@@ -9,17 +9,25 @@
 // turnos, como los demás juegos), acierte o no. Gana el que más acertó.
 
 const { loadDecks, pickDeck, shuffle, shuffleOptions } = require('../contentLoader');
+const { resolver } = require('../opciones');
 
 const type = 'eligi-una';
 const label = 'Elegí Una';
 const estimateSecondsPerRound = 90;
 
 const SEGUNDOS_POR_ACIERTO = 5;
-const PREGUNTAS_POR_EQUIPO = 10;
 
 const decks = loadDecks('el-rosco', 'eligi-una');
 
-function createRound({ entrantIds, usedDeckIds = [], region, adultsOnly, difficulty }) {
+// Ajustes que el anfitrión puede elegir en la sala (ver server/opciones.js).
+// Si no elige, cada uno sale de la dificultad.
+const opciones = [
+  { id: 'preguntas', label: 'Preguntas por equipo', valores: [[5, '5'], [8, '8'], [10, '10']], porDificultad: { facil: 8, normal: 10, dificil: 10 } }
+];
+
+function createRound({ entrantIds, usedDeckIds = [], region, adultsOnly, difficulty, opciones: elegidas }) {
+  const o = resolver(opciones, elegidas, difficulty);
+  const PREGUNTAS_POR_EQUIPO = o.preguntas;
   const deck = pickDeck(decks, usedDeckIds, { region, adultsOnly, difficulty });
   const pool = deck ? shuffle(deck.data.questions) : [];
 
@@ -120,4 +128,15 @@ function publicView(state) {
   };
 }
 
-module.exports = { type, label, estimateSecondsPerRound, createRound, answer, scores, carryOver, publicView };
+// Reloj para responder (lo maneja el motor, si el anfitrión lo activó): si
+// se acaba el tiempo del turno, cuenta como respuesta equivocada y sigue.
+function turnoEnEspera(state) {
+  return !state.finished;
+}
+
+function alVencerTurno(state) {
+  if (!turnoEnEspera(state)) return;
+  answer(state, state.activeEntrant, -1);
+}
+
+module.exports = { type, label, estimateSecondsPerRound, opciones, createRound, alVencerTurno, turnoEnEspera, answer, scores, carryOver, publicView };

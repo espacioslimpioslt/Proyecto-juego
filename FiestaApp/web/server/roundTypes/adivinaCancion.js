@@ -1,3 +1,4 @@
+const { resolver } = require('../opciones');
 // Juego "Adiviná la Canción" — roles cruzados, como Mímica. Cada ronda, UN
 // equipo hace de "DJ" (cualquiera de sus integrantes reproduce una canción
 // cualquiera desde SU PROPIO celu/parlante -- Spotify, YouTube, lo que
@@ -16,20 +17,15 @@ const skipMemberGate = true; // cualquiera del equipo que adivina puede presiona
 
 const SEGUNDOS_POR_ACIERTO = 6;
 
-// Sin contenido propio (las canciones las elige y reproduce cada equipo en
-// vivo, desde su propio celu): la dificultad solo ajusta cuantas canciones
-// se juegan en total.
-const DIFICULTAD_MECANICA = {
-  facil: { duelos: 5 },
-  normal: { duelos: 7 },
-  dificil: { duelos: 9 }
-};
-function mecanica(difficulty) {
-  return DIFICULTAD_MECANICA[difficulty] || DIFICULTAD_MECANICA.normal;
-}
+// Ajustes que el anfitrión puede elegir en la sala (ver server/opciones.js).
+// Si no elige, cada uno sale de la dificultad.
+const opciones = [
+  { id: 'canciones', label: 'Canciones', valores: [[5, '5'], [7, '7'], [9, '9'], [11, '11']], porDificultad: { facil: 5, normal: 7, dificil: 9 } }
+];
 
-function createRound({ entrantIds, difficulty }) {
-  const m = mecanica(difficulty);
+function createRound({ entrantIds, difficulty, opciones: elegidas }) {
+  const o = resolver(opciones, elegidas, difficulty);
+  const m = { duelos: o.canciones };
   const entrants = {};
   entrantIds.forEach((id) => { entrants[id] = { wins: 0, secondsWon: 0 }; });
 
@@ -132,5 +128,5 @@ function publicView(state) {
 
 module.exports = {
   type, label, estimateSecondsPerRound, skipMemberGate,
-  createRound, answer, judge, scores, carryOver, publicView
+  opciones, createRound, answer, judge, scores, carryOver, publicView
 };

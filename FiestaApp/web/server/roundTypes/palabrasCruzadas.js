@@ -9,6 +9,7 @@
 // resolver TODO su tablero en menos tiempo.
 
 const { loadDecks, pickDeck, shuffle, shuffleOptions } = require('../contentLoader');
+const { resolver } = require('../opciones');
 
 const type = 'palabras-cruzadas';
 const label = 'Palabras Cruzadas';
@@ -22,21 +23,17 @@ const SEGUNDOS_POR_ACIERTO = 7;
 // realmente llegan a terminar).
 const SEGUNDOS_BONUS_VELOCIDAD = 15;
 
-// Sin mazos propios por dificultad (no hay contenido "mas dificil" en sí),
-// la dificultad ajusta el tiempo maximo para resolver el tablero entero.
-const DIFICULTAD_MECANICA = {
-  facil: { segundosMax: 150 },
-  normal: { segundosMax: 110 },
-  dificil: { segundosMax: 80 }
-};
-function mecanica(difficulty) {
-  return DIFICULTAD_MECANICA[difficulty] || DIFICULTAD_MECANICA.normal;
-}
-
 const decks = loadDecks('el-rosco', 'palabras-cruzadas');
 
-function createRound({ entrantIds, usedDeckIds = [], region, adultsOnly, difficulty }) {
-  const m = mecanica(difficulty);
+// Ajustes que el anfitrión puede elegir en la sala (ver server/opciones.js).
+// Si no elige, cada uno sale de la dificultad.
+const opciones = [
+  { id: 'segundos', label: 'Tiempo máximo', valores: [[80, '1 min 20 s'], [110, '1 min 50 s'], [150, '2 min 30 s']], porDificultad: { facil: 150, normal: 110, dificil: 80 } }
+];
+
+function createRound({ entrantIds, usedDeckIds = [], region, adultsOnly, difficulty, opciones: elegidas }) {
+  const o = resolver(opciones, elegidas, difficulty);
+  const m = { segundosMax: o.segundos };
   const deck = pickDeck(decks, usedDeckIds, { region, adultsOnly, difficulty });
   const board = deck ? shuffle(deck.data.boards)[0] : null;
 
@@ -175,5 +172,5 @@ function publicView(state) {
 
 module.exports = {
   type, label, estimateSecondsPerRound, simultaneous, skipMemberGate,
-  createRound, answer, tick, scores, carryOver, publicView
+  opciones, createRound, answer, tick, scores, carryOver, publicView
 };

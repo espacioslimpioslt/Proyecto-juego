@@ -11,6 +11,7 @@
 // tiempo.
 
 const { loadDecks, pickDeck, shuffle } = require('../contentLoader');
+const { resolver } = require('../opciones');
 
 const type = 'sopa-de-letras';
 const label = 'Sopa de Letras';
@@ -27,20 +28,6 @@ const SEGUNDOS_PENALIDAD_ERROR = 5;
 // Bono para el equipo que termina TODO su panel mas rapido (entre los que
 // realmente llegan a terminar).
 const SEGUNDOS_BONUS_VELOCIDAD = 15;
-
-// Sin mazos propios por dificultad (no hay "sopa facil.json" / "dificil.json"),
-// la dificultad ajusta el tamaño del panel y el tiempo maximo: una grilla mas
-// chica con mas tiempo es mucho mas facil que una grande con el reloj
-// corriendo. En dificil ademas se permiten palabras "al reves" (de derecha a
-// izquierda o de abajo hacia arriba), que hay que reconocer invertidas.
-const DIFICULTAD_MECANICA = {
-  facil: { size: 6, segundosMax: 120, alReves: false },
-  normal: { size: 7, segundosMax: 90, alReves: false },
-  dificil: { size: 9, segundosMax: 90, alReves: true }
-};
-function mecanica(difficulty) {
-  return DIFICULTAD_MECANICA[difficulty] || DIFICULTAD_MECANICA.normal;
-}
 
 const ABC = 'ABCDEFGHILMNOPRSTUVZ';
 
@@ -115,8 +102,17 @@ function buildPanel(panel, size, alReves) {
   return { grid: grid.flat(), words: placed };
 }
 
-function createRound({ entrantIds, usedDeckIds = [], region, adultsOnly, difficulty }) {
-  const m = mecanica(difficulty);
+// Ajustes que el anfitrión puede elegir en la sala (ver server/opciones.js).
+// Si no elige, cada uno sale de la dificultad.
+const opciones = [
+  { id: 'tamano', label: 'Tamaño del panel', valores: [[6, '6×6'], [7, '7×7'], [9, '9×9']], porDificultad: { facil: 6, normal: 7, dificil: 9 } },
+  { id: 'segundos', label: 'Tiempo máximo', valores: [[60, '1 min'], [90, '1 min 30 s'], [120, '2 min'], [150, '2 min 30 s']], porDificultad: { facil: 120, normal: 90, dificil: 90 } },
+  { id: 'alReves', label: 'Palabras al revés', valores: [['no', 'No'], ['si', 'Sí']], porDificultad: { facil: 'no', normal: 'no', dificil: 'si' } }
+];
+
+function createRound({ entrantIds, usedDeckIds = [], region, adultsOnly, difficulty, opciones: elegidas }) {
+  const o = resolver(opciones, elegidas, difficulty);
+  const m = { size: o.tamano, segundosMax: o.segundos, alReves: o.alReves === 'si' };
   const deck = pickDeck(decks, usedDeckIds, { region, adultsOnly, difficulty });
   const panel = deck ? shuffle(deck.data.panels)[0] : null;
   const built = panel ? buildPanel(panel, m.size, m.alReves) : { grid: [], words: [] };
@@ -262,5 +258,5 @@ function publicView(state) {
 
 module.exports = {
   type, label, estimateSecondsPerRound, simultaneous, skipMemberGate,
-  createRound, answer, tick, scores, carryOver, publicView
+  opciones, createRound, answer, tick, scores, carryOver, publicView
 };

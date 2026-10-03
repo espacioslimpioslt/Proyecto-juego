@@ -121,6 +121,8 @@
         <input id="config-locked" type="checkbox" />
         Cerrar la sala (ya estamos todos, no entra nadie más)
       </label>
+      <p class="cfg-title">¿Cómo quieren jugar?</p>
+      <div id="config-formatos" class="formatos"></div>
       <label>Programa
         <select id="config-program"></select>
       </label>
@@ -155,6 +157,14 @@
       <label>Dificultad
         <select id="config-difficulty"></select>
       </label>
+      <label>Tiempo para responder (juegos por turnos)
+        <select id="config-tiempo-respuesta"></select>
+      </label>
+      <details id="config-ajustes-wrap" class="ajustes">
+        <summary>⚙️ Ajustes de cada juego</summary>
+        <p class="muted sm-desc">Lo que no toques sale de la dificultad elegida.</p>
+        <div id="config-ajustes"></div>
+      </details>
       <label class="checkbox-row">
         <input id="config-adults" type="checkbox" />
         Solo mayores de 18 (habilita temas para grandes)

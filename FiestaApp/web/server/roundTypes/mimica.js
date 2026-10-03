@@ -13,6 +13,7 @@
 // orden de la lista.
 
 const { loadDecks, pickDeck, shuffle } = require('../contentLoader');
+const { resolver } = require('../opciones');
 
 const type = 'mimica';
 const label = 'Mímica';
@@ -21,18 +22,6 @@ const simultaneous = true; // dos equipos con roles distintos conviven en la mis
 const skipMemberGate = true; // cualquiera del equipo que adivina puede mandar su intento, no solo el de turno
 
 const SEGUNDOS_POR_ACIERTO = 4;
-
-// Sin contenido propio para "quién adivina" (no aplica): la dificultad ajusta
-// el tiempo de cada bloque y, vía mazos separados, qué tan concretas o
-// abstractas son las palabras a actuar.
-const DIFICULTAD_MECANICA = {
-  facil: { segundosPorBloque: 150 },
-  normal: { segundosPorBloque: 120 },
-  dificil: { segundosPorBloque: 90 }
-};
-function mecanica(difficulty) {
-  return DIFICULTAD_MECANICA[difficulty] || DIFICULTAD_MECANICA.normal;
-}
 
 const decks = loadDecks('varios', 'mimica');
 
@@ -88,8 +77,15 @@ function endBlock(state) {
   startBlock(state);
 }
 
-function createRound({ entrantIds, rosters = {}, usedDeckIds = [], region, adultsOnly, difficulty }) {
-  const m = mecanica(difficulty);
+// Ajustes que el anfitrión puede elegir en la sala (ver server/opciones.js).
+// Si no elige, cada uno sale de la dificultad.
+const opciones = [
+  { id: 'segundos', label: 'Segundos por turno', valores: [[60, '1 min'], [90, '1 min 30 s'], [120, '2 min'], [150, '2 min 30 s']], porDificultad: { facil: 150, normal: 120, dificil: 90 } }
+];
+
+function createRound({ entrantIds, rosters = {}, usedDeckIds = [], region, adultsOnly, difficulty, opciones: elegidas }) {
+  const o = resolver(opciones, elegidas, difficulty);
+  const m = { segundosPorBloque: o.segundos };
   const deck = pickDeck(decks, usedDeckIds, { region, adultsOnly, difficulty });
   const words = deck ? shuffle(deck.data.words) : [];
 
@@ -270,5 +266,5 @@ function onRosterChange(state, rosters) {
 
 module.exports = {
   type, label, estimateSecondsPerRound, simultaneous, skipMemberGate,
-  createRound, answer, onRosterChange, judge, tick, scores, carryOver, publicView
+  opciones, createRound, answer, onRosterChange, judge, tick, scores, carryOver, publicView
 };

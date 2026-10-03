@@ -10,6 +10,7 @@
 // acierto sigue el mismo equipo, error o plantada pasa el turno al otro.
 
 const { loadDecks, pickDeck, shuffleOptions } = require('../contentLoader');
+const { resolver } = require('../opciones');
 
 const type = 'escalera-final';
 const label = 'Escalera Final';
@@ -18,11 +19,18 @@ const estimateSecondsPerRound = 150;
 // Tiempo base por equipo si se juega suelta, sin duelos previos de los que
 // arrastrar segundos (mismo rol que BASE_TIME_SECONDS en el rosco).
 const BASE_TIME_SECONDS = 60;
-const TOTAL_ESCALONES = 10;
 
 const decks = loadDecks('ahora-caigo', 'escalera-final');
 
-function createRound({ entrantIds, carryOver = {}, baseTimeSeconds = BASE_TIME_SECONDS, usedDeckIds = [], region, adultsOnly, difficulty }) {
+// Ajustes que el anfitrión puede elegir en la sala (ver server/opciones.js).
+// Si no elige, cada uno sale de la dificultad.
+const opciones = [
+  { id: 'escalones', label: 'Escalones', valores: [[6, '6'], [8, '8'], [10, '10']], porDefecto: 10 }
+];
+
+function createRound({ entrantIds, carryOver = {}, baseTimeSeconds = BASE_TIME_SECONDS, usedDeckIds = [], region, adultsOnly, difficulty, opciones: elegidas }) {
+  const o = resolver(opciones, elegidas, difficulty);
+  const TOTAL_ESCALONES = o.escalones;
   const deck = pickDeck(decks, usedDeckIds, { region, adultsOnly, difficulty });
   const pool = deck ? deck.data.questions : [];
 
@@ -134,7 +142,7 @@ function answer(state, entrantId, payload) {
   if (isCorrect) {
     entrant.step += 1;
     state.lastFeedback = { entrantId, result: 'correct', escalon: entrant.step, correctOption: q.options[q.correctIndex] };
-    if (entrant.step >= TOTAL_ESCALONES) {
+    if (entrant.step >= state.totalEscalones) {
       // Completó toda la escalera: queda a salvo en el último escalón.
       entrant.banked = entrant.step;
       entrant.out = true;
@@ -196,5 +204,5 @@ function publicView(state) {
 
 module.exports = {
   type, label, estimateSecondsPerRound, BASE_TIME_SECONDS,
-  createRound, answer, tick, scores, carryOver, publicView
+  opciones, createRound, answer, tick, scores, carryOver, publicView
 };

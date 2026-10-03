@@ -1363,3 +1363,34 @@ h1 { letter-spacing: -0.01em; }
   .time-bank .tb-time.bump, .option-btn, .score-row, .grid-cell, .eq i, .cancion-buzzer, .ld-step.top,
   .rosco-letter.current, .vs-crown, .vs-badge, .tuti-letter, .cadena-chain li, .mimica-secret-word { animation: none !important; }
 }
+
+/* ---------- Sala de espera: formatos de un toque y ajustes por juego ---------- */
+.cfg-title { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; margin: 0.4rem 0 0.6rem; }
+.formatos { display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: 0.5rem; margin-bottom: 1.2rem; }
+.formato {
+  display: flex; flex-direction: column; gap: 0.15rem; text-align: left; cursor: pointer;
+  padding: 0.75rem 0.8rem; border-radius: 14px; font: inherit; color: var(--text);
+  background: var(--glass); border: 1px solid var(--line);
+  transition: transform 0.2s var(--ease-out), border-color 0.2s ease, background 0.2s ease;
+}
+.formato b { font-size: 0.92rem; }
+.formato small { font-size: 0.72rem; color: var(--text-dim); }
+.formato:active { transform: scale(0.97); }
+.formato.on {
+  border-color: var(--accent); background: linear-gradient(135deg, rgba(255, 178, 63, 0.18), rgba(255, 61, 127, 0.12));
+  box-shadow: 0 0 0 1px var(--accent), 0 10px 24px -12px rgba(255, 178, 63, 0.8);
+}
+.ajustes { margin: 0 0 1.2rem; border: 1px solid var(--line); border-radius: 14px; background: var(--glass); padding: 0.2rem 0.9rem; }
+.ajustes summary { cursor: pointer; padding: 0.7rem 0; font-weight: 700; color: var(--text); }
+.ajustes[open] summary { border-bottom: 1px solid var(--line); margin-bottom: 0.6rem; }
+.ajuste-juego { padding: 0.4rem 0 0.2rem; border-bottom: 1px dashed var(--line); }
+.ajuste-juego:last-child { border-bottom: none; }
+.aj-name { margin: 0 0 0.4rem; font-weight: 700; color: var(--text); }
+.ajuste-juego label { margin-bottom: 0.6rem; }
+
+/* Reloj para responder, en el encabezado del juego */
+.gh-timer {
+  font-family: var(--font-display); font-weight: 800; font-size: 0.85rem; padding: 0.25rem 0.55rem; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line); font-variant-numeric: tabular-nums;
+}
+.gh-timer.danger { color: #fff; background: var(--error); border-color: var(--error); animation: pulse-danger 0.8s infinite; }

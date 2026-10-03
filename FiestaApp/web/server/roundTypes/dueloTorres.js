@@ -10,6 +10,7 @@
 // preguntas; cada torre ganada reparte segundos para la Escalera Final.
 
 const { loadDecks, pickDeck, shuffle, shuffleOptions } = require('../contentLoader');
+const { resolver } = require('../opciones');
 
 const type = 'duelo-torres';
 const label = 'Duelo de Torres';
@@ -17,17 +18,6 @@ const estimateSecondsPerRound = 100;
 const skipMemberGate = true; // el motor de turnos comun no aplica: acá hay un campeón fijo y un retador fijo, no "el que sigue en la lista"
 
 const SEGUNDOS_POR_TORRE = 8;
-
-// Sin mazos propios por dificultad para la mecánica (el contenido sí varía
-// por dificultad): lo que cambia es cuántos duelos seguidos se juegan.
-const DIFICULTAD_MECANICA = {
-  facil: { duelos: 3 },
-  normal: { duelos: 4 },
-  dificil: { duelos: 5 }
-};
-function mecanica(difficulty) {
-  return DIFICULTAD_MECANICA[difficulty] || DIFICULTAD_MECANICA.normal;
-}
 
 const decks = loadDecks('ahora-caigo', 'duelo-torres');
 
@@ -70,8 +60,15 @@ function beginDuelo(state) {
   state.phase = 'duelo';
 }
 
-function createRound({ entrantIds, rosters = {}, usedDeckIds = [], region, adultsOnly, difficulty }) {
-  const m = mecanica(difficulty);
+// Ajustes que el anfitrión puede elegir en la sala (ver server/opciones.js).
+// Si no elige, cada uno sale de la dificultad.
+const opciones = [
+  { id: 'duelos', label: 'Cantidad de duelos', valores: [[3, '3'], [4, '4'], [5, '5'], [6, '6']], porDificultad: { facil: 3, normal: 4, dificil: 5 } }
+];
+
+function createRound({ entrantIds, rosters = {}, usedDeckIds = [], region, adultsOnly, difficulty, opciones: elegidas }) {
+  const o = resolver(opciones, elegidas, difficulty);
+  const m = { duelos: o.duelos };
   const deck = pickDeck(decks, usedDeckIds, { region, adultsOnly, difficulty });
   const pool = deck ? shuffle(deck.data.questions) : [];
 
@@ -208,7 +205,19 @@ function onRosterChange(state, rosters) {
   }
 }
 
+// Reloj para responder (lo maneja el motor, si el anfitrión lo activó): si
+// se acaba el tiempo del turno, cuenta como respuesta equivocada y sigue.
+function turnoEnEspera(state) {
+  return !state.finished && state.phase === 'duelo' && !!state.currentQuestion;
+}
+
+function alVencerTurno(state) {
+  if (!turnoEnEspera(state)) return;
+  const esCampeon = state.turnoDe === 'campeon';
+  answer(state, esCampeon ? state.campeonTeam : state.retadorTeam, -1, esCampeon ? state.campeonId : state.retadorId, true);
+}
+
 module.exports = {
   type, label, estimateSecondsPerRound, skipMemberGate,
-  createRound, answer, onRosterChange, scores, carryOver, publicView
+  opciones, createRound, alVencerTurno, turnoEnEspera, answer, onRosterChange, scores, carryOver, publicView
 };
