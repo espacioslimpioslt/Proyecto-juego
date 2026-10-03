@@ -73,3 +73,10 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: FiestaApp/deploy/
           server-dir: wwwroot/
+          # Por defecto esta accion NO sube node_modules: hay que decirle
+          # explicitamente que solo excluya lo de git. Sin esto, cuando se
+          # suma una dependencia nueva el servidor no la tiene y Node no
+          # arranca (paso con "compression": error 500 de iisnode).
+          exclude: |
+            **/.git*
+            **/.git*/**
