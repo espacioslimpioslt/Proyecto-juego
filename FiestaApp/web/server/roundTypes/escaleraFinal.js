@@ -69,12 +69,25 @@ function currentQuestion(state, entrantId) {
   return entrant ? preguntas[entrant.qIndex] || null : null;
 }
 
+// Un equipo que ya no tiene preguntas asignadas queda plantado con lo que
+// subio. Antes se quedaba "jugando" sin pregunta en pantalla hasta que se le
+// acababa todo el reloj (con caidas, las 15 preguntas se gastan rapido).
+function plantarSiSinPreguntas(state, entrantId) {
+  const entrant = state.entrants[entrantId];
+  if (!entrant || entrant.out || currentQuestion(state, entrantId)) return false;
+  entrant.banked = entrant.step;
+  entrant.out = true;
+  state.lastFeedback = { entrantId, result: 'sin-preguntas', escalon: entrant.step };
+  return true;
+}
+
 // Pasa el turno al siguiente equipo que todavía pueda seguir jugando.
 function passTurn(state) {
   const ids = Object.keys(state.entrants);
   const startIdx = ids.indexOf(state.activeEntrant);
   for (let step = 1; step <= ids.length; step++) {
     const candidate = ids[(startIdx + step) % ids.length];
+    plantarSiSinPreguntas(state, candidate);
     if (!state.entrants[candidate].out) { state.activeEntrant = candidate; return; }
   }
   state.finished = true;
@@ -132,6 +145,8 @@ function answer(state, entrantId, payload) {
     state.lastFeedback = { entrantId, result: 'wrong', escalonPerdido: entrant.step, correctOption: q.options[q.correctIndex] };
     passTurn(state);
   }
+  // Acerto pero era su ultima pregunta: se planta solo y pasa el turno.
+  if (state.activeEntrant === entrantId && plantarSiSinPreguntas(state, entrantId)) passTurn(state);
   checkFinished(state);
   return {};
 }

@@ -129,6 +129,11 @@ body {
 #app { max-width: 520px; margin: 0 auto; padding: 1.2rem; }
 #app.wide-app { max-width: 1200px; padding: 0 0 4.5rem; }
 .screen.hidden { display: none; }
+/* Regla general: app.js oculta y muestra con la clase "hidden" en muchos
+   elementos (controles del anfitrión, campos del modo prueba, selector de
+   juegos, mensajes), pero solo algunos tenían su propia regla -- el resto se
+   seguía viendo (ej. los invitados veían los controles del anfitrión). */
+.hidden { display: none !important; }
 .screen.screen-enter { animation: screen-fade-in 0.28s ease both; }
 @keyframes screen-fade-in {
   0% { opacity: 0; transform: translateY(8px); }
@@ -719,3 +724,8 @@ input[type="text"], select {
   font-size: 0.9rem; z-index: 100; max-width: 90vw;
 }
 .toast.hidden { display: none; }
+
+/* Sala de espera: invitar por link (para los que juegan desde lejos) */
+.lobby-share { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 14px; }
+.lobby-share .btn { flex: 1 1 160px; }
+.player-list .offline { opacity: 0.55; }

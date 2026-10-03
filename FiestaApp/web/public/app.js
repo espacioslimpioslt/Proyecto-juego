@@ -1,6 +1,26 @@
-const socket = io();
+// Identidad de este celu para el servidor. NO es la conexion: si se corta
+// (pantalla bloqueada, cambio de app, wifi que va y viene) el socket nuevo
+// manda el mismo playerId + secreto y el servidor le devuelve su lugar en la
+// sala. Vive en sessionStorage (por pestaña): sobrevive a recargar la página,
+// y dos pestañas del mismo navegador siguen siendo dos jugadores distintos.
+function randomId() {
+  const bytes = new Uint8Array(18);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => b.toString(36).padStart(2, '0')).join('').slice(0, 24);
+}
+function loadIdentity() {
+  try {
+    const saved = JSON.parse(sessionStorage.getItem('soyparticipante:id'));
+    if (saved && saved.playerId && saved.secret) return saved;
+  } catch { /* sin storage: identidad nueva */ }
+  const fresh = { playerId: randomId(), secret: randomId() };
+  try { sessionStorage.setItem('soyparticipante:id', JSON.stringify(fresh)); } catch { /* sigue sin guardar */ }
+  return fresh;
+}
+const identity = loadIdentity();
+const socket = io({ auth: identity });
 
-let myId = null;
+const myId = identity.playerId;
 let room = null;
 let lastRoundKey = null;
 let catalog = [];
@@ -10,6 +30,15 @@ let lastSpokenKey = null;
 let soupSelectionByTeam = {}; // primera casilla marcada, por equipo (cada uno tiene su propia sopa)
 
 const $ = (id) => document.getElementById(id);
+
+// Todo texto que escribe un jugador (nombres, palabras de Tutifruti) pasa por
+// aca antes de meterlo en innerHTML: si no, un nombre como "<b>hola</b>" se
+// dibujaba como HTML en el celu de todos.
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
 
 // ---------- Preferencias por defecto (guardadas en este celu) ----------
 // No es una cuenta -- vive en localStorage de este navegador nomás. Sirve
@@ -66,11 +95,6 @@ function entrantLabel(entrantId) {
   if (room.teamsEnabled) return entrantId;
   const player = room.players.find((p) => p.id === entrantId);
   return player ? player.name : entrantId;
-}
-
-function membersOf(entrantId) {
-  if (!room.teamsEnabled) return [];
-  return room.players.filter((p) => p.team === entrantId).map((p) => p.name);
 }
 
 function formatTime(seconds) {
@@ -294,6 +318,17 @@ async function loadCatalog() {
 }
 loadCatalog();
 
+// Llegó por un link de invitación (?sala=CODIGO): directo a "Unirme" con el
+// código ya cargado, solo falta el nombre.
+(function abrirInvitacion() {
+  const code = new URLSearchParams(location.search).get('sala');
+  if (!code) return;
+  $('join-code').value = code.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+  showScreen('screen-join');
+  $('join-name').focus();
+  history.replaceState(null, '', location.pathname);
+}());
+
 // ---------- Menú lateral ----------
 function openMenu() {
   $('side-menu').classList.add('open');
@@ -430,6 +465,29 @@ $('config-voice').addEventListener('change', (e) => {
 });
 
 $('btn-start-game').addEventListener('click', () => socket.emit('start-game'));
+$('config-locked').addEventListener('change', (e) => socket.emit('lock-room', { locked: e.target.checked }));
+
+// ---------- Invitar por link (WhatsApp) ----------
+// El link lleva el codigo de la sala: quien lo abre cae directo en "Unirme"
+// con el codigo ya cargado, y solo tiene que poner su nombre. Asi se suman
+// los que estan lejos (hijos, parientes, amigos) sin dictar codigos.
+function inviteLink() {
+  return `${location.origin}/?sala=${encodeURIComponent(room.code)}`;
+}
+$('btn-invite-whatsapp').addEventListener('click', () => {
+  if (!room) return;
+  const texto = `¡Vení a jugar a Soy Participante! Entrá acá: ${inviteLink()} (código ${room.code})`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+});
+$('btn-copy-link').addEventListener('click', async () => {
+  if (!room) return;
+  try {
+    await navigator.clipboard.writeText(inviteLink());
+    showError('Link copiado. Pegalo en el grupo de WhatsApp.');
+  } catch {
+    showError(`Mandá este link: ${inviteLink()}`);
+  }
+});
 
 function renderLobby() {
   $('lobby-code').textContent = room.code;
@@ -437,8 +495,10 @@ function renderLobby() {
   $('lobby-players').innerHTML = '';
   room.players.forEach((p) => {
     const li = document.createElement('li');
-    const label = p.name + (p.id === room.hostId ? ' (anfitrión)' : '') + (p.team ? ` — ${p.team}` : '');
-    li.innerHTML = `<span>${label}</span>`;
+    const label = p.name + (p.id === room.hostId ? ' (anfitrión)' : '') + (p.team ? ` — ${p.team}` : '')
+      + (p.connected ? '' : ' · 📵 se le cortó, esperando que vuelva');
+    li.innerHTML = `<span>${esc(label)}</span>`;
+    li.classList.toggle('offline', !p.connected);
     if (myId === room.hostId && p.id !== room.hostId) {
       const btn = document.createElement('button');
       btn.textContent = 'Sacar';
@@ -449,6 +509,7 @@ function renderLobby() {
   });
 
   const iAmHost = myId === room.hostId;
+  $('config-locked').checked = !!room.locked;
   $('lobby-host-controls').classList.toggle('hidden', !iAmHost);
   $('lobby-waiting-msg').classList.toggle('hidden', iAmHost);
   if (!iAmHost) return;
@@ -533,8 +594,13 @@ function renderBanks(round) {
     if (color) box.style.setProperty('--team-color', color);
 
     const onDuty = (room.currentMembers || {})[entrantId];
-    const members = membersOf(entrantId).map((n) =>
-      onDuty && onDuty.name === n ? `<strong>${n}</strong>` : n);
+    // 📵 = se le cortó la conexión; su turno lo toma el siguiente del equipo
+    // hasta que vuelva.
+    const members = (room.teamsEnabled ? room.players.filter((p) => p.team === entrantId) : [])
+      .map((p) => {
+        const n = esc(p.name) + (p.connected ? '' : ' 📵');
+        return onDuty && onDuty.id === p.id ? `<strong>${n}</strong>` : n;
+      });
 
     // En el rosco se muestra el reloj; en las pruebas, los segundos ganados.
     const main = esRosco
@@ -1292,7 +1358,7 @@ function renderTutifrutiReview(round, container) {
       const pending = round.pendingJudgements.find((p) => p.entrantId === entrantId && p.category === cat);
       const item = document.createElement('div');
       item.className = 'tuti-review-item' + (pending ? ' pending' : '');
-      item.innerHTML = `<span class="tri-team">${entrantLabel(entrantId)}</span><span class="tri-word">${word || '—'}</span>`;
+      item.innerHTML = `<span class="tri-team">${esc(entrantLabel(entrantId))}</span><span class="tri-word">${esc(word) || '—'}</span>`;
 
       if (pending && myId === room.hostId) {
         const yes = document.createElement('button');
@@ -1526,7 +1592,7 @@ function renderMimica(round, container, roundKey) {
       const reveal = document.createElement('div');
       reveal.className = 'mimica-actor-reveal dice-reveal';
       reveal.innerHTML = `
-        <p class="muted">${iAmTestHost ? `Actúa ${round.actorName} — esto es lo que tiene que mimicar:` : '¡Te toca actuar! Nadie más puede ver esto:'}</p>
+        <p class="muted">${iAmTestHost ? `Actúa ${esc(round.actorName)} — esto es lo que tiene que mimicar:` : '¡Te toca actuar! Nadie más puede ver esto:'}</p>
         <div class="mimica-secret-word">${round.currentWord || '…'}</div>
       `;
       container.appendChild(reveal);
@@ -1690,7 +1756,7 @@ function renderPalabraProhibida(round, container, roundKey) {
       const reveal = document.createElement('div');
       reveal.className = 'mimica-actor-reveal dice-reveal';
       reveal.innerHTML = `
-        <p class="muted">${iAmTestHost ? `Describe ${round.actorName} — esto es lo que tiene que hacer adivinar:` : '¡Te toca describir! Nadie más puede ver esto:'}</p>
+        <p class="muted">${iAmTestHost ? `Describe ${esc(round.actorName)} — esto es lo que tiene que hacer adivinar:` : '¡Te toca describir! Nadie más puede ver esto:'}</p>
         <div class="mimica-secret-word">${card ? card.word : '…'}</div>
         <p class="muted">Sin decir:</p>
         ${prohibidasHtml}
@@ -1803,7 +1869,7 @@ function renderDuelo(round, container) {
   box.className = 'board';
   box.innerHTML = `
     <p class="board-topic">${round.theme || 'Duelo de Torres'}</p>
-    <p class="board-clue">👑 ${entrantLabel(round.campeonTeam)}${round.campeonName ? ` (${round.campeonName})` : ''} defiende la torre · 🗡 reta ${entrantLabel(round.retadorTeam)}${round.retadorName ? ` (${round.retadorName})` : ''}</p>
+    <p class="board-clue">👑 ${entrantLabel(round.campeonTeam)}${round.campeonName ? ` (${esc(round.campeonName)})` : ''} defiende la torre · 🗡 reta ${entrantLabel(round.retadorTeam)}${round.retadorName ? ` (${esc(round.retadorName)})` : ''}</p>
     <p class="board-counter">Duelo ${round.number} de ${round.total} · responde ${nombreEnTurno || '...'} · cada torre suma ${round.secondsPerTorre}s</p>
     <div class="cancion-scoreboard">${marcador}</div>
   `;
@@ -2142,8 +2208,9 @@ function renderResults() {
     const color = teamColor(leader[0]);
     banner.innerHTML = `
       <span class="wb-trophy">🏆</span>
-      <span class="wb-name" style="color:${color || 'var(--accent)'}">${entrantLabel(leader[0])}</span>
-      <span class="wb-sub">se llevó la noche con ${leader[1]} puntos</span>
+      <span class="wb-name" style="color:${color || 'var(--accent)'}">${esc(entrantLabel(leader[0]))}</span>
+      <span class="wb-sub">se llevó la noche con ${leader[1]} puntos${room.endedEarly
+    ? ' (el programa terminó antes: el otro equipo se quedó sin jugadores)' : ''}</span>
     `;
     // Se reinicia la animación de entrada cada vez que se llega a esta pantalla.
     banner.classList.remove('animate-in');
@@ -2168,7 +2235,9 @@ function renderResults() {
 $('btn-play-again').addEventListener('click', () => socket.emit('play-again'));
 
 $('btn-back-home').addEventListener('click', () => {
-  socket.disconnect();
+  // Se avisa que se va de verdad: si solo se cortara la conexion, el
+  // servidor le guardaria el lugar y lo volveria a meter en la sala.
+  socket.emit('leave-room');
   room = null;
   lastRoundKey = null;
   tutiFormBuiltFor = null;
@@ -2180,7 +2249,6 @@ $('btn-back-home').addEventListener('click', () => {
   stopVoiceListening();
   $('room-code-badge').classList.add('hidden');
   showScreen('screen-start');
-  socket.connect();
 });
 
 // Las tarjetas de "también en cartelera" en resultados usan el mismo click
@@ -2214,7 +2282,6 @@ function render() {
   }
 }
 
-socket.on('connect', () => { myId = socket.id; });
 socket.on('room-update', (state) => { room = state; render(); });
 socket.on('room-error', (msg) => showError(msg));
 socket.on('kicked', () => {

@@ -45,17 +45,32 @@ function decksFor(decks, { region = 'global', adultsOnly = false, difficulty = '
 }
 
 // Elige un mazo al azar entre los que corresponden, evitando repetir.
+// Si ningun mazo cumple todos los filtros, se aflojan de a uno -- primero la
+// dificultad, despues el pais -- pero la EDAD nunca: antes se caia a "todos
+// los mazos" y podia salir uno +18 con "solo mayores" apagado.
 function pickDeck(decks, usedDeckIds = [], filters = {}) {
-  const candidates = decksFor(decks, filters);
-  const safe = candidates.length ? candidates : decks;
+  const permitidos = decks.filter((d) => filters.adultsOnly || d.minAge < 18);
+  const intentos = [
+    decksFor(permitidos, filters),
+    permitidos.filter((d) => d.regions.includes('global') || d.regions.includes(filters.region || 'global')),
+    permitidos
+  ];
+  const safe = intentos.find((lista) => lista.length) || [];
   if (!safe.length) return null;
   const unused = safe.filter((d) => !usedDeckIds.includes(d.id));
   const pool = unused.length ? unused : safe;
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
+// Fisher-Yates: mezcla pareja. El viejo sort(() => Math.random() - 0.5) hacia
+// que algunos ordenes salieran bastante mas que otros.
 function shuffle(arr) {
-  return [...arr].sort(() => Math.random() - 0.5);
+  const out = [...arr];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
 }
 
 // Mezcla las opciones y devuelve donde quedo la correcta. Sin esto, quien

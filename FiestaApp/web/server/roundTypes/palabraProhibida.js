@@ -35,6 +35,12 @@ function mecanica(difficulty) {
 
 const decks = loadDecks('varios', 'palabra-prohibida');
 
+// Limites para adivinar: tiempo minimo entre intentos de una misma persona y
+// cuantas palabras "de relleno" se toleran alrededor de la respuesta (el
+// reconocimiento de voz suele traer cosas como "es un ..." o "¡ya sé, ...!").
+const MS_ENTRE_INTENTOS = 1500;
+const MAX_PALABRAS_DE_MAS = 3;
+
 function norm(s) {
   return String(s || '').trim().toLowerCase()
     .normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -179,25 +185,35 @@ function judge(state, payload) {
 // toca adivinar (por eso este juego usa skipMemberGate — no hay un solo
 // representante fijo por equipo).
 // isTestHost: en modo prueba el anfitrion controla a todos los jugadores
-// inventados desde su unico socket real, asi que su socketId no va a
+// inventados desde su unico socket real, asi que su playerId no va a
 // coincidir nunca con el actorId elegido -- se lo deja pasar igual.
-function answer(state, entrantId, payload, socketId, isTestHost) {
+function answer(state, entrantId, payload, playerId, isTestHost) {
   if (state.finished) return { error: 'Este juego ya termino.' };
   if (state.phase !== 'acting') return { error: 'Todavía no arrancó a describir nadie en este bloque.' };
 
   if (payload && payload.pasar) {
-    if (socketId !== state.actorId && !isTestHost) return { error: 'Solo quien está describiendo puede pasar de tarjeta.' };
+    if (playerId !== state.actorId && !isTestHost) return { error: 'Solo quien está describiendo puede pasar de tarjeta.' };
     state.queue.push(state.currentCard); // no se pierde, vuelve al fondo de la cola
     return cortarTarjetaSinPuntaje(state, 'paso');
   }
 
   if (payload && typeof payload.guess === 'string') {
     if (entrantId !== state.guessingTeam) return { error: 'A tu equipo no le toca adivinar en este bloque.' };
-    if (socketId === state.actorId) return { error: 'El que describe no puede adivinar.' };
+    if (playerId === state.actorId) return { error: 'El que describe no puede adivinar.' };
+
+    // Un intento cada tanto por persona, y sin listas largas de palabras:
+    // antes se podia escribir "perro gato casa sol ..." y alguna pegaba.
+    const ahora = Date.now();
+    state.ultimoIntento = state.ultimoIntento || {};
+    if (!isTestHost && ahora - (state.ultimoIntento[playerId] || 0) < MS_ENTRE_INTENTOS) {
+      return { error: 'Esperá un segundo antes de volver a intentar.' };
+    }
+    state.ultimoIntento[playerId] = ahora;
 
     const dicho = norm(payload.guess);
     const objetivo = norm(state.currentCard.word);
-    if (!dicho || !objetivo || !dicho.includes(objetivo)) {
+    const palabrasDeMas = dicho.split(/\s+/).filter(Boolean).length - objetivo.split(/\s+/).length;
+    if (!dicho || !objetivo || !dicho.includes(objetivo) || palabrasDeMas > MAX_PALABRAS_DE_MAS) {
       state.lastFeedback = { result: 'guess-fail', heard: payload.guess };
       return {};
     }
@@ -251,7 +267,21 @@ function publicView(state) {
   };
 }
 
+// Cambio quien esta disponible. Si se fue (o se corto) justo quien estaba
+// actuando, la tarjeta vuelve al principio de la cola y el anfitrion elige
+// a otro del mismo equipo, sin perder el tiempo que le quedaba al bloque.
+function onRosterChange(state, rosters) {
+  state.rosters = rosters;
+  if (state.finished || state.phase !== 'acting') return;
+  if ((rosters[state.actorTeam] || []).some((p) => p.id === state.actorId)) return;
+  if (state.currentCard) state.queue.unshift(state.currentCard);
+  state.currentCard = null;
+  state.actorId = null;
+  state.actorName = null;
+  state.phase = 'choosing-actor';
+}
+
 module.exports = {
   type, label, estimateSecondsPerRound, simultaneous, skipMemberGate,
-  createRound, answer, judge, tick, scores, carryOver, publicView
+  createRound, answer, onRosterChange, judge, tick, scores, carryOver, publicView
 };

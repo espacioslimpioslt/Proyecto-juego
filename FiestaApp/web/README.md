@@ -28,6 +28,22 @@ npm start
 Abrir `http://localhost:3000` — un tab como anfitrión, y otro tab (o el celu, si
 está en la misma red) como invitado con el código que aparece.
 
+### Jugar con gente que está lejos
+En la sala de espera hay un botón **📲 Invitar por WhatsApp** (y otro para
+copiar el link). El link lleva el código de la sala: quien lo abre cae directo
+en "Unirme" con el código cargado y solo pone su nombre. Así se suman hijos,
+parientes o amigos que están en otra ciudad, igual que si estuvieran en el
+living. Cuando ya están todos, el anfitrión puede **cerrar la sala** para que
+no entre nadie más, y si saca a alguien, ese celu no puede volver a entrar.
+
+### Si se corta la conexión
+Cada celu tiene una identidad propia que no depende de la conexión. Si se
+bloquea la pantalla, se cambia de app, se va el wifi o se recarga la página,
+el jugador **vuelve solo a su lugar**, con su equipo y en la misma prueba.
+Mientras no está, aparece con 📵 y su turno lo toma el siguiente de su equipo.
+Si no vuelve en 2 minutos (`GRACIA_MS`), sale de la sala; si un equipo se
+queda sin nadie, el programa termina con el puntaje que había.
+
 ### Modo prueba (probar solo, sin esperar a nadie)
 En la sala de espera el anfitrión puede tildar **"Modo prueba"**: arranca con una
 sola persona y le permite jugar por todos los equipos. Con el modo apagado el juego
@@ -314,6 +330,14 @@ misma inicial, que los paneles de memoria tengan 9 palabras, que las palabras de
 sopa entren en la grilla, y que las cruzadas del crucigrama **realmente crucen** en
 la letra correcta. Encontró 35 errores reales mientras se escribía el contenido
 inicial, así que conviene correrla siempre antes de dar un mazo por bueno.
+
+Para el motor de juego hay un simulador que juega cientos de partidas
+completas con bots (respuestas al azar, gente que se corta y vuelve, gente que
+se va) y avisa si alguna se traba o explota:
+
+```
+node tools/simular-partidas.js 20
+```
 
 ## Cómo se agrega una prueba nueva
 

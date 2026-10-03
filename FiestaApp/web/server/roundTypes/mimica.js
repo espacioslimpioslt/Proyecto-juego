@@ -4,7 +4,7 @@
 // apenas la sepa. El celu de quien adivina la escucha (reconocimiento de
 // voz) y valida sola contra la palabra objetivo -- por eso este juego
 // necesita saber quién puntual es cada jugador (roster) y quién mandó cada
-// acción (socketId), no solo "de qué equipo es", como los demás juegos.
+// acción (playerId), no solo "de qué equipo es", como los demás juegos.
 //
 // Se juega en bloques de tiempo fijo (no por cuántas palabras acierta el
 // actor): cada bloque, un equipo actúa y el otro adivina; se turnan y
@@ -35,6 +35,12 @@ function mecanica(difficulty) {
 }
 
 const decks = loadDecks('varios', 'mimica');
+
+// Limites para adivinar: tiempo minimo entre intentos de una misma persona y
+// cuantas palabras "de relleno" se toleran alrededor de la respuesta (el
+// reconocimiento de voz suele traer cosas como "es un ..." o "¡ya sé, ...!").
+const MS_ENTRE_INTENTOS = 1500;
+const MAX_PALABRAS_DE_MAS = 3;
 
 function norm(s) {
   return String(s || '').trim().toLowerCase()
@@ -163,14 +169,14 @@ function judge(state, payload) {
 // adivinar (por eso este juego usa skipMemberGate — no hay un solo
 // representante fijo por equipo).
 // isTestHost: en modo prueba el anfitrion controla a todos los jugadores
-// inventados desde su unico socket real, asi que su socketId no va a
+// inventados desde su unico socket real, asi que su playerId no va a
 // coincidir nunca con el actorId elegido -- se lo deja pasar igual.
-function answer(state, entrantId, payload, socketId, isTestHost) {
+function answer(state, entrantId, payload, playerId, isTestHost) {
   if (state.finished) return { error: 'Este juego ya termino.' };
   if (state.phase !== 'acting') return { error: 'Todavía no arrancó a actuar nadie en este bloque.' };
 
   if (payload && payload.pasar) {
-    if (socketId !== state.actorId && !isTestHost) return { error: 'Solo quien está actuando puede pasar de palabra.' };
+    if (playerId !== state.actorId && !isTestHost) return { error: 'Solo quien está actuando puede pasar de palabra.' };
     state.queue.push(state.currentWord); // no se pierde, vuelve al fondo de la cola
     state.currentWord = nextWord(state);
     state.lastFeedback = { result: 'paso' };
@@ -180,11 +186,21 @@ function answer(state, entrantId, payload, socketId, isTestHost) {
 
   if (payload && typeof payload.guess === 'string') {
     if (entrantId !== state.guessingTeam) return { error: 'A tu equipo no le toca adivinar en este bloque.' };
-    if (socketId === state.actorId) return { error: 'El que actúa no puede adivinar.' };
+    if (playerId === state.actorId) return { error: 'El que actúa no puede adivinar.' };
+
+    // Un intento cada tanto por persona, y sin listas largas de palabras:
+    // antes se podia escribir "perro gato casa sol ..." y alguna pegaba.
+    const ahora = Date.now();
+    state.ultimoIntento = state.ultimoIntento || {};
+    if (!isTestHost && ahora - (state.ultimoIntento[playerId] || 0) < MS_ENTRE_INTENTOS) {
+      return { error: 'Esperá un segundo antes de volver a intentar.' };
+    }
+    state.ultimoIntento[playerId] = ahora;
 
     const dicho = norm(payload.guess);
     const objetivo = norm(state.currentWord);
-    if (!dicho || !objetivo || !dicho.includes(objetivo)) {
+    const palabrasDeMas = dicho.split(/\s+/).filter(Boolean).length - objetivo.split(/\s+/).length;
+    if (!dicho || !objetivo || !dicho.includes(objetivo) || palabrasDeMas > MAX_PALABRAS_DE_MAS) {
       state.lastFeedback = { result: 'guess-fail', heard: payload.guess };
       return {};
     }
@@ -238,7 +254,21 @@ function publicView(state) {
   };
 }
 
+// Cambio quien esta disponible. Si se fue (o se corto) justo quien estaba
+// actuando, la palabra vuelve al principio de la cola y el anfitrion elige
+// a otro del mismo equipo, sin perder el tiempo que le quedaba al bloque.
+function onRosterChange(state, rosters) {
+  state.rosters = rosters;
+  if (state.finished || state.phase !== 'acting') return;
+  if ((rosters[state.actorTeam] || []).some((p) => p.id === state.actorId)) return;
+  if (state.currentWord) state.queue.unshift(state.currentWord);
+  state.currentWord = null;
+  state.actorId = null;
+  state.actorName = null;
+  state.phase = 'choosing-actor';
+}
+
 module.exports = {
   type, label, estimateSecondsPerRound, simultaneous, skipMemberGate,
-  createRound, answer, judge, tick, scores, carryOver, publicView
+  createRound, answer, onRosterChange, judge, tick, scores, carryOver, publicView
 };

@@ -62,6 +62,13 @@ function chequearDicho(dicho, secuenciaEsperada) {
   return true;
 }
 
+// "nube" como palabra suelta dentro de lo dicho (no como parte de otra).
+function contienePalabra(texto, palabra) {
+  const t = ` ${norm(texto).replace(/[^a-z0-9ñ]+/g, ' ')} `;
+  const p = norm(palabra).replace(/[^a-z0-9ñ]+/g, ' ').trim();
+  return !!p && t.includes(` ${p} `);
+}
+
 function createRound({ entrantIds, rosters = {}, usedDeckIds = [], region, adultsOnly, difficulty }) {
   const m = mecanica(difficulty);
   const deck = pickDeck(decks, usedDeckIds, { region, adultsOnly, difficulty });
@@ -132,7 +139,14 @@ function answer(state, entrantId, payload) {
   const respuestaNueva = q.options[q.correctIndex];
   const secuenciaEsperada = [...entrant.chain, respuestaNueva];
 
-  if (chequearDicho(dicho, secuenciaEsperada)) {
+  // Si en el audio aparecen OTRAS opciones de la pregunta, no vale: si no,
+  // alcanzaba con decir las 4 opciones seguidas para acertar siempre.
+  const otrasOpciones = q.options.filter((o, i) => i !== q.correctIndex
+    && norm(o) !== norm(respuestaNueva)
+    && !entrant.chain.some((c) => norm(c) === norm(o))); // las de la cadena si hay que decirlas
+  const dijoOtras = otrasOpciones.some((o) => contienePalabra(dicho, o));
+
+  if (!dijoOtras && chequearDicho(dicho, secuenciaEsperada)) {
     entrant.chain.push(respuestaNueva);
     entrant.helpShuffled = shuffle(entrant.chain);
     entrant.secondsWon = entrant.chain.length * SEGUNDOS_POR_ESLABON;
@@ -217,4 +231,10 @@ function publicView(state) {
   };
 }
 
-module.exports = { type, label, estimateSecondsPerRound, createRound, answer, judge, scores, carryOver, publicView };
+// Cambio quien esta disponible: la vuelta "todos intentaron y nadie pudo"
+// se cuenta sobre los que estan, no sobre los que se fueron.
+function onRosterChange(state, rosters) {
+  state.rosters = rosters;
+}
+
+module.exports = { type, label, estimateSecondsPerRound, createRound, answer, onRosterChange, judge, scores, carryOver, publicView };

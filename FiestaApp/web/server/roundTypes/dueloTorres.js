@@ -107,9 +107,9 @@ function createRound({ entrantIds, rosters = {}, usedDeckIds = [], region, adult
 }
 
 // optionIndex: la opción que eligió quien le toca responder en este momento
-// (campeón o retador, según turnoDe). socketId identifica a la persona real
+// (campeón o retador, según turnoDe). playerId identifica a la persona real
 // que mandó la respuesta -- solo vale si es justo quien está en el duelo.
-function answer(state, entrantId, optionIndex, socketId, isTestHost) {
+function answer(state, entrantId, optionIndex, playerId, isTestHost) {
   if (state.finished) return { error: 'Este juego ya termino.' };
   if (state.phase !== 'duelo' || !state.currentQuestion) return { error: 'No hay una pregunta activa.' };
 
@@ -119,7 +119,7 @@ function answer(state, entrantId, optionIndex, socketId, isTestHost) {
   const nombreEsperado = esCampeonTurno ? state.campeonName : state.retadorName;
 
   if (entrantId !== equipoEsperado) return { error: 'No es el turno de tu equipo en este duelo.' };
-  if (!isTestHost && socketId !== idEsperado) return { error: `Le toca responder a ${nombreEsperado}.` };
+  if (!isTestHost && playerId !== idEsperado) return { error: `Le toca responder a ${nombreEsperado}.` };
 
   const q = state.currentQuestion;
   const isCorrect = optionIndex === q.correctIndex;
@@ -189,7 +189,26 @@ function publicView(state) {
   };
 }
 
+// Cambio quien esta disponible (alguien se desconecto o se fue). Si justo
+// era el campeon o el retador, lo reemplaza el siguiente de su equipo -- si
+// no, el duelo esperaria para siempre a alguien que no esta.
+function onRosterChange(state, rosters) {
+  state.rosters = rosters;
+  if (state.finished || state.phase !== 'duelo') return;
+  const sigue = (team, id) => (rosters[team] || []).some((p) => p.id === id);
+  if (!sigue(state.campeonTeam, state.campeonId)) {
+    const c = pickDuelist(state, state.campeonTeam);
+    state.campeonId = c ? c.id : null;
+    state.campeonName = c ? c.name : null;
+  }
+  if (!sigue(state.retadorTeam, state.retadorId)) {
+    const r = pickDuelist(state, state.retadorTeam);
+    state.retadorId = r ? r.id : null;
+    state.retadorName = r ? r.name : null;
+  }
+}
+
 module.exports = {
   type, label, estimateSecondsPerRound, skipMemberGate,
-  createRound, answer, scores, carryOver, publicView
+  createRound, answer, onRosterChange, scores, carryOver, publicView
 };
