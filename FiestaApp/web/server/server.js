@@ -2,6 +2,7 @@ const path = require('path');
 const http = require('http');
 const crypto = require('crypto');
 const express = require('express');
+const compression = require('compression');
 const { Server } = require('socket.io');
 const rooms = require('./rooms');
 
@@ -12,7 +13,10 @@ const server = http.createServer(app);
 // del equipo, en vez de dejar a todos esperando casi un minuto.
 const io = new Server(server, { pingInterval: 10000, pingTimeout: 8000 });
 
-app.use(express.static(path.join(__dirname, '..', 'public')));
+// Comprime lo que se manda (el 3D de la portada pesa ~680 KB sin comprimir,
+// ~170 KB comprimido): importa mucho con datos moviles.
+app.use(compression());
+app.use(express.static(path.join(__dirname, '..', 'public'), { maxAge: '1h' }));
 
 app.get('/api/catalog', (req, res) => {
   res.json(rooms.getCatalog());

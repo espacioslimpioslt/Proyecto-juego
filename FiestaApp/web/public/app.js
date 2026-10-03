@@ -56,6 +56,7 @@ let currentScreenId = null;
 
 function showScreen(id) {
   const changed = id !== currentScreenId;
+  const previo = currentScreenId;
   currentScreenId = id;
   document.querySelectorAll('.screen').forEach((el) => el.classList.add('hidden'));
   const target = $(id);
@@ -66,6 +67,14 @@ function showScreen(id) {
   // Transición suave solo cuando de verdad se cambia de pantalla -- no en cada
   // actualización de estado dentro de la misma pantalla (evita reiniciar la
   // animación una vez por segundo mientras corre un reloj, por ejemplo).
+  if (changed && previo !== null) {
+    // Cortina de luz + "whoosh" al pasar de una sección a otra.
+    const cortina = $('curtain');
+    cortina.classList.remove('run');
+    void cortina.offsetWidth;
+    cortina.classList.add('run');
+    if (window.Sfx) Sfx.play('whoosh');
+  }
   if (changed) {
     target.classList.remove('screen-enter');
     void target.offsetWidth;
@@ -153,8 +162,20 @@ const UPCOMING = [
 // Categorías de los programas ya construidos (el servidor no las manda, son
 // editoriales — a medida que haya más programas reales esto se puede mover
 // al manifest.json de cada uno).
-const REAL_CATEGORIES = { 'el-rosco': ['cartelera', 'familia', 'amigos'] };
-const REAL_ICONS = { 'el-rosco': '🎡' };
+const REAL_CATEGORIES = {
+  'el-rosco': ['cartelera', 'familia', 'amigos'],
+  'ahora-caigo': ['cartelera', 'familia', 'amigos'],
+  varios: ['cartelera', 'amigos', 'pareja']
+};
+const REAL_ICONS = { 'el-rosco': '🎡', 'ahora-caigo': '🗼', varios: '🕵️' };
+
+// Color propio de cada Programa (portada, escenario y botones).
+const PROGRAM_THEME = {
+  'el-rosco': ['#ffb23f', '#ff6b3d'],
+  'ahora-caigo': ['#3de6ff', '#5b8dd6'],
+  varios: ['#ff3d7f', '#8b5cff']
+};
+function themeFor(id) { return PROGRAM_THEME[id] || ['#8b5cff', '#3de6ff']; }
 
 const GRADIENTS = [
   'linear-gradient(135deg,#3a2a6d,#7a3b69)',
@@ -203,6 +224,12 @@ function openProgram(program) {
     return showError(`"${program.name}" está en camino — todavía no se puede jugar.`);
   }
   chosenProgramId = program.id;
+  const reel = $('create-reel');
+  const [ca, cb] = themeFor(program.id);
+  reel.style.setProperty('--pa', ca);
+  reel.style.setProperty('--pb', cb);
+  reel.innerHTML = window.Reels ? Reels.reelHtml(program) : '';
+  if (window.Reels) Reels.observarReels(reel);
   $('create-title').textContent = program.name;
   $('create-program-desc').textContent = program.description || '';
   $('create-games').innerHTML = (program.gameLabels || [])
@@ -216,7 +243,7 @@ function posterHtml(program, rank) {
     : (program.paused ? 'En pausa' : 'Próximamente');
   const posterButton = `
     <button class="poster${program.playable ? '' : ' locked'}" data-id="${program.id}" aria-label="${program.name}">
-      <div class="poster-art" style="background:${gradientFor(program.id)}">${program.icon}</div>
+      <div class="poster-art" style="--pa:${themeFor(program.id)[0]};--pb:${themeFor(program.id)[1]}">${window.Reels ? Reels.reelHtml(program) : program.icon}</div>
       ${!program.playable ? `<span class="poster-badge">${program.paused ? 'En pausa' : 'Próximamente'}</span><span class="poster-lock">🔒</span>` : ''}
     </button>
   `;
@@ -233,33 +260,111 @@ function posterHtml(program, rank) {
   `;
 }
 
-function renderHero(all) {
-  const featured = all.find((p) => p.playable) || all[0];
-  if (!featured) return;
+// ---------- Hero: escenario + programa destacado que rota ----------
+// Arriba de todo, un "estudio de TV": en celus que pueden, un escenario 3D
+// (public/fx/stage3d.js) con el objeto de cada Programa; si no, luces en
+// CSS. El Programa destacado cambia solo cada 8 segundos (o tocando los
+// puntitos), como la portada de una plataforma de streaming.
+let heroDestacados = [];
+let heroIndex = 0;
+let heroTimer = null;
+let heroStage = null;
+const HERO_MS = 8000;
+
+function puede3D() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  try {
+    const c = document.createElement('canvas');
+    return !!(c.getContext('webgl2') || c.getContext('webgl'));
+  } catch (e) { return false; }
+}
+
+function iniciarEscenario3D() {
+  if (heroStage !== null || !puede3D()) return;
+  heroStage = false; // "cargando": no se pide dos veces
+  import('./fx/stage3d.js')
+    .then((m) => {
+      heroStage = m.createStage($('hero-canvas'));
+      const actual = heroDestacados[heroIndex];
+      if (actual) heroStage.setProgram(actual.id);
+      $('hero').classList.add('has-3d');
+    })
+    .catch(() => { heroStage = false; });
+}
+
+function mostrarHero(i) {
+  if (!heroDestacados.length) return;
+  heroIndex = (i + heroDestacados.length) % heroDestacados.length;
+  const p = heroDestacados[heroIndex];
+  const [a, b] = themeFor(p.id);
   const hero = $('hero');
-  hero.style.background = gradientFor(featured.id);
-  hero.innerHTML = `
-    <span class="hero-icon-bg">${featured.icon}</span>
-    <div class="hero-content">
-      <p class="hero-tag">🔴 En cartelera ahora</p>
-      <h1 class="hero-title">${featured.name}</h1>
-      <div class="hero-meta">
-        <b>● Jugable ya</b>
-        <span>${featured.minPlayers}–${featured.maxPlayers} jugadores</span>
-        <span>${(featured.gameLabels || []).length} pruebas</span>
-      </div>
-      <p class="hero-lede">${featured.description || ''}</p>
-      <div class="hero-ctas">
-        <button class="hero-btn play" id="hero-play">▶ Jugar ahora</button>
-        <button class="hero-btn info" id="hero-info">ℹ Más información</button>
-      </div>
+  hero.style.setProperty('--hero-a', a);
+  hero.style.setProperty('--hero-b', b);
+
+  const juegos = (p.gameLabels || []).map((g) => `<span class="hero-game">${g.icon} ${esc(g.label)}</span>`).join('');
+  const content = $('hero-content');
+  content.classList.remove('hero-in');
+  void content.offsetWidth; // reinicia la animación de entrada
+  content.innerHTML = `
+    <p class="hero-tag"><span class="live-dot"></span>En vivo · ${heroIndex + 1} de ${heroDestacados.length}</p>
+    <h1 class="hero-title">${esc(p.name)}</h1>
+    <p class="hero-lede">${esc(p.tagline || '')}</p>
+    <div class="hero-meta">
+      <span class="hero-chip">👥 ${p.minPlayers}–${p.maxPlayers} jugadores</span>
+      <span class="hero-chip">🎬 ${(p.gameLabels || []).length} ${(p.gameLabels || []).length === 1 ? 'prueba' : 'pruebas'}</span>
     </div>
-  `;
-  $('hero-play').addEventListener('click', () => openProgram(featured));
+    <div class="hero-games">${juegos}</div>
+    <div class="hero-ctas">
+      <button class="hero-btn play" id="hero-play">▶ Jugar ahora</button>
+      <button class="hero-btn info" id="hero-info">Ver todos</button>
+    </div>`;
+  content.classList.add('hero-in');
+  $('hero-play').addEventListener('click', () => { if (window.Sfx) Sfx.play('pop'); openProgram(p); });
   $('hero-info').addEventListener('click', () => {
     document.getElementById('row-cartelera')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
+
+  $('hero-dots').innerHTML = heroDestacados.map((x, k) =>
+    `<button class="hero-dot${k === heroIndex ? ' on' : ''}" data-k="${k}" aria-label="${esc(x.name)}"><i style="animation-duration:${HERO_MS}ms"></i></button>`).join('');
+  if (heroStage) heroStage.setProgram(p.id);
 }
+
+function programarRotacionHero() {
+  clearInterval(heroTimer);
+  if (heroDestacados.length < 2) return;
+  heroTimer = setInterval(() => {
+    // currentScreenId es null mientras no se navegó: la portada es la pantalla inicial.
+    if ((currentScreenId || 'screen-start') === 'screen-start' && !document.hidden) mostrarHero(heroIndex + 1);
+  }, HERO_MS);
+}
+
+function renderHero(all) {
+  heroDestacados = all.filter((p) => p.playable);
+  if (!heroDestacados.length) return;
+  mostrarHero(heroIndex);
+  programarRotacionHero();
+  iniciarEscenario3D();
+}
+
+$('hero-dots').addEventListener('click', (e) => {
+  const dot = e.target.closest('.hero-dot');
+  if (!dot) return;
+  mostrarHero(Number(dot.dataset.k));
+  programarRotacionHero();
+});
+
+// Deslizar el destacado con el dedo, como un carrusel.
+(function () {
+  let x0 = null;
+  const hero = $('hero');
+  hero.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  hero.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    x0 = null;
+    if (Math.abs(dx) > 50) { mostrarHero(heroIndex + (dx < 0 ? 1 : -1)); programarRotacionHero(); }
+  });
+}());
 
 function renderRow(container, id, title, items, ranked) {
   if (!items.length) return;
@@ -298,6 +403,7 @@ function renderRows() {
   renderRow(container, 'row-pareja', '💑 Para jugar en pareja', ALL_PROGRAMS.filter((p) => p.categories.includes('pareja')));
   renderRow(container, 'row-ninos', '🧒 Para los más chicos', ALL_PROGRAMS.filter((p) => p.categories.includes('ninos')));
   renderRow(container, 'row-proximamente', '🔜 Próximamente en la galería', ALL_PROGRAMS.filter((p) => !p.playable));
+  if (window.Reels) Reels.observarReels(container);
 }
 
 $('rows-container').addEventListener('click', (e) => {
@@ -381,6 +487,18 @@ $('pref-voice').addEventListener('change', (e) => {
 });
 
 $('btn-go-join').addEventListener('click', () => showScreen('screen-join'));
+
+// Botón de sonido en la barra de arriba (queda guardado en el celu).
+function pintarBotonSonido() {
+  const on = !window.Sfx || Sfx.activo;
+  $('btn-sound').textContent = on ? '🔊' : '🔇';
+  $('btn-sound').setAttribute('aria-label', on ? 'Silenciar sonidos' : 'Activar sonidos');
+}
+$('btn-sound').addEventListener('click', () => {
+  if (window.Sfx) Sfx.setActivo(!Sfx.activo);
+  pintarBotonSonido();
+});
+pintarBotonSonido();
 document.querySelectorAll('.btn-back').forEach((btn) => {
   btn.addEventListener('click', () => showScreen(btn.dataset.back));
 });
@@ -1122,6 +1240,7 @@ function maybeFlashFeedback(round) {
   board.classList.remove('flash-correct', 'flash-wrong');
   void board.offsetWidth; // fuerza el reflow para poder reiniciar la animación
   board.classList.add(fb.result === 'correct' ? 'flash-correct' : 'flash-wrong');
+  if (window.Sfx) Sfx.play(fb.result === 'correct' ? 'acierto' : 'error');
 }
 
 const BOARDS = {
@@ -2091,6 +2210,7 @@ function renderImpostor(round, container, roundKey) {
     const meToca = round.turnoDe === myId;
     if (meToca || iAmTestHost) {
       if (meToca && navigator.vibrate) navigator.vibrate(120);
+      if (meToca && window.Sfx) Sfx.play('turno');
       const form = document.createElement('form');
       form.className = 'imp-form';
       form.innerHTML = `
@@ -2469,11 +2589,16 @@ function renderRoundResult() {
   }
 }
 
+let lastFanfarria = null;
 function renderResults() {
   const sorted = Object.entries(room.scores).sort((a, b) => b[1] - a[1]);
   renderScoreList($('final-scores'), sorted, false);
   const leader = sorted[0];
   if (leader) narrate('fin-programa', `Fin del programa. Gana ${entrantLabel(leader[0])}.`);
+  if (leader && window.Sfx && lastFanfarria !== room.code + room.currentRoundNumber) {
+    lastFanfarria = room.code + room.currentRoundNumber;
+    Sfx.play('fanfarria');
+  }
 
   const banner = $('winner-banner');
   if (leader) {

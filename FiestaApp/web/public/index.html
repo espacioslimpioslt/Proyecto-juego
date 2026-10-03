@@ -4,16 +4,26 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Soy Participante</title>
+<meta name="theme-color" content="#07081a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 <div id="error-toast" class="toast hidden"></div>
+<!-- Cortina de luz que barre la pantalla al cambiar de sección -->
+<div id="curtain" class="curtain" aria-hidden="true"></div>
 
 <header class="navbar" id="navbar">
   <div class="navbar-inner">
     <button id="btn-menu-open" class="menu-btn" aria-label="Abrir menú">☰</button>
-    <span class="brand">SOY<span class="brand-accent">PARTICIPANTE</span></span>
+    <span class="brand logo" aria-label="Soy Participante">
+      <span class="logo-soy">SOY</span><span class="logo-part">PARTICIPANTE</span>
+      <span class="on-air" aria-hidden="true"><i></i>ON AIR</span>
+    </span>
     <span id="room-code-badge" class="room-code-badge hidden"></span>
+    <button id="btn-sound" class="sound-btn" aria-label="Sonido">🔊</button>
   </div>
 </header>
 
@@ -57,8 +67,15 @@
   <!-- Portada estilo plataforma de streaming -->
   <section id="screen-start" class="screen screen-wide">
 
-    <!-- Hero: el programa destacado -->
-    <div class="hero" id="hero"></div>
+    <!-- Hero: escenario (3D si el celu puede) + el programa destacado, que rota -->
+    <div class="hero" id="hero">
+      <div class="hero-stage" aria-hidden="true">
+        <div class="stage-css"><i></i><i></i><i></i></div>
+        <canvas id="hero-canvas"></canvas>
+      </div>
+      <div class="hero-content" id="hero-content"></div>
+      <div class="hero-dots" id="hero-dots"></div>
+    </div>
 
     <!-- Filas horizontales por categoría -->
     <div id="rows-container" class="rows-container"></div>
@@ -66,6 +83,7 @@
   </section>
 
   <section id="screen-create" class="screen hidden">
+    <div id="create-reel" class="create-reel"></div>
     <h1 id="create-title">Crear sala</h1>
     <p id="create-program-desc" class="muted"></p>
     <div id="create-games" class="games-preview"></div>
@@ -215,6 +233,8 @@
 </nav>
 
 <script src="/socket.io/socket.io.js"></script>
+<script src="fx/sfx.js"></script>
+<script src="fx/reels.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

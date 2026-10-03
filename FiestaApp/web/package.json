@@ -4,10 +4,15 @@
   "description": "Motor comun (la cascara) de la app de fiesta: sala, codigo, equipos, rondas y puntaje. Los Programas (El Rosco y demas) se conectan como tipos de ronda.",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js"
+    "start": "node server/server.js",
+    "vendor": "node -e \"require('fs').copyFileSync('node_modules/three/build/three.module.min.js','public/vendor/three.module.min.js')\""
   },
   "dependencies": {
+    "compression": "^1.8.2",
     "express": "^4.19.2",
     "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "three": "^0.170.0"
   }
 }
