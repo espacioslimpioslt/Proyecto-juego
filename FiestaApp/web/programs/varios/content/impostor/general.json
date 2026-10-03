@@ -1,0 +1,264 @@
+{
+  "theme": "Impostor — general",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "categorias": [
+    {
+      "nombre": "Frutas",
+      "palabras": [
+        "Manzana",
+        "Banana",
+        "Frutilla",
+        "Naranja",
+        "Sandía",
+        "Uva",
+        "Durazno",
+        "Pera",
+        "Ananá",
+        "Kiwi",
+        "Mango",
+        "Cereza"
+      ]
+    },
+    {
+      "nombre": "Comidas",
+      "palabras": [
+        "Pizza",
+        "Empanada",
+        "Milanesa",
+        "Asado",
+        "Fideos",
+        "Hamburguesa",
+        "Ensalada",
+        "Sushi",
+        "Tarta",
+        "Ñoquis",
+        "Locro",
+        "Sopa"
+      ]
+    },
+    {
+      "nombre": "Animales",
+      "palabras": [
+        "Perro",
+        "Gato",
+        "Caballo",
+        "Elefante",
+        "Jirafa",
+        "León",
+        "Pingüino",
+        "Delfín",
+        "Mono",
+        "Tortuga",
+        "Vaca",
+        "Loro"
+      ]
+    },
+    {
+      "nombre": "Lugares",
+      "palabras": [
+        "Playa",
+        "Escuela",
+        "Hospital",
+        "Aeropuerto",
+        "Supermercado",
+        "Cine",
+        "Plaza",
+        "Biblioteca",
+        "Estadio",
+        "Zoológico",
+        "Montaña",
+        "Banco"
+      ]
+    },
+    {
+      "nombre": "Objetos de la casa",
+      "palabras": [
+        "Heladera",
+        "Sillón",
+        "Lámpara",
+        "Espejo",
+        "Almohada",
+        "Escoba",
+        "Microondas",
+        "Televisor",
+        "Reloj",
+        "Alfombra",
+        "Cortina",
+        "Llave"
+      ]
+    },
+    {
+      "nombre": "Profesiones",
+      "palabras": [
+        "Médico",
+        "Bombero",
+        "Maestra",
+        "Cocinero",
+        "Policía",
+        "Piloto",
+        "Peluquero",
+        "Carpintero",
+        "Dentista",
+        "Mecánico",
+        "Veterinario",
+        "Panadero"
+      ]
+    },
+    {
+      "nombre": "Deportes",
+      "palabras": [
+        "Fútbol",
+        "Tenis",
+        "Básquet",
+        "Natación",
+        "Vóley",
+        "Rugby",
+        "Boxeo",
+        "Ciclismo",
+        "Golf",
+        "Hockey",
+        "Ajedrez",
+        "Atletismo"
+      ]
+    },
+    {
+      "nombre": "Transportes",
+      "palabras": [
+        "Colectivo",
+        "Avión",
+        "Bicicleta",
+        "Tren",
+        "Barco",
+        "Moto",
+        "Subte",
+        "Taxi",
+        "Helicóptero",
+        "Camión",
+        "Ambulancia",
+        "Monopatín"
+      ]
+    },
+    {
+      "nombre": "Ropa",
+      "palabras": [
+        "Campera",
+        "Bufanda",
+        "Zapatillas",
+        "Gorro",
+        "Pollera",
+        "Corbata",
+        "Pijama",
+        "Medias",
+        "Guantes",
+        "Malla",
+        "Sombrero",
+        "Pantalón"
+      ]
+    },
+    {
+      "nombre": "Instrumentos",
+      "palabras": [
+        "Guitarra",
+        "Piano",
+        "Batería",
+        "Violín",
+        "Flauta",
+        "Trompeta",
+        "Bombo",
+        "Acordeón",
+        "Arpa",
+        "Saxofón",
+        "Bandoneón",
+        "Charango"
+      ]
+    },
+    {
+      "nombre": "Fiestas y celebraciones",
+      "palabras": [
+        "Cumpleaños",
+        "Casamiento",
+        "Navidad",
+        "Año Nuevo",
+        "Carnaval",
+        "Graduación",
+        "Bautismo",
+        "Halloween",
+        "Pascua",
+        "Día del Padre",
+        "Aniversario",
+        "Asado del domingo"
+      ]
+    },
+    {
+      "nombre": "En la cocina",
+      "palabras": [
+        "Sartén",
+        "Cuchara",
+        "Olla",
+        "Tenedor",
+        "Horno",
+        "Licuadora",
+        "Colador",
+        "Tabla",
+        "Cuchillo",
+        "Pava",
+        "Taza",
+        "Rallador"
+      ]
+    },
+    {
+      "nombre": "Naturaleza",
+      "palabras": [
+        "Volcán",
+        "Río",
+        "Desierto",
+        "Bosque",
+        "Cascada",
+        "Isla",
+        "Glaciar",
+        "Lago",
+        "Selva",
+        "Cueva",
+        "Arcoíris",
+        "Tormenta"
+      ]
+    },
+    {
+      "nombre": "Cuerpo humano",
+      "palabras": [
+        "Rodilla",
+        "Codo",
+        "Oreja",
+        "Nariz",
+        "Corazón",
+        "Pulmón",
+        "Ceja",
+        "Tobillo",
+        "Hombro",
+        "Muñeca",
+        "Dedo",
+        "Ombligo"
+      ]
+    },
+    {
+      "nombre": "Juguetes y juegos",
+      "palabras": [
+        "Pelota",
+        "Muñeca de trapo",
+        "Rompecabezas",
+        "Barrilete",
+        "Trompo",
+        "Yoyó",
+        "Dominó",
+        "Ludo",
+        "Cartas",
+        "Bolitas",
+        "Patineta",
+        "Burbujas"
+      ]
+    }
+  ]
+}

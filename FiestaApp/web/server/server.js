@@ -75,8 +75,13 @@ function identify(socket) {
   return playerId;
 }
 
+// Cada jugador recibe su propia version del estado: algunos juegos tienen
+// datos secretos por persona (ver privateView en El Impostor).
 function broadcast(room) {
-  io.to(room.code).emit('room-update', rooms.publicState(room));
+  for (const p of room.players) {
+    if (String(p.id).startsWith('test:')) continue; // inventados del modo prueba: no tienen celu
+    io.to(`p:${p.id}`).emit('room-update', rooms.publicState(room, p.id));
+  }
 }
 
 // ---------- Limite de mensajes ----------

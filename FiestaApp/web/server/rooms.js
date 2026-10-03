@@ -19,7 +19,8 @@ const roundTypes = {
   mimica: require('./roundTypes/mimica'),
   'palabra-prohibida': require('./roundTypes/palabraProhibida'),
   'duelo-torres': require('./roundTypes/dueloTorres'),
-  'escalera-final': require('./roundTypes/escaleraFinal')
+  'escalera-final': require('./roundTypes/escaleraFinal'),
+  impostor: require('./roundTypes/impostor')
 };
 
 // Catalogo de Programas: se arma solo escaneando `programs/*/manifest.json`.
@@ -91,7 +92,8 @@ const ICONS = {
   mimica: '🎭',
   'palabra-prohibida': '🤐',
   'duelo-torres': '🗼',
-  'escalera-final': '🪜'
+  'escalera-final': '🪜',
+  impostor: '🕵️'
 };
 
 // El catalogo se muestra ANTES de crear una sala (pantalla de portada), asi que
@@ -491,6 +493,12 @@ function startGame(room, hostPlayerId) {
     if (!room.gameSequence.length) return { error: 'Ese Programa no tiene juegos configurados.' };
   }
 
+  // Juegos que necesitan un minimo de personas (ej. El Impostor: con 2 no
+  // hay a quien sospechar). Se avisa antes de arrancar, no a mitad.
+  const cantidad = room.players.length;
+  const faltan = room.gameSequence.map((g) => roundTypes[g]).find((t) => t.minJugadores && cantidad < t.minJugadores);
+  if (faltan) return { error: `${faltan.label} necesita al menos ${faltan.minJugadores} jugadores.` };
+
   room.currentRoundIndex = 0;
   room.endedEarly = false;
   room.scores = {};
@@ -708,9 +716,15 @@ function removePlayer(playerId) {
 
 // Estado que se manda por WebSocket a todos en la sala. Mientras la ronda esta
 // "playing" no se manda la respuesta correcta, para no arruinar el juego.
-function publicState(room) {
+// viewerId: a quien se le manda. Algunos juegos (ej. El Impostor) tienen
+// informacion distinta para cada persona (privateView): la palabra secreta
+// no puede viajar al celu del impostor, ni siquiera escondida.
+function publicState(room, viewerId) {
   const program = room.programId ? programs[room.programId] : null;
   const roundType = roundTypeOf(room);
+  const privado = room.roundState && roundType && roundType.privateView && viewerId
+    ? roundType.privateView(room.roundState, viewerId, room.testMode && isHost(room, viewerId))
+    : null;
 
   return {
     code: room.code,
@@ -746,7 +760,7 @@ function publicState(room) {
       : {},
     currentRoundNumber: room.currentRoundIndex + 1,
     totalRounds: (room.gameSequence && room.gameSequence.length) || room.roundCount,
-    round: room.roundState && roundType ? roundType.publicView(room.roundState) : null,
+    round: room.roundState && roundType ? { ...roundType.publicView(room.roundState), privado } : null,
     gameSequence: (room.gameSequence || []).map((g) => (roundTypes[g] ? roundTypes[g].label : g)),
     timeCarryOver: room.timeCarryOver,
     lastRoundSeconds: room.lastRoundSeconds || null,

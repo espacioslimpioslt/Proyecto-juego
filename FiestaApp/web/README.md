@@ -175,6 +175,7 @@ terminar el último tildado se pasa directo a la pantalla de resultados.
 
 | Juego | Qué se hace |
 |---|---|
+| **El Impostor** | Todos reciben la misma palabra secreta menos uno, el impostor. Por turnos, cada uno escribe una pista corta (sin decir la palabra) que aparece en la pantalla de todos; después se vota tocando a quien se sospecha. Si atrapan al impostor, tiene un **robo final**: adivinar la palabra entre 6 opciones para robarse el caso. Necesita al menos 3 personas |
 | **Mímica** | Roles cruzados: uno de un equipo actúa en silencio, cualquiera del OTRO equipo dice la respuesta apretando el micrófono — el celu la reconoce y valida sola. Se juega por bloques de tiempo fijo que se turnan hasta que todos actuaron |
 | **Adiviná la Canción** | Roles cruzados: un equipo pone música (cualquiera, desde su propio celu), cualquiera del otro equipo responde en voz alta apenas la sepa y el anfitrión confirma. Se invierten los roles en cada canción |
 | **La Cadena** | Memoria en equipo, al estilo "iba al mercado y compré...": pregunta 1 → "sol". Pregunta 2 → hay que decir "sol" y recién ahí la respuesta nueva. Pregunta 3 → "sol, nube" y la nueva. Todo en un solo audio, el celu lo valida. Si alguien falla, la cadena NO se pierde: le toca a la siguiente persona del equipo, con la misma cadena y la misma pregunta |
@@ -183,6 +184,24 @@ terminar el último tildado se pasa directo a la pantalla de resultados.
 Como no hay rosco final, ninguno de estos juegos reparte "segundos" — el
 puntaje de cada uno (aciertos, largo de la cadena lograda, etc.) se suma tal
 cual al marcador general del Programa.
+
+### Sobre El Impostor
+- **Cada celu recibe solo lo suyo**: la palabra secreta nunca viaja al celu
+  del impostor, ni siquiera escondida (el servidor arma una vista por persona,
+  `privateView`). La palabra se ve manteniendo apretada una carta, para que el
+  de al lado no espíe.
+- **Pistas escritas**: se juega igual en el living que a distancia, sin
+  videollamada. El servidor rechaza una pista que diga la palabra (o un pedazo
+  largo de ella). Si el impostor la "adivina" como pista se acepta:
+  rechazarla le confirmaría cuál es.
+- **Dificultad**: en fácil todos ven la categoría; en normal nadie; en difícil
+  ("a ciegas") el impostor recibe otra palabra de la misma categoría y no
+  sabe que es el impostor.
+- **Puntos**: cada voto acertado suma 1 al equipo de quien votó; el impostor
+  suma 3 a su equipo si escapa (o si hay empate) o si roba el caso.
+- Se juegan 3 casos, con relojes para pistas, votación y robo: si alguien no
+  contesta, el juego sigue solo. El anfitrión puede saltear un turno o cerrar
+  la votación antes.
 
 ### Sobre Mímica: reconocimiento de voz real
 A diferencia de Tutifruti/La Cadena/Adiviná la Canción (donde el anfitrión

@@ -168,6 +168,29 @@ function validarPalabraProhibida(deck) {
   console.log(`   ${(deck.cards || []).length} tarjetas`);
 }
 
+// --- El Impostor: categorias con al menos 6 palabras (las opciones del
+// "robo final" salen de la misma categoria), sin repetidas ---
+function validarImpostor(deck) {
+  const todas = [];
+  (deck.categorias || []).forEach((c) => {
+    const donde = `categoría "${c.nombre}"`;
+    if (!c.nombre) aviso('categoría sin nombre');
+    if (!Array.isArray(c.palabras) || c.palabras.length < 6) {
+      aviso(`${donde}: hacen falta al menos 6 palabras, tiene ${(c.palabras || []).length}`);
+    }
+    (c.palabras || []).forEach((w) => {
+      if (!/^[a-záéíóúüñ ]+$/i.test(w)) aviso(`${donde}: "${w}" tiene caracteres raros`);
+      todas.push(w);
+    });
+  });
+  const vistas = new Set();
+  todas.forEach((w) => {
+    if (vistas.has(norm(w))) aviso(`"${w}" está repetida`);
+    vistas.add(norm(w));
+  });
+  console.log(`   ${(deck.categorias || []).length} categorías, ${todas.length} palabras`);
+}
+
 const VALIDADORES = {
   rosco: validarRosco,
   'eligi-una': validarPreguntas,
@@ -180,7 +203,8 @@ const VALIDADORES = {
   mimica: validarMimica,
   'palabra-prohibida': validarPalabraProhibida,
   'duelo-torres': validarPreguntas,
-  'escalera-final': validarPreguntas
+  'escalera-final': validarPreguntas,
+  impostor: validarImpostor
 };
 
 // Recorre TODOS los Programas (El Rosco, Varios, los que se sumen despues),
