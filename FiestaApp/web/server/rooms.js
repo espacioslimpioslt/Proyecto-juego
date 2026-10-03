@@ -42,6 +42,9 @@ function loadPrograms() {
 const programs = loadPrograms();
 
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sin 0/O ni 1/I, se confunden
+// 6 caracteres: ~1.000 millones de combinaciones. Con 4 (~1 millon) y salas
+// que se comparten por internet, se podian adivinar codigos probando al azar.
+const LARGO_CODIGO = 6;
 
 // Rival ficticio que aparece solo en modo prueba, para poder probar los turnos
 // sin necesidad de que se sume otra persona.
@@ -52,15 +55,22 @@ const rooms = new Map(); // code -> room
 function generateCode() {
   let code;
   do {
-    code = Array.from({ length: 4 }, () => CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]).join('');
+    code = Array.from({ length: LARGO_CODIGO }, () => CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]).join('');
   } while (rooms.has(code));
   return code;
 }
 
-function makePlayer(socketId, name) {
+// Nombres: sin caracteres que sirvan para armar HTML (< > & " ' `), sin
+// espacios de mas y con largo maximo. Es la primera barrera; el cliente
+// ademas escapa todo lo que dibuja.
+function limpiarNombre(name, fallback = 'Jugador') {
+  return String(name || '').replace(/[<>&"'`]/g, '').replace(/\s+/g, ' ').trim().slice(0, 20) || fallback;
+}
+
+function makePlayer(playerId, name) {
   return {
-    id: socketId,
-    name: name.trim().slice(0, 20) || 'Jugador',
+    id: playerId,
+    name: limpiarNombre(name),
     team: null,
     connected: true
   };
@@ -101,13 +111,15 @@ function getCatalog() {
   }));
 }
 
-function createRoom(hostSocketId, hostName, initialProgramId, prefs = {}) {
+function createRoom(hostPlayerId, hostName, initialProgramId, prefs = {}) {
   const code = generateCode();
   const room = {
     code,
-    hostId: hostSocketId,
+    hostId: hostPlayerId,
     phase: 'lobby', // lobby -> config -> playing -> roundResult -> results
-    players: [makePlayer(hostSocketId, hostName)],
+    players: [makePlayer(hostPlayerId, hostName)],
+    locked: false, // el anfitrion cierra la sala cuando ya estan todos
+    banned: [], // playerIds expulsados: no pueden volver a esta sala
     programId: null,
     roundCount: null,
     estimatedSeconds: null,
@@ -138,7 +150,7 @@ function createRoom(hostSocketId, hostName, initialProgramId, prefs = {}) {
   // y "solo mayores" vienen de las preferencias guardadas en el celu del
   // anfitrion (menu lateral), asi no las tiene que tocar cada vez.
   if (initialProgramId && programs[initialProgramId]) {
-    setConfig(room, hostSocketId, {
+    setConfig(room, hostPlayerId, {
       programId: initialProgramId,
       roundCount: 6,
       teamsEnabled: true,
@@ -159,12 +171,20 @@ function getRoom(code) {
 // portada) pero todavia no arranco la partida.
 const JOINABLE_PHASES = ['lobby', 'config'];
 
-function joinRoom(code, socketId, name) {
+function joinRoom(code, playerId, name) {
   const room = getRoom(code);
   if (!room) return { error: 'No existe una sala con ese codigo.' };
+  // Ya estaba en la sala (por ejemplo, se le corto la conexion y vuelve a
+  // entrar con el codigo): recupera su lugar, aunque la partida ya empezo.
+  const existing = room.players.find((p) => p.id === playerId);
+  if (existing) {
+    setConnected(room, playerId, true);
+    return { room };
+  }
+  if (room.banned.includes(playerId)) return { error: 'El anfitrión no te dejó volver a entrar a esta sala.' };
+  if (room.locked) return { error: 'El anfitrión cerró la sala: ya no entra nadie más.' };
   if (!JOINABLE_PHASES.includes(room.phase)) return { error: 'Esa sala ya empezo a jugar.' };
-  if (room.players.some((p) => p.id === socketId)) return { room };
-  room.players.push(makePlayer(socketId, name));
+  room.players.push(makePlayer(playerId, name));
   // Se reparte al toque para que cada uno vea su equipo en la sala de espera,
   // y no recien cuando arranca la partida.
   if (room.teamsEnabled) {
@@ -174,15 +194,39 @@ function joinRoom(code, socketId, name) {
   return { room };
 }
 
-function isHost(room, socketId) {
-  return !!room && room.hostId === socketId;
+function isHost(room, playerId) {
+  return !!room && room.hostId === playerId;
 }
 
-function kickPlayer(room, hostSocketId, playerId) {
-  if (!isHost(room, hostSocketId)) return { error: 'Solo el anfitrion puede sacar jugadores.' };
+function kickPlayer(room, hostPlayerId, playerId) {
+  if (!isHost(room, hostPlayerId)) return { error: 'Solo el anfitrion puede sacar jugadores.' };
   if (playerId === room.hostId) return { error: 'El anfitrion no se puede sacar a si mismo.' };
-  room.players = room.players.filter((p) => p.id !== playerId);
+  if (!room.players.some((p) => p.id === playerId)) return { error: 'Ese jugador ya no está en la sala.' };
+  if (!String(playerId).startsWith('test:') && !room.banned.includes(playerId)) room.banned.push(playerId);
+  dropPlayer(room, playerId);
   return { room };
+}
+
+function setLocked(room, hostPlayerId, locked) {
+  if (!isHost(room, hostPlayerId)) return { error: 'Solo el anfitrion puede cerrar la sala.' };
+  room.locked = !!locked;
+  return { room };
+}
+
+// Un jugador se desconecto (o volvio). No se lo saca de la sala: queda
+// marcado, el resto lo ve, y los turnos lo saltean mientras no este.
+function setConnected(room, playerId, connected) {
+  const player = room && room.players.find((p) => p.id === playerId);
+  if (!player) return false;
+  if (player.connected !== connected) {
+    player.connected = connected;
+    syncRosters(room);
+  }
+  return true;
+}
+
+function isRealPlayer(p) {
+  return !String(p.id).startsWith('test:');
 }
 
 // Entrant = jugador o equipo, segun teamsEnabled. Es la unidad que puntua.
@@ -220,10 +264,15 @@ function tieneNombresDePrueba(room) {
 
 function buildTestRoster(room) {
   const host = room.players.find((p) => p.id === room.hostId);
+  // Los invitados reales que ya entraron se quedan (antes desaparecian de la
+  // lista sin aviso); se reparten entre los dos equipos, como siempre.
+  const invitados = room.players
+    .filter((p) => p.id !== room.hostId && isRealPlayer(p))
+    .map((p, i) => ({ ...p, team: i % 2 === 0 ? 'Equipo B' : 'Equipo A' }));
   const falsos = [];
-  (room.testNamesA || []).forEach((name, i) => falsos.push({ id: `test:A:${i}`, name, team: 'Equipo A' }));
-  (room.testNamesB || []).forEach((name, i) => falsos.push({ id: `test:B:${i}`, name, team: 'Equipo B' }));
-  room.players = host ? [{ ...host, team: 'Equipo A' }, ...falsos] : falsos;
+  (room.testNamesA || []).forEach((name, i) => falsos.push({ id: `test:A:${i}`, name, team: 'Equipo A', connected: true }));
+  (room.testNamesB || []).forEach((name, i) => falsos.push({ id: `test:B:${i}`, name, team: 'Equipo B', connected: true }));
+  room.players = [...(host ? [{ ...host, team: 'Equipo A' }] : []), ...invitados, ...falsos];
 }
 
 const TIEMPOS_VALIDOS = [60, 90, 120, 180, 300]; // segundos por equipo
@@ -252,7 +301,7 @@ const REGIONES = [
 // espacios, saca vacios, y limita la cantidad para no permitir listas eternas.
 function sanitizeTestNames(list) {
   return (Array.isArray(list) ? list : [])
-    .map((n) => String(n || '').trim())
+    .map((n) => limpiarNombre(n, ''))
     .filter(Boolean)
     .slice(0, 10);
 }
@@ -264,11 +313,11 @@ function sanitizeSelectedGames(program, selectedGames) {
   return (Array.isArray(selectedGames) ? selectedGames : []).filter((g) => validos.has(g));
 }
 
-function setConfig(room, hostSocketId, {
+function setConfig(room, hostPlayerId, {
   programId, roundCount, teamsEnabled, testMode, baseTimeSeconds, region, adultsOnly, difficulty,
   testNamesA, testNamesB, selectedGames
 }) {
-  if (!isHost(room, hostSocketId)) return { error: 'Solo el anfitrion puede configurar la partida.' };
+  if (!isHost(room, hostPlayerId)) return { error: 'Solo el anfitrion puede configurar la partida.' };
   const program = programs[programId];
   if (!program) return { error: 'Ese Programa no existe.' };
   const count = [3, 6, 9].includes(roundCount) ? roundCount : 3;
@@ -344,10 +393,23 @@ function rostersOf(room) {
       return [id, p ? [{ id: p.id, name: p.name }] : []];
     }));
   }
-  return Object.fromEntries(ids.map((id) => [
-    id,
-    room.players.filter((p) => p.team === id).map((p) => ({ id: p.id, name: p.name }))
-  ]));
+  return Object.fromEntries(ids.map((id) => {
+    const members = room.players.filter((p) => p.team === id);
+    // Para elegir quien actua/duela se usa solo a los que estan conectados;
+    // si justo no hay ninguno, se deja a todos (pueden estar volviendo).
+    const online = members.filter((p) => p.connected !== false);
+    return [id, (online.length ? online : members).map((p) => ({ id: p.id, name: p.name }))];
+  }));
+}
+
+// Avisa al juego en curso que cambio quien esta disponible en cada equipo
+// (alguien se desconecto, volvio o se fue), para que no espere para siempre
+// a una persona que ya no esta -- ej. el duelista del Duelo de Torres.
+function syncRosters(room) {
+  if (room.phase !== 'playing' || !room.roundState) return;
+  const roundType = roundTypeOf(room);
+  if (roundType && roundType.onRosterChange) roundType.onRosterChange(room.roundState, rostersOf(room));
+  if (room.roundState.finished) finishRound(room);
 }
 
 // Arranca un juego del pool. Le pasa el tiempo acumulado de juegos anteriores
@@ -372,6 +434,9 @@ function beginRound(room) {
   // Cada juego arranca rotando desde el primer integrante de cada equipo.
   room.memberTurnIndex = {};
   room.phase = 'playing';
+  // Un juego puede nacer ya terminado (ej. no hay contenido, o quedo un solo
+  // equipo): si no se cierra aca, nadie lo cierra y la partida se traba.
+  if (room.roundState.finished) finishRound(room);
 }
 
 // A quien le toca contestar dentro de un equipo. Rota en cada letra para que
@@ -381,6 +446,12 @@ function currentMemberOf(room, entrantId) {
   const members = room.players.filter((p) => p.team === entrantId);
   if (!members.length) return null;
   const idx = (room.memberTurnIndex[entrantId] || 0) % members.length;
+  // Si al que le toca se le corto la conexion, contesta el siguiente que
+  // este conectado -- el equipo no se queda esperando.
+  for (let step = 0; step < members.length; step++) {
+    const m = members[(idx + step) % members.length];
+    if (m.connected !== false) return m;
+  }
   return members[idx];
 }
 
@@ -388,8 +459,8 @@ function advanceMemberTurn(room, entrantId) {
   room.memberTurnIndex[entrantId] = (room.memberTurnIndex[entrantId] || 0) + 1;
 }
 
-function startGame(room, hostSocketId) {
-  if (!isHost(room, hostSocketId)) return { error: 'Solo el anfitrion puede arrancar.' };
+function startGame(room, hostPlayerId) {
+  if (!isHost(room, hostPlayerId)) return { error: 'Solo el anfitrion puede arrancar.' };
   if (!room.programId) return { error: 'Todavia no se eligio Programa y cantidad de rondas.' };
 
   // Se reasignan aca y no solo en setConfig, porque puede haberse sumado gente
@@ -421,6 +492,7 @@ function startGame(room, hostSocketId) {
   }
 
   room.currentRoundIndex = 0;
+  room.endedEarly = false;
   room.scores = {};
   room.timeCarryOver = {};
   room.usedDeckIds = [];
@@ -430,12 +502,12 @@ function startGame(room, hostSocketId) {
   return { room };
 }
 
-function entrantOf(room, socketId, payload) {
-  const player = room.players.find((p) => p.id === socketId);
+function entrantOf(room, playerId, payload) {
+  const player = room.players.find((p) => p.id === playerId);
   if (!player) return null;
   // En modo prueba el anfitrion juega por todos los equipos, asi puede probar
   // la partida entera sin esperar a nadie.
-  if (room.testMode && isHost(room, socketId) && room.roundState) {
+  if (room.testMode && isHost(room, playerId) && room.roundState) {
     const roundType = roundTypeOf(room);
     if (roundType && roundType.simultaneous) {
       // Juegos simultaneos (ej. Tutifruti) no tienen "de quien es el turno" --
@@ -454,33 +526,33 @@ function entrantOf(room, socketId, payload) {
 
 // Chequea que quien manda la accion sea el integrante al que le toca dentro del
 // equipo. El anfitrion en modo prueba juega por todos, asi que se lo saltea.
-function checkMemberTurn(room, socketId, entrantId) {
-  if (room.testMode && isHost(room, socketId)) return null;
+function checkMemberTurn(room, playerId, entrantId) {
+  if (room.testMode && isHost(room, playerId)) return null;
   const member = currentMemberOf(room, entrantId);
-  if (member && member.id !== socketId) {
+  if (member && member.id !== playerId) {
     return `Le toca a ${member.name}. Pueden ayudarlo en voz alta, pero contesta desde su celu.`;
   }
   return null;
 }
 
-function submitAnswer(room, socketId, payload) {
+function submitAnswer(room, playerId, payload) {
   if (room.phase !== 'playing') return { error: 'No hay un juego activo ahora mismo.' };
-  const entrantId = entrantOf(room, socketId, payload);
+  const entrantId = entrantOf(room, playerId, payload);
   if (!entrantId) return { error: 'No estas en esta sala.' };
   const roundType = roundTypeOf(room);
   // Casi todos los juegos exigen que conteste "el de turno" dentro del
   // equipo (checkMemberTurn). Algunos (ej. Mimica: cualquiera puede
   // adivinar, no solo un representante rotativo) declaran skipMemberGate y
-  // resuelven ellos mismos, con el socketId, quien puede actuar.
+  // resuelven ellos mismos, con el playerId, quien puede actuar.
   if (!roundType.skipMemberGate) {
-    const turnError = checkMemberTurn(room, socketId, entrantId);
+    const turnError = checkMemberTurn(room, playerId, entrantId);
     if (turnError) return { error: turnError };
   }
   // En modo prueba el anfitrion controla a todos los jugadores inventados;
-  // algunos juegos (ej. Mimica) chequean el socketId puntual de quien actua,
+  // algunos juegos (ej. Mimica) chequean el playerId puntual de quien actua,
   // y necesitan saber que este socket "vale por cualquiera" en ese caso.
-  const isTestHost = room.testMode && isHost(room, socketId);
-  const result = roundType.answer(room.roundState, entrantId, payload, socketId, isTestHost);
+  const isTestHost = room.testMode && isHost(room, playerId);
+  const result = roundType.answer(room.roundState, entrantId, payload, playerId, isTestHost);
   if (result.error) return { error: result.error };
   advanceMemberTurn(room, entrantId);
   // Algunos juegos (ej. duelos donde dos equipos actuan en el mismo momento,
@@ -491,11 +563,11 @@ function submitAnswer(room, socketId, payload) {
   return { room };
 }
 
-function pasapalabra(room, socketId) {
+function pasapalabra(room, playerId) {
   if (room.phase !== 'playing') return { error: 'No hay un juego activo ahora mismo.' };
-  const entrantId = entrantOf(room, socketId);
+  const entrantId = entrantOf(room, playerId);
   if (!entrantId) return { error: 'No estas en esta sala.' };
-  const turnError = checkMemberTurn(room, socketId, entrantId);
+  const turnError = checkMemberTurn(room, playerId, entrantId);
   if (turnError) return { error: turnError };
   const roundType = roundTypeOf(room);
   if (!roundType.pasapalabra) return { error: 'Este juego no tiene pasapalabra.' };
@@ -508,8 +580,8 @@ function pasapalabra(room, socketId) {
 
 // El anfitrion acepta o rechaza una palabra que no estaba en el banco (Tutifruti).
 // Representa lo que el grupo discutio en voz alta antes de dar el punto por bueno.
-function judgeWord(room, hostSocketId, payload) {
-  if (!isHost(room, hostSocketId)) return { error: 'Solo el anfitrion puede resolver palabras dudosas.' };
+function judgeWord(room, hostPlayerId, payload) {
+  if (!isHost(room, hostPlayerId)) return { error: 'Solo el anfitrion puede resolver palabras dudosas.' };
   if (room.phase !== 'playing') return { error: 'No hay un juego activo ahora mismo.' };
   const roundType = roundTypeOf(room);
   if (!roundType.judge) return { error: 'Este juego no tiene palabras para juzgar.' };
@@ -553,8 +625,8 @@ function finishRound(room) {
   room.phase = 'roundResult';
 }
 
-function continueGame(room, hostSocketId) {
-  if (!isHost(room, hostSocketId)) return { error: 'Solo el anfitrion puede continuar.' };
+function continueGame(room, hostPlayerId) {
+  if (!isHost(room, hostPlayerId)) return { error: 'Solo el anfitrion puede continuar.' };
   if (room.phase !== 'roundResult') return { error: 'Todavia no termino el juego actual.' };
 
   const isLastRound = room.currentRoundIndex >= room.gameSequence.length - 1;
@@ -571,8 +643,8 @@ function continueGame(room, hostSocketId) {
 // Vuelve a la sala de espera desde la pantalla de resultados, para elegir otro
 // Programa (o el mismo) sin tener que crear una sala nueva ni que el grupo
 // vuelva a entrar con un codigo. Se conservan jugadores y equipos.
-function playAgain(room, hostSocketId) {
-  if (!isHost(room, hostSocketId)) return { error: 'Solo el anfitrion puede volver a jugar.' };
+function playAgain(room, hostPlayerId) {
+  if (!isHost(room, hostPlayerId)) return { error: 'Solo el anfitrion puede volver a jugar.' };
   if (room.phase !== 'results') return { error: 'Todavia no termino el programa.' };
 
   room.phase = 'lobby';
@@ -586,18 +658,51 @@ function playAgain(room, hostSocketId) {
   room.memberTurnIndex = {};
   room.lastRoundPoints = null;
   room.lastRoundSeconds = null;
+  room.endedEarly = false;
   return { room };
 }
 
-function removeSocket(socketId) {
-  for (const room of rooms.values()) {
-    const wasHost = room.hostId === socketId;
-    room.players = room.players.filter((p) => p.id !== socketId);
-    if (room.players.length === 0) {
-      rooms.delete(room.code);
-      continue;
+// Saca a un jugador de una sala de verdad (se fue, lo expulsaron, o no
+// volvio despues de cortarse). Se encarga de todo lo que eso rompe: quien
+// queda de anfitrion, salas vacias, y equipos que se quedan sin nadie.
+function dropPlayer(room, playerId) {
+  const wasHost = room.hostId === playerId;
+  room.players = room.players.filter((p) => p.id !== playerId);
+
+  const reales = room.players.filter(isRealPlayer);
+  if (!reales.length) {
+    // Solo quedaron jugadores inventados del modo prueba (o nadie).
+    rooms.delete(room.code);
+    return;
+  }
+  if (wasHost) {
+    const nuevo = reales.find((p) => p.connected !== false) || reales[0];
+    room.hostId = nuevo.id;
+  }
+
+  if (room.phase === 'playing' || room.phase === 'roundResult') {
+    if (room.teamsEnabled && !room.testMode) {
+      const conGente = new Set(room.players.map((p) => p.team).filter(Boolean));
+      const enJuego = Object.keys(room.scores || {});
+      if (enJuego.some((id) => !conGente.has(id))) {
+        // Un equipo se quedo sin nadie: no hay contra quien seguir. Se cierra
+        // el Programa con el puntaje que hay hasta aca.
+        room.phase = 'results';
+        room.endedEarly = true;
+        return;
+      }
     }
-    if (wasHost) room.hostId = room.players[0].id;
+    syncRosters(room);
+  }
+}
+
+function leaveRoom(room, playerId) {
+  if (room.players.some((p) => p.id === playerId)) dropPlayer(room, playerId);
+}
+
+function removePlayer(playerId) {
+  for (const room of [...rooms.values()]) {
+    if (room.players.some((p) => p.id === playerId)) dropPlayer(room, playerId);
   }
 }
 
@@ -611,7 +716,9 @@ function publicState(room) {
     code: room.code,
     hostId: room.hostId,
     phase: room.phase,
-    players: room.players.map((p) => ({ id: p.id, name: p.name, team: p.team })),
+    players: room.players.map((p) => ({ id: p.id, name: p.name, team: p.team, connected: p.connected !== false })),
+    locked: !!room.locked,
+    endedEarly: !!room.endedEarly,
     programId: room.programId,
     programName: program ? program.name : null,
     sequenceMode: program ? (program.sequenceMode || 'random') : 'random',
@@ -658,6 +765,8 @@ module.exports = {
   joinRoom,
   isHost,
   kickPlayer,
+  setLocked,
+  setConnected,
   setConfig,
   startGame,
   submitAnswer,
@@ -666,7 +775,8 @@ module.exports = {
   tickRoom,
   continueGame,
   playAgain,
-  removeSocket,
+  leaveRoom,
+  removePlayer,
   publicState,
   allRooms: () => rooms.values()
 };

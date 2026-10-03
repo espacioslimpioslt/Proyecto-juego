@@ -79,7 +79,7 @@
   <section id="screen-join" class="screen hidden">
     <h1>Entrar a una sala</h1>
     <label>Código de sala
-      <input id="join-code" type="text" maxlength="4" placeholder="Ej: AB3K" autocapitalize="characters" />
+      <input id="join-code" type="text" maxlength="6" placeholder="Ej: AB3K7P" autocapitalize="characters" />
     </label>
     <label>Tu nombre
       <input id="join-name" type="text" maxlength="20" placeholder="Ej: Leandro" />
@@ -91,10 +91,18 @@
   <!-- Sala de espera -->
   <section id="screen-lobby" class="screen hidden">
     <h1>Sala de espera</h1>
-    <p class="muted">Compartí este código con el grupo:</p>
+    <p class="muted">Compartí este código con el grupo, o mandales el link (sirve para los que están lejos):</p>
     <div id="lobby-code" class="big-code"></div>
+    <div class="lobby-share">
+      <button id="btn-invite-whatsapp" class="btn btn-solid">📲 Invitar por WhatsApp</button>
+      <button id="btn-copy-link" class="btn btn-ghost">🔗 Copiar link</button>
+    </div>
     <ul id="lobby-players" class="player-list"></ul>
     <div id="lobby-host-controls" class="hidden">
+      <label class="checkbox-row">
+        <input id="config-locked" type="checkbox" />
+        Cerrar la sala (ya estamos todos, no entra nadie más)
+      </label>
       <label>Programa
         <select id="config-program"></select>
       </label>

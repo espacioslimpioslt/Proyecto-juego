@@ -45,6 +45,14 @@ function norm(s) {
     .normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 
+// Primera letra para comparar con la letra sorteada. Igual que norm() (sin
+// tildes ni mayusculas) pero respetando la Ñ: norm() la convierte en N, y
+// con la letra Ñ se aceptaba "Naranja".
+function inicial(s) {
+  const c = String(s || '').trim().toLowerCase().charAt(0);
+  return c === 'ñ' ? 'ñ' : norm(c);
+}
+
 function estaEnElBanco(categoria, palabra) {
   const lista = banco[categoria] || [];
   return lista.some((w) => norm(w) === norm(palabra));
@@ -114,7 +122,7 @@ function beginReview(state) {
     Object.entries(state.entrants).forEach(([entrantId, entrant]) => {
       const palabra = (entrant.answers[cat] || '').trim();
       if (!palabra) return;
-      if (norm(palabra)[0] !== norm(state.letter)) return; // letra incorrecta, invalida directo
+      if (inicial(palabra) !== inicial(state.letter)) return; // letra incorrecta, invalida directo
       if (!estaEnElBanco(cat, palabra)) {
         pending.push({ entrantId, category: cat, word: palabra, decided: null });
       }
@@ -132,7 +140,7 @@ function resolveScores(state) {
     const validas = {}; // entrantId -> palabra normalizada, solo si es valida
     Object.entries(state.entrants).forEach(([entrantId, entrant]) => {
       const palabra = (entrant.answers[cat] || '').trim();
-      if (!palabra || norm(palabra)[0] !== norm(state.letter)) return;
+      if (!palabra || inicial(palabra) !== inicial(state.letter)) return;
       const enBanco = estaEnElBanco(cat, palabra);
       const dudosa = state.pendingJudgements.find((p) => p.entrantId === entrantId && p.category === cat);
       const aceptada = dudosa ? dudosa.decided === true : enBanco;
@@ -185,7 +193,7 @@ function answer(state, entrantId, payload) {
     return { error: 'Tenés que completar las 6 categorías para mandar primero — así no le cortás la escritura a los demás con solo una o dos.' };
   }
 
-  categorias.forEach((cat) => { entrant.answers[cat] = String(respuestas[cat] || '').slice(0, 40); });
+  categorias.forEach((cat) => { entrant.answers[cat] = String(respuestas[cat] || '').replace(/[<>&"'`]/g, '').slice(0, 40); });
   entrant.submitted = true;
 
   if (allSubmitted(state)) beginReview(state);

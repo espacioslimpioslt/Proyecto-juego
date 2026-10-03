@@ -1,7 +1,7 @@
 // Simulador de partidas: juega partidas completas contra el motor real
 // (server/rooms.js) con jugadores "bots" que mandan respuestas correctas,
 // incorrectas e invalidas al azar, en los 3 Programas y las 3 dificultades.
-// En ~30% de las partidas desconecta a alguien a mitad de juego.
+// En ~50% de las partidas desconecta a alguien a mitad de juego.
 // Detecta excepciones, partidas trabadas (que nunca terminan) y puntajes raros.
 //
 // Uso: node tools/simular-partidas.js [partidas por programa y dificultad]
@@ -88,6 +88,7 @@ function play({ programId, difficulty, players = 4, disconnectAt = null, label }
   let sockets = [...ids];
   let steps = 0; let roundSteps = 0;
   const log = [];
+  let reconnect = null;
   while (room.phase !== 'results') {
     if (++steps > 200000) return { label, stuck: 'global', log };
     if (room.phase === 'roundResult') {
@@ -99,11 +100,28 @@ function play({ programId, difficulty, players = 4, disconnectAt = null, label }
       rooms.continueGame(room, room.hostId);
       continue;
     }
+    if (room.phase === 'results') break;
     if (++roundSteps > 20000) return { label, stuck: room.roundState.gameType, phase: room.roundState.phase, view: JSON.stringify(rooms.publicState(room).round).slice(0, 600), log };
     if (disconnectAt !== null && steps === disconnectAt) {
-      const victim = sockets[sockets.length - 1];
-      rooms.removeSocket(victim); sockets = sockets.filter((s) => s !== victim);
-      log.push(`DESCONECTA ${victim} durante ${room.roundState.gameType}`);
+      // Mitad de las veces se le corta y vuelve al rato (celu bloqueado);
+      // la otra mitad se va del todo (no vuelve dentro del tiempo de gracia).
+      const victim = pick(sockets.slice(1).length ? sockets.slice(1) : sockets);
+      if (Math.random() < 0.5) {
+        rooms.setConnected(room, victim, false);
+        sockets = sockets.filter((s) => s !== victim);
+        reconnect = { id: victim, at: steps + 30 + R(300) };
+        log.push(`SE CORTA ${victim} durante ${room.roundState && room.roundState.gameType}`);
+      } else {
+        rooms.removePlayer(victim); sockets = sockets.filter((s) => s !== victim);
+        log.push(`SE VA ${victim} durante ${room.roundState && room.roundState.gameType}`);
+      }
+      if (room.phase === 'results') break;
+    }
+    if (reconnect && steps === reconnect.at) {
+      rooms.joinRoom(room.code, reconnect.id, 'Vuelve');
+      sockets.push(reconnect.id);
+      log.push(`VUELVE ${reconnect.id}`);
+      reconnect = null;
     }
     try {
       if (Math.random() < 0.15) { rooms.tickRoom(room); continue; }
@@ -118,7 +136,8 @@ function play({ programId, difficulty, players = 4, disconnectAt = null, label }
       return { label, exception: e.stack.split('\n').slice(0, 4).join(' | '), game: room.roundState && room.roundState.gameType };
     }
   }
-  return { label, ok: true, scores: room.scores, log };
+  if (room.players.some((p) => !p.id.startsWith('s'))) log.push('jugador raro en la sala');
+  return { label, ok: true, endedEarly: !!room.endedEarly, scores: room.scores, log };
 }
 
 const results = [];
@@ -127,13 +146,14 @@ for (const programId of ['el-rosco', 'ahora-caigo', 'varios']) {
   for (const difficulty of ['facil', 'normal', 'dificil']) {
     for (let i = 0; i < N; i++) {
       const players = pick([2, 3, 4, 5, 7]);
-      const disconnectAt = Math.random() < 0.3 ? 50 + R(400) : null;
+      const disconnectAt = Math.random() < 0.5 ? 50 + R(400) : null;
       results.push(play({ programId, difficulty, players, disconnectAt, label: `${programId}/${difficulty}/${players}j${disconnectAt ? '/desc@' + disconnectAt : ''}` }));
     }
   }
 }
 const bad = results.filter((r) => !r.ok);
-console.log(`partidas: ${results.length}, ok: ${results.length - bad.length}, con problemas: ${bad.length}`);
+console.log(`partidas: ${results.length}, ok: ${results.length - bad.length}, con problemas: ${bad.length}`
+  + ` (terminadas antes por quedarse un equipo sin gente: ${results.filter((r) => r.endedEarly).length})`);
 const byKind = {};
 for (const b of bad) {
   const key = b.exception ? 'EXC ' + b.exception : b.stuck ? `TRABADA en ${b.stuck} (${b.phase || ''})` : b.error;

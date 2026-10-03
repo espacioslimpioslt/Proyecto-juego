@@ -288,7 +288,27 @@ esto.
 
 ## 9. Plan de ajustes, en orden
 
-### Fase 1: dejar sólido el Modo Casa (antes de publicar)
+### Fase 1: dejar sólido el juego, en casa y a distancia con conocidos — ✅ hecha (oct 2026)
+
+Decisión tomada: el juego se abre a internet **para familia y amigos que
+están lejos**, entrando por link de invitación (WhatsApp). Las salas para
+desconocidos quedan para más adelante, con las medidas de las secciones 4 y 5.
+
+Hecho en esta fase: reconexión (identidad por celu, 2 min de gracia, turno al
+siguiente del equipo mientras alguien está cortado), juegos que ya no se
+traban (duelista y actor se reemplazan, juego que nace terminado se cierra,
+equipo vacío termina el programa), nombres y palabras escapados, filtro +18
+que nunca se afloja, trampas de voz cerradas (La Cadena, Mímica, Palabra
+Prohibida), expulsión con bloqueo, sala cerrable, códigos de 6 caracteres,
+límite de mensajes por segundo y de intentos de unirse, modo prueba sin
+perder invitados ni dejar salas huérfanas, la Ñ en Tutifruti, mezcla
+Fisher-Yates, invitación por link de WhatsApp, una regla `.hidden` que
+faltaba (los invitados veían los controles del anfitrión), y la Escalera
+Final ya no deja a un equipo sin pregunta esperando que se le acabe el reloj. Errores 1, 2, 3,
+4, 6, 7, 8, 9, 10 y 13 de la sección 6. Quedan el 5 (vista por jugador, para
+Duelo de Casas), el 11 (árbitro) y el 12 (Redis), que son de las fases 2 y 3.
+
+Plan original de la fase:
 1. Reconexión: cada jugador recibe un token al entrar; si se cae, vuelve a su
    lugar con el mismo equipo y turno (errores 1 y 2b).
 2. Reloj de turno con salto automático, y el anfitrión puede saltear a quien
