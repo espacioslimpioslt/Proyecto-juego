@@ -805,7 +805,7 @@ function renderBanks(round) {
     // En el rosco se muestra el reloj; en las pruebas, los segundos ganados.
     const main = esRosco
       ? formatTime(state.timeLeft)
-      : round.type === 'impostor' ? `${state.points || 0} pts`
+      : ['impostor', 'encuesta', 'caja-fuerte'].includes(round.type) ? `${state.points || 0} pts`
         : `+${state.secondsWon || 0}s`;
 
     // La Silla muestra las vidas que le quedan al equipo.
@@ -1358,7 +1358,9 @@ const GAME_TYPE_ICONS = {
   'palabra-prohibida': '🤐',
   'duelo-torres': '🗼',
   'escalera-final': '🪜',
-  impostor: '🕵️'
+  impostor: '🕵️',
+  encuesta: '📊',
+  'caja-fuerte': '💼'
 };
 
 // ---------- Capa "show" común a todos los juegos ----------
@@ -1379,7 +1381,9 @@ const GAME_THEME = {
   'palabra-prohibida': ['#ff4d5e', '#ff9f1c'],
   'duelo-torres': ['#5b8dd6', '#e0637a'],
   'escalera-final': ['#ffb23f', '#3de6ff'],
-  impostor: ['#ff3d7f', '#8b5cff']
+  impostor: ['#ff3d7f', '#8b5cff'],
+  encuesta: ['#3de6ff', '#ffb23f'],
+  'caja-fuerte': ['#ffd23f', '#3ddc84']
 };
 const GAME_HOWTO = {
   'rosco-por-turnos': 'Una palabra por letra. Acertás y seguís; errás o pasás y le toca al otro. El reloj corre solo en tu turno.',
@@ -1395,7 +1399,9 @@ const GAME_HOWTO = {
   'palabra-prohibida': 'Describí la palabra sin decir ninguna de las prohibidas.',
   'duelo-torres': 'Uno contra uno, preguntas alternadas. El primero que se equivoca, cae.',
   'escalera-final': 'Subí escalón por escalón. Si caés, volvés al último que plantaste.',
-  impostor: 'Todos tienen la misma palabra... menos uno. Den pistas y descubran al impostor.'
+  impostor: 'Todos tienen la misma palabra... menos uno. Den pistas y descubran al impostor.',
+  encuesta: 'Adivinen las respuestas más populares. Con 3 errores, el otro equipo puede robar el pozo.',
+  'caja-fuerte': 'Elijan su caja y abran las demás. La Banca ofrece: ¿trato o no trato?'
 };
 function gameTheme(type) { return GAME_THEME[type] || ['#ffb23f', '#ff3d7f']; }
 
@@ -2581,6 +2587,235 @@ function renderImpostor(round, container, roundKey) {
   $('playing-turn-msg').textContent = msg;
 }
 
+// ---------- La Encuesta (tablero de respuestas, cruces y robo) ----------
+// El reloj para responder manda una actualización por segundo: el formulario
+// se rearma solo cuando cambia algo de verdad, para no borrar lo que se
+// está escribiendo.
+let encuestaBuiltFor = null;
+let encuestaVerOcultas = false;
+
+function renderEncuesta(round, container, roundKey) {
+  const iAmHost = myId === room.hostId;
+  const puedo = myTurnNow(round);
+  const fichasKey = (round.fichas || []).map((f) => (f.revelada ? 1 : 0)).join('');
+  const buildKey = [roundKey, round.number, round.fase, round.activeEntrant, fichasKey, round.cruces,
+    JSON.stringify(round.ultimo || {}), encuestaVerOcultas,
+    ((room.currentMembers || {})[round.activeEntrant] || {}).id].join('|');
+  if (buildKey === encuestaBuiltFor) {
+    // Solo cambia la cuenta regresiva: se actualiza el texto, sin redibujar
+    // (si no, el botón "Siguiente" se recreaba justo cuando lo tocaban).
+    if (round.fase === 'resultado') $('playing-turn-msg').textContent = `Sigue solo en ${round.segundosResultado} s.`;
+    return;
+  }
+  encuestaBuiltFor = buildKey;
+  container.innerHTML = '';
+
+  const cruces = Array.from({ length: round.maxCruces }, (_, i) =>
+    `<span class="enc-x${i < round.cruces ? ' on' : ''}">✗</span>`).join('');
+  const box = document.createElement('div');
+  box.className = 'board';
+  box.innerHTML = `
+    <p class="board-topic">Pregunta ${round.number} de ${round.total}${round.multiplicador > 1 ? ' · <b class="enc-doble">¡VALE DOBLE!</b>' : ''}</p>
+    <p class="enc-pregunta">${esc(round.pregunta || '')}</p>
+    <div class="enc-meta">
+      <span class="enc-cruces">${cruces}</span>
+      <span class="enc-pozo">Pozo <b>${round.pozo}</b></span>
+    </div>`;
+  container.appendChild(box);
+
+  // Tablero de fichas
+  const tablero = document.createElement('div');
+  tablero.className = 'enc-tablero';
+  (round.fichas || []).forEach((f) => {
+    const el = document.createElement('div');
+    const color = f.por ? teamColor(f.por) : null;
+    el.className = 'enc-ficha' + (f.revelada ? ' revelada' : '') + (!f.revelada && f.texto ? ' sobrante' : '');
+    if (color) el.style.setProperty('--team-color', color);
+    el.innerHTML = f.texto
+      ? `<span class="enc-n">${f.n}</span><span class="enc-t">${esc(f.texto)}</span><span class="enc-p">${f.puntos}</span>`
+      : `<span class="enc-n grande">${f.n}</span>`;
+    tablero.appendChild(el);
+  });
+  container.appendChild(tablero);
+
+  // Lo último que se dijo
+  if (round.ultimo && round.fase !== 'resultado') {
+    const u = round.ultimo;
+    const p = document.createElement('p');
+    p.className = 'enc-ultimo ' + (u.acierto ? 'ok' : u.repetida ? 'rep' : 'mal');
+    p.innerHTML = `${esc(entrantLabel(u.team))} dijo <b>"${esc(u.texto)}"</b> ${u.acierto ? '✔' : u.repetida ? '— ya estaba, digan otra' : '✗'}`;
+    container.appendChild(p);
+  }
+
+  const acciones = document.createElement('div');
+  acciones.className = 'imp-actions';
+  container.appendChild(acciones);
+  let msg = '';
+
+  if (round.fase === 'resultado') {
+    const gano = round.ganadorPregunta;
+    const banner = document.createElement('div');
+    banner.className = 'enc-resultado';
+    banner.innerHTML = gano
+      ? `<b>${esc(entrantLabel(gano))}</b> se lleva <b>${round.pozo}</b> puntos${round.control !== gano ? ' <span>¡robado!</span>' : ''}`
+      : 'Nadie se lleva el pozo';
+    acciones.appendChild(banner);
+    if (iAmHost) {
+      const sig = document.createElement('button');
+      sig.className = 'btn btn-solid';
+      sig.textContent = round.number >= round.total ? 'Terminar ▶' : 'Siguiente pregunta ▶';
+      sig.addEventListener('click', () => socket.emit('judge-word', { siguiente: true }));
+      acciones.appendChild(sig);
+    }
+    msg = `Sigue solo en ${round.segundosResultado} s.`;
+  } else {
+    if (round.fase === 'robo') {
+      const robo = document.createElement('p');
+      robo.className = 'enc-robo';
+      robo.innerHTML = `🚨 ¡ROBO! <b>${esc(entrantLabel(round.activeEntrant))}</b> tiene una sola chance de llevarse el pozo`;
+      acciones.appendChild(robo);
+    }
+    if (puedo) {
+      const form = document.createElement('form');
+      form.className = 'imp-form';
+      form.innerHTML = `<input id="enc-input" type="text" maxlength="40" autocomplete="off" placeholder="${round.fase === 'robo' ? 'Su respuesta para robar' : 'Tu respuesta'}" />
+        <button class="btn btn-solid" type="submit">Decir</button>`;
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const v = $('enc-input').value.trim();
+        if (v) socket.emit('submit-answer', { respuesta: v });
+      });
+      acciones.appendChild(form);
+      setTimeout(() => { const i = $('enc-input'); if (i) i.focus(); }, 50);
+      msg = round.fase === 'robo' ? '¡Una sola chance! Pónganse de acuerdo y escriban.' : '¡Te toca! Escribí una respuesta popular.';
+    } else {
+      const onDuty = (room.currentMembers || {})[round.activeEntrant];
+      msg = `Responde ${entrantLabel(round.activeEntrant)}${onDuty ? ` — ${onDuty.name}` : ''}...`;
+    }
+    // Anfitrión: ver las respuestas ocultas (a propósito) para arbitrar.
+    if (iAmHost && round.privado && round.privado.ocultas) {
+      const t = document.createElement('button');
+      t.className = 'btn btn-ghost mimica-safety';
+      t.textContent = encuestaVerOcultas ? '🙈 Ocultar respuestas' : '🔒 Ver respuestas para arbitrar (las vas a ver vos)';
+      t.addEventListener('click', () => { encuestaVerOcultas = !encuestaVerOcultas; encuestaBuiltFor = null; renderPlaying(); });
+      acciones.appendChild(t);
+      if (encuestaVerOcultas) {
+        const lista = document.createElement('div');
+        lista.className = 'enc-arbitro';
+        lista.innerHTML = '<p class="muted">Si lo que dijeron es una de estas, tocala para darla por buena:</p>';
+        round.privado.ocultas.forEach((o) => {
+          const b = document.createElement('button');
+          b.className = 'btn btn-ghost';
+          b.textContent = `✔ ${o.texto}`;
+          b.addEventListener('click', () => socket.emit('judge-word', { revelar: o.i }));
+          lista.appendChild(b);
+        });
+        acciones.appendChild(lista);
+      }
+    }
+  }
+  $('playing-turn-msg').textContent = msg;
+}
+
+// ---------- Caja Fuerte (¿trato o no trato?) ----------
+// Se redibuja solo si cambió algo (no con cada segundo del reloj): si no, un
+// toque justo en ese momento caía sobre una caja que ya no existía.
+let cajaBuiltFor = null;
+function renderCajaFuerte(round, container, roundKey) {
+  const abiertas = (round.cajas || []).map((c) => (c.abierta ? 1 : 0)).join('');
+  const buildKey = [roundKey, round.number, round.fase, round.miCaja, abiertas, round.oferta, round.activeEntrant,
+    ((room.currentMembers || {})[round.activeEntrant] || {}).id].join('|');
+  if (buildKey === cajaBuiltFor) {
+    if (round.fase === 'final') $('playing-turn-msg').textContent = `Sigue solo en ${round.segundosFinal} s.`;
+    return;
+  }
+  cajaBuiltFor = buildKey;
+  container.innerHTML = '';
+  const puedo = myTurnNow(round);
+  const equipo = esc(entrantLabel(round.activeEntrant));
+  const textos = {
+    elegir: `${equipo}: elijan <b>SU caja</b>. No se abre hasta el final.`,
+    abrir: `${equipo}: abran <b>${round.abrirEnTanda}</b> ${round.abrirEnTanda === 1 ? 'caja' : 'cajas'} más`,
+    oferta: '📞 Suena el teléfono... <b>la Banca hace una oferta</b>',
+    final: '🎬 Final del tablero'
+  };
+  const box = document.createElement('div');
+  box.className = 'board';
+  box.innerHTML = `
+    <p class="board-topic">Tablero ${round.number} de ${round.total} · juega ${equipo}</p>
+    <p class="board-clue">${textos[round.fase] || ''}</p>`;
+  container.appendChild(box);
+
+  const mesa = document.createElement('div');
+  mesa.className = 'cf-mesa';
+  // Premios en juego (tachados los que ya salieron)
+  const premios = round.premios || [];
+  const mitad = Math.ceil(premios.length / 2);
+  const col = (lista) => lista.map((p) => `<span class="cf-premio${p.enJuego ? '' : ' fuera'}${p.v >= 15 ? ' alto' : ''}">${p.v}</span>`).join('');
+  mesa.innerHTML = `
+    <div class="cf-premios"><div>${col(premios.slice(0, mitad))}</div><div>${col(premios.slice(mitad))}</div></div>
+    <div class="cf-cajas"></div>`;
+  const grid = mesa.querySelector('.cf-cajas');
+  (round.cajas || []).forEach((c) => {
+    const b = document.createElement('button');
+    const esMia = c.n === round.miCaja;
+    b.className = 'cf-caja' + (c.abierta ? ' abierta' : '') + (esMia ? ' mia' : '') + (c.valor !== null && c.valor >= 15 ? ' alto' : '');
+    b.innerHTML = c.abierta || (esMia && c.valor !== null)
+      ? `<span class="cf-num">${c.n}</span><b>${c.valor}</b>`
+      : `<span class="cf-num">${c.n}</span>${esMia ? '<small>TU CAJA</small>' : '💼'}`;
+    const elegible = puedo && ((round.fase === 'elegir') || (round.fase === 'abrir' && !c.abierta && !esMia));
+    b.disabled = !elegible;
+    if (elegible) b.addEventListener('click', () => { if (window.Sfx) Sfx.play('pop'); socket.emit('submit-answer', { caja: c.n }); });
+    grid.appendChild(b);
+  });
+  container.appendChild(mesa);
+
+  const acciones = document.createElement('div');
+  acciones.className = 'imp-actions';
+  container.appendChild(acciones);
+  let msg = puedo ? '¡Les toca! Decidan en voz alta.' : `Decide ${equipo}...`;
+
+  if (round.fase === 'oferta') {
+    const of = document.createElement('div');
+    of.className = 'cf-oferta';
+    of.innerHTML = `<p>La Banca ofrece</p><b>${round.oferta}</b><span>puntos por tu caja</span>
+      ${round.ofertas.length > 1 ? `<small>Ofertas anteriores: ${round.ofertas.slice(0, -1).join(' · ')}</small>` : ''}`;
+    acciones.appendChild(of);
+    if (puedo) {
+      const fila = document.createElement('div');
+      fila.className = 'cf-decision';
+      fila.innerHTML = '<button class="cf-trato">🤝 TRATO</button><button class="cf-notrato">✋ NO TRATO</button>';
+      fila.querySelector('.cf-trato').addEventListener('click', () => socket.emit('submit-answer', { trato: true }));
+      fila.querySelector('.cf-notrato').addEventListener('click', () => socket.emit('submit-answer', { trato: false }));
+      acciones.appendChild(fila);
+      msg = '¿Trato o no trato?';
+    }
+  }
+  if (round.fase === 'final' && round.resultado) {
+    const r = round.resultado;
+    const fin = document.createElement('div');
+    fin.className = 'cf-final';
+    fin.innerHTML = r.como === 'trato'
+      ? `<p>Aceptaron el trato por <b>${r.puntos}</b></p><p>Su caja tenía <b>${r.valorSuCaja}</b> ${r.valorSuCaja > r.puntos ? '😱 ¡tenían más!' : '😎 ¡buen negocio!'}</p>`
+      : `<p>Llegaron hasta el final: su caja tenía</p><b class="cf-grande">${r.valorSuCaja}</b>`;
+    acciones.appendChild(fin);
+    if (myId === room.hostId) {
+      const sig = document.createElement('button');
+      sig.className = 'btn btn-solid';
+      sig.textContent = round.number >= round.total ? 'Terminar ▶' : 'Siguiente equipo ▶';
+      sig.addEventListener('click', () => socket.emit('judge-word', { siguiente: true }));
+      acciones.appendChild(sig);
+    }
+    msg = `Sigue solo en ${round.segundosFinal} s.`;
+    if (lastCajaFinal !== `${room.code}-${room.currentRoundNumber}-${round.number}`) {
+      lastCajaFinal = `${room.code}-${room.currentRoundNumber}-${round.number}`;
+      if (r.puntos >= 10) confetti(1.8);
+    }
+  }
+  $('playing-turn-msg').textContent = msg;
+}
+let lastCajaFinal = null;
+
 function renderEscalera(round, container) {
   container.innerHTML = '';
   const iAmHost = myId === room.hostId;
@@ -2778,6 +3013,18 @@ function renderPlaying() {
     return;
   }
 
+  // La Encuesta y Caja Fuerte: tableros propios (formulario que no se
+  // puede rearmar cada segundo / cajas para tocar).
+  if (round.type === 'encuesta' || round.type === 'caja-fuerte') {
+    $('btn-pasapalabra').classList.add('hidden');
+    $('playing-options').innerHTML = '';
+    if (round.type === 'encuesta') renderEncuesta(round, container, roundKey);
+    else renderCajaFuerte(round, container, roundKey);
+    applyGameIdentity(round);
+    maybeFlashFeedback(round);
+    return;
+  }
+
   // Escalera Final: como el Rosco (reloj propio por equipo) pero con un
   // botón extra para plantarse -- necesita su propio flujo.
   if (round.type === 'escalera-final') {
@@ -2936,6 +3183,8 @@ $('btn-back-home').addEventListener('click', () => {
   mimicaBuiltFor = null;
   prohibidaBuiltFor = null;
   impostorBuiltFor = null;
+  encuestaBuiltFor = null;
+  cajaBuiltFor = null;
   sopaBuiltFor = null;
   cruzadasBuiltFor = null;
   stopVoiceListening();

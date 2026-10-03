@@ -1,0 +1,910 @@
+{
+  "theme": "La Encuesta — general",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "encuestas": [
+    {
+      "pregunta": "Algo que se lleva a la playa",
+      "respuestas": [
+        {
+          "texto": "Sombrilla",
+          "puntos": 30,
+          "alias": [
+            "parasol"
+          ]
+        },
+        {
+          "texto": "Protector solar",
+          "puntos": 24,
+          "alias": [
+            "bronceador",
+            "crema",
+            "protector"
+          ]
+        },
+        {
+          "texto": "Toalla",
+          "puntos": 18,
+          "alias": [
+            "lona"
+          ]
+        },
+        {
+          "texto": "Mate",
+          "puntos": 12,
+          "alias": [
+            "termo"
+          ]
+        },
+        {
+          "texto": "Reposera",
+          "puntos": 9,
+          "alias": [
+            "silla"
+          ]
+        },
+        {
+          "texto": "Pelota",
+          "puntos": 7,
+          "alias": [
+            "paleta",
+            "paletas"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Algo que se hace un domingo en familia",
+      "respuestas": [
+        {
+          "texto": "Asado",
+          "puntos": 34,
+          "alias": [
+            "parrilla",
+            "parrillada"
+          ]
+        },
+        {
+          "texto": "Ir a la plaza",
+          "puntos": 18,
+          "alias": [
+            "plaza",
+            "parque"
+          ]
+        },
+        {
+          "texto": "Dormir la siesta",
+          "puntos": 16,
+          "alias": [
+            "siesta",
+            "dormir"
+          ]
+        },
+        {
+          "texto": "Ver fútbol",
+          "puntos": 14,
+          "alias": [
+            "futbol",
+            "partido"
+          ]
+        },
+        {
+          "texto": "Comer pastas",
+          "puntos": 10,
+          "alias": [
+            "pastas",
+            "fideos",
+            "ravioles",
+            "ñoquis"
+          ]
+        },
+        {
+          "texto": "Tomar mate",
+          "puntos": 8,
+          "alias": [
+            "mate"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Un animal que se tiene de mascota",
+      "respuestas": [
+        {
+          "texto": "Perro",
+          "puntos": 42,
+          "alias": [
+            "perrito"
+          ]
+        },
+        {
+          "texto": "Gato",
+          "puntos": 30,
+          "alias": [
+            "gatito"
+          ]
+        },
+        {
+          "texto": "Pez",
+          "puntos": 10,
+          "alias": [
+            "pescado",
+            "peces",
+            "pececito"
+          ]
+        },
+        {
+          "texto": "Loro",
+          "puntos": 8,
+          "alias": [
+            "pajaro",
+            "canario",
+            "ave"
+          ]
+        },
+        {
+          "texto": "Tortuga",
+          "puntos": 6,
+          "alias": []
+        },
+        {
+          "texto": "Conejo",
+          "puntos": 4,
+          "alias": [
+            "hamster",
+            "hámster"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Algo que se encuentra en una heladera",
+      "respuestas": [
+        {
+          "texto": "Leche",
+          "puntos": 28,
+          "alias": []
+        },
+        {
+          "texto": "Agua",
+          "puntos": 20,
+          "alias": [
+            "botella de agua"
+          ]
+        },
+        {
+          "texto": "Huevos",
+          "puntos": 16,
+          "alias": [
+            "huevo"
+          ]
+        },
+        {
+          "texto": "Manteca",
+          "puntos": 14,
+          "alias": [
+            "mantequilla"
+          ]
+        },
+        {
+          "texto": "Queso",
+          "puntos": 12,
+          "alias": []
+        },
+        {
+          "texto": "Gaseosa",
+          "puntos": 10,
+          "alias": [
+            "coca",
+            "soda",
+            "jugo"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Una excusa para llegar tarde",
+      "respuestas": [
+        {
+          "texto": "Había tráfico",
+          "puntos": 36,
+          "alias": [
+            "trafico",
+            "transito",
+            "tránsito",
+            "embotellamiento"
+          ]
+        },
+        {
+          "texto": "Me quedé dormido",
+          "puntos": 28,
+          "alias": [
+            "dormido",
+            "no sonó el despertador",
+            "despertador"
+          ]
+        },
+        {
+          "texto": "Se me rompió el auto",
+          "puntos": 14,
+          "alias": [
+            "auto",
+            "se rompió el auto",
+            "pinchadura",
+            "goma"
+          ]
+        },
+        {
+          "texto": "No pasaba el colectivo",
+          "puntos": 12,
+          "alias": [
+            "colectivo",
+            "bondi",
+            "micro",
+            "tren"
+          ]
+        },
+        {
+          "texto": "Estaba enfermo",
+          "puntos": 10,
+          "alias": [
+            "enfermo",
+            "me sentía mal"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Algo que hace la gente cuando está aburrida",
+      "respuestas": [
+        {
+          "texto": "Mirar el celular",
+          "puntos": 40,
+          "alias": [
+            "celular",
+            "telefono",
+            "teléfono",
+            "redes"
+          ]
+        },
+        {
+          "texto": "Dormir",
+          "puntos": 20,
+          "alias": [
+            "siesta"
+          ]
+        },
+        {
+          "texto": "Comer",
+          "puntos": 16,
+          "alias": [
+            "picar algo"
+          ]
+        },
+        {
+          "texto": "Ver tele",
+          "puntos": 14,
+          "alias": [
+            "television",
+            "televisión",
+            "series",
+            "netflix"
+          ]
+        },
+        {
+          "texto": "Salir a caminar",
+          "puntos": 10,
+          "alias": [
+            "caminar",
+            "pasear"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Una comida que se pide por delivery",
+      "respuestas": [
+        {
+          "texto": "Pizza",
+          "puntos": 44,
+          "alias": []
+        },
+        {
+          "texto": "Hamburguesa",
+          "puntos": 22,
+          "alias": [
+            "hamburguesas"
+          ]
+        },
+        {
+          "texto": "Empanadas",
+          "puntos": 16,
+          "alias": [
+            "empanada"
+          ]
+        },
+        {
+          "texto": "Sushi",
+          "puntos": 10,
+          "alias": []
+        },
+        {
+          "texto": "Helado",
+          "puntos": 8,
+          "alias": []
+        }
+      ]
+    },
+    {
+      "pregunta": "Algo que se olvida al salir de viaje",
+      "respuestas": [
+        {
+          "texto": "Cargador",
+          "puntos": 32,
+          "alias": [
+            "cargador del celular"
+          ]
+        },
+        {
+          "texto": "Cepillo de dientes",
+          "puntos": 24,
+          "alias": [
+            "cepillo",
+            "pasta de dientes"
+          ]
+        },
+        {
+          "texto": "Documento",
+          "puntos": 18,
+          "alias": [
+            "dni",
+            "pasaporte"
+          ]
+        },
+        {
+          "texto": "Ropa interior",
+          "puntos": 14,
+          "alias": [
+            "calzones",
+            "medias",
+            "bombacha"
+          ]
+        },
+        {
+          "texto": "Anteojos",
+          "puntos": 12,
+          "alias": [
+            "lentes",
+            "anteojos de sol"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Un regalo típico para el Día de la Madre",
+      "respuestas": [
+        {
+          "texto": "Flores",
+          "puntos": 34,
+          "alias": [
+            "ramo",
+            "rosas"
+          ]
+        },
+        {
+          "texto": "Perfume",
+          "puntos": 26,
+          "alias": [
+            "colonia"
+          ]
+        },
+        {
+          "texto": "Ropa",
+          "puntos": 16,
+          "alias": [
+            "remera",
+            "pañuelo",
+            "bufanda"
+          ]
+        },
+        {
+          "texto": "Bombones",
+          "puntos": 14,
+          "alias": [
+            "chocolates",
+            "chocolate"
+          ]
+        },
+        {
+          "texto": "Una tarjeta",
+          "puntos": 10,
+          "alias": [
+            "carta",
+            "tarjeta"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Algo que hay en un cumpleaños infantil",
+      "respuestas": [
+        {
+          "texto": "Torta",
+          "puntos": 34,
+          "alias": [
+            "pastel"
+          ]
+        },
+        {
+          "texto": "Globos",
+          "puntos": 26,
+          "alias": [
+            "globo"
+          ]
+        },
+        {
+          "texto": "Velitas",
+          "puntos": 16,
+          "alias": [
+            "velas",
+            "vela"
+          ]
+        },
+        {
+          "texto": "Piñata",
+          "puntos": 12,
+          "alias": [
+            "piñatas"
+          ]
+        },
+        {
+          "texto": "Payaso",
+          "puntos": 12,
+          "alias": [
+            "animador",
+            "mago"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Una profesión que usa uniforme",
+      "respuestas": [
+        {
+          "texto": "Policía",
+          "puntos": 30,
+          "alias": [
+            "policia",
+            "agente"
+          ]
+        },
+        {
+          "texto": "Médico",
+          "puntos": 24,
+          "alias": [
+            "medico",
+            "doctor",
+            "enfermero",
+            "enfermera"
+          ]
+        },
+        {
+          "texto": "Bombero",
+          "puntos": 20,
+          "alias": []
+        },
+        {
+          "texto": "Cocinero",
+          "puntos": 14,
+          "alias": [
+            "chef"
+          ]
+        },
+        {
+          "texto": "Piloto",
+          "puntos": 12,
+          "alias": [
+            "azafata",
+            "militar",
+            "soldado"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Algo que se hace antes de dormir",
+      "respuestas": [
+        {
+          "texto": "Lavarse los dientes",
+          "puntos": 36,
+          "alias": [
+            "dientes",
+            "cepillarse"
+          ]
+        },
+        {
+          "texto": "Mirar el celular",
+          "puntos": 26,
+          "alias": [
+            "celular",
+            "telefono"
+          ]
+        },
+        {
+          "texto": "Ponerse el pijama",
+          "puntos": 16,
+          "alias": [
+            "pijama"
+          ]
+        },
+        {
+          "texto": "Leer",
+          "puntos": 12,
+          "alias": [
+            "libro"
+          ]
+        },
+        {
+          "texto": "Rezar",
+          "puntos": 10,
+          "alias": [
+            "orar"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Un deporte que se ve por televisión",
+      "respuestas": [
+        {
+          "texto": "Fútbol",
+          "puntos": 54,
+          "alias": [
+            "futbol"
+          ]
+        },
+        {
+          "texto": "Tenis",
+          "puntos": 16,
+          "alias": []
+        },
+        {
+          "texto": "Básquet",
+          "puntos": 12,
+          "alias": [
+            "basquet",
+            "basket",
+            "basketball"
+          ]
+        },
+        {
+          "texto": "Fórmula 1",
+          "puntos": 10,
+          "alias": [
+            "formula 1",
+            "autos",
+            "carreras"
+          ]
+        },
+        {
+          "texto": "Boxeo",
+          "puntos": 8,
+          "alias": []
+        }
+      ]
+    },
+    {
+      "pregunta": "Algo que se compra en un kiosco",
+      "respuestas": [
+        {
+          "texto": "Golosinas",
+          "puntos": 32,
+          "alias": [
+            "caramelos",
+            "chicles",
+            "chupetin",
+            "alfajor"
+          ]
+        },
+        {
+          "texto": "Gaseosa",
+          "puntos": 22,
+          "alias": [
+            "bebida",
+            "agua"
+          ]
+        },
+        {
+          "texto": "Cigarrillos",
+          "puntos": 18,
+          "alias": [
+            "puchos",
+            "tabaco"
+          ]
+        },
+        {
+          "texto": "Carga del celular",
+          "puntos": 14,
+          "alias": [
+            "recarga",
+            "sube",
+            "carga"
+          ]
+        },
+        {
+          "texto": "Diario",
+          "puntos": 14,
+          "alias": [
+            "revista",
+            "periodico"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Una fruta que se come en verano",
+      "respuestas": [
+        {
+          "texto": "Sandía",
+          "puntos": 36,
+          "alias": [
+            "sandia"
+          ]
+        },
+        {
+          "texto": "Durazno",
+          "puntos": 24,
+          "alias": [
+            "melocoton"
+          ]
+        },
+        {
+          "texto": "Melón",
+          "puntos": 16,
+          "alias": [
+            "melon"
+          ]
+        },
+        {
+          "texto": "Frutilla",
+          "puntos": 14,
+          "alias": [
+            "fresa",
+            "frutillas"
+          ]
+        },
+        {
+          "texto": "Cereza",
+          "puntos": 10,
+          "alias": [
+            "cerezas"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Algo que te puede arruinar el día",
+      "respuestas": [
+        {
+          "texto": "Lluvia",
+          "puntos": 28,
+          "alias": [
+            "llover",
+            "tormenta"
+          ]
+        },
+        {
+          "texto": "Una pelea",
+          "puntos": 24,
+          "alias": [
+            "discusion",
+            "discusión",
+            "pelear"
+          ]
+        },
+        {
+          "texto": "Perder el colectivo",
+          "puntos": 18,
+          "alias": [
+            "llegar tarde",
+            "colectivo"
+          ]
+        },
+        {
+          "texto": "Que te roben",
+          "puntos": 16,
+          "alias": [
+            "robo",
+            "asalto"
+          ]
+        },
+        {
+          "texto": "Quedarse sin batería",
+          "puntos": 14,
+          "alias": [
+            "bateria",
+            "celular"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Algo que se hace en un casamiento",
+      "respuestas": [
+        {
+          "texto": "Bailar",
+          "puntos": 34,
+          "alias": [
+            "baile",
+            "fiesta"
+          ]
+        },
+        {
+          "texto": "Brindar",
+          "puntos": 22,
+          "alias": [
+            "brindis"
+          ]
+        },
+        {
+          "texto": "Tirar el ramo",
+          "puntos": 18,
+          "alias": [
+            "ramo"
+          ]
+        },
+        {
+          "texto": "Comer",
+          "puntos": 14,
+          "alias": [
+            "cena",
+            "banquete"
+          ]
+        },
+        {
+          "texto": "Llorar",
+          "puntos": 12,
+          "alias": [
+            "emocionarse"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Un lugar donde hay que hacer fila",
+      "respuestas": [
+        {
+          "texto": "Banco",
+          "puntos": 36,
+          "alias": [
+            "cajero"
+          ]
+        },
+        {
+          "texto": "Supermercado",
+          "puntos": 28,
+          "alias": [
+            "super",
+            "caja del super"
+          ]
+        },
+        {
+          "texto": "Hospital",
+          "puntos": 14,
+          "alias": [
+            "medico",
+            "guardia",
+            "clinica"
+          ]
+        },
+        {
+          "texto": "Parada del colectivo",
+          "puntos": 12,
+          "alias": [
+            "colectivo",
+            "parada"
+          ]
+        },
+        {
+          "texto": "Cine",
+          "puntos": 10,
+          "alias": [
+            "recital",
+            "teatro"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Algo que se guarda en la billetera",
+      "respuestas": [
+        {
+          "texto": "Plata",
+          "puntos": 40,
+          "alias": [
+            "dinero",
+            "billetes"
+          ]
+        },
+        {
+          "texto": "Tarjetas",
+          "puntos": 28,
+          "alias": [
+            "tarjeta",
+            "tarjeta de credito",
+            "tarjeta de debito"
+          ]
+        },
+        {
+          "texto": "Documento",
+          "puntos": 18,
+          "alias": [
+            "dni",
+            "cedula"
+          ]
+        },
+        {
+          "texto": "Fotos",
+          "puntos": 8,
+          "alias": [
+            "foto"
+          ]
+        },
+        {
+          "texto": "Tickets",
+          "puntos": 6,
+          "alias": [
+            "boletos",
+            "recibos"
+          ]
+        }
+      ]
+    },
+    {
+      "pregunta": "Una cosa que se hace en vacaciones",
+      "respuestas": [
+        {
+          "texto": "Ir a la playa",
+          "puntos": 36,
+          "alias": [
+            "playa",
+            "mar"
+          ]
+        },
+        {
+          "texto": "Descansar",
+          "puntos": 22,
+          "alias": [
+            "dormir"
+          ]
+        },
+        {
+          "texto": "Sacar fotos",
+          "puntos": 16,
+          "alias": [
+            "fotos"
+          ]
+        },
+        {
+          "texto": "Pasear",
+          "puntos": 14,
+          "alias": [
+            "conocer",
+            "turismo",
+            "viajar"
+          ]
+        },
+        {
+          "texto": "Comer afuera",
+          "puntos": 12,
+          "alias": [
+            "restaurante",
+            "comer"
+          ]
+        }
+      ]
+    }
+  ]
+}
