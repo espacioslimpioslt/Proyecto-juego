@@ -98,6 +98,16 @@ function play({ programId, difficulty, players = 4, disconnectAt = null, label }
   ids.slice(1).forEach((id, i) => rooms.joinRoom(room.code, id, 'P' + (i + 1)));
   const cfg = { programId, roundCount: pick([3, 6, 9]), teamsEnabled: true, difficulty, baseTimeSeconds: 90 };
   if (programId === 'varios') cfg.selectedGames = ['impostor', 'mimica', 'adivina-la-cancion', 'la-cadena', 'palabra-prohibida'];
+  // Formato de un toque, o personalizada con ajustes y reloj al azar.
+  if (Math.random() < 0.3) {
+    cfg.formato = pick(['rapida', 'clasica', 'maraton', 'familia', 'desafio']);
+  } else {
+    cfg.tiempoRespuesta = pick([0, 15, 30]);
+    cfg.gameOptions = {};
+    for (const juego of rooms.publicState(room, ids[0]).ajustesJuegos) {
+      cfg.gameOptions[juego.id] = Object.fromEntries(juego.opciones.map((o) => [o.id, pick(o.valores).v]));
+    }
+  }
   rooms.setConfig(room, ids[0], cfg);
   let r = rooms.startGame(room, ids[0]);
   if (r.error) return { label, error: 'start: ' + r.error };

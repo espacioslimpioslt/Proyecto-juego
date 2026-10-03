@@ -4,31 +4,32 @@
 // palabra. Reparte segundos para el rosco final.
 
 const { loadDecks, pickDeck, shuffle } = require('../contentLoader');
+const { resolver } = require('../opciones');
 
 const type = 'donde-estaba';
 const label = '¿Dónde Estaba?';
 const estimateSecondsPerRound = 90;
 
 const SEGUNDOS_POR_ACIERTO = 6;
-const PREGUNTAS_POR_RONDA = 6;
-
-// Sin mazos propios por dificultad, lo que cambia es cuanto tiempo hay para
-// memorizar el panel antes de que se tape.
-const SEGUNDOS_MEMORIZANDO = { facil: 12, normal: 8, dificil: 5 };
-function segundosMemorizando(difficulty) {
-  return SEGUNDOS_MEMORIZANDO[difficulty] || SEGUNDOS_MEMORIZANDO.normal;
-}
 
 const decks = loadDecks('el-rosco', 'donde-estaba');
 
-function createRound({ entrantIds, usedDeckIds = [], region, adultsOnly, difficulty }) {
+// Ajustes que el anfitrión puede elegir en la sala (ver server/opciones.js).
+// Si no elige, cada uno sale de la dificultad.
+const opciones = [
+  { id: 'memorizar', label: 'Segundos para memorizar', valores: [[5, '5 s'], [8, '8 s'], [12, '12 s'], [15, '15 s']], porDificultad: { facil: 12, normal: 8, dificil: 5 } },
+  { id: 'preguntas', label: 'Preguntas', valores: [[4, '4'], [6, '6'], [9, '9 (todas)']], porDefecto: 6 }
+];
+
+function createRound({ entrantIds, usedDeckIds = [], region, adultsOnly, difficulty, opciones: elegidas }) {
+  const o = resolver(opciones, elegidas, difficulty);
   const deck = pickDeck(decks, usedDeckIds, { region, adultsOnly, difficulty });
   const panel = deck ? shuffle(deck.data.panels)[0] : null;
   // Cada casilla es una imagen (emoji + su nombre), no una palabra suelta.
   const items = panel ? shuffle(panel.items).slice(0, 9) : [];
 
   // El orden de preguntas: que casilla se pide en cada turno.
-  const asks = shuffle(items.map((it, i) => ({ item: it, cell: i }))).slice(0, PREGUNTAS_POR_RONDA);
+  const asks = shuffle(items.map((it, i) => ({ item: it, cell: i }))).slice(0, o.preguntas);
 
   const entrants = {};
   entrantIds.forEach((id) => { entrants[id] = { correct: 0, secondsWon: 0 }; });
@@ -41,8 +42,8 @@ function createRound({ entrantIds, usedDeckIds = [], region, adultsOnly, difficu
     items,
     asks,
     index: 0,
-    revealSecondsLeft: segundosMemorizando(difficulty),
-    revealMaxSeconds: segundosMemorizando(difficulty),
+    revealSecondsLeft: o.memorizar,
+    revealMaxSeconds: o.memorizar,
     entrants,
     activeEntrant: entrantIds[0] || null,
     lastFeedback: null,
@@ -124,4 +125,15 @@ function publicView(state) {
   };
 }
 
-module.exports = { type, label, estimateSecondsPerRound, createRound, answer, tick, scores, carryOver, publicView };
+// Reloj para responder (lo maneja el motor, si el anfitrión lo activó): si
+// se acaba el tiempo del turno, cuenta como respuesta equivocada y sigue.
+function turnoEnEspera(state) {
+  return !state.finished && state.revealSecondsLeft <= 0;
+}
+
+function alVencerTurno(state) {
+  if (!turnoEnEspera(state)) return;
+  answer(state, state.activeEntrant, -1);
+}
+
+module.exports = { type, label, estimateSecondsPerRound, opciones, createRound, alVencerTurno, turnoEnEspera, answer, tick, scores, carryOver, publicView };

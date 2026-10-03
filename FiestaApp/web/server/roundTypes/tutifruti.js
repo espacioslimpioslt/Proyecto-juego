@@ -14,6 +14,7 @@
 // discutio el grupo en voz alta) la acepta o la rechaza antes de puntuar.
 
 const { loadDecks } = require('../contentLoader');
+const { resolver } = require('../opciones');
 
 const type = 'tutifruti';
 const label = 'Tutifruti';
@@ -80,8 +81,16 @@ function iniciarLetra(state, m) {
   Object.values(state.entrants).forEach((e) => { e.answers = {}; e.submitted = false; });
 }
 
-function createRound({ entrantIds, usedLetters = [], difficulty }) {
-  const m = mecanica(difficulty);
+// Ajustes que el anfitrión puede elegir en la sala (ver server/opciones.js).
+// Si no elige, cada uno sale de la dificultad.
+const opciones = [
+  { id: 'letras', label: 'Cantidad de letras', valores: [[3, '3'], [5, '5'], [7, '7'], [9, '9']], porDificultad: { facil: 5, normal: 7, dificil: 9 } },
+  { id: 'segundos', label: 'Segundos por letra', valores: [[30, '30 s'], [45, '45 s'], [60, '1 min'], [80, '1 min 20 s']], porDificultad: { facil: 80, normal: 60, dificil: 45 } }
+];
+
+function createRound({ entrantIds, usedLetters = [], difficulty, opciones: elegidas }) {
+  const o = resolver(opciones, elegidas, difficulty);
+  const m = { ...mecanica(difficulty), segundos: o.segundos, rondas: o.letras };
 
   const entrants = {};
   entrantIds.forEach((id) => {
@@ -91,6 +100,7 @@ function createRound({ entrantIds, usedLetters = [], difficulty }) {
   const state = {
     gameType: type,
     difficulty,
+    m,
     totalRondas: m.rondas,
     rondaActual: 0, // 0-based
     usedLettersInternal: [...usedLetters],
@@ -165,7 +175,7 @@ function resolveScores(state) {
   if (state.rondaActual >= state.totalRondas) {
     state.finished = true;
   } else {
-    iniciarLetra(state, mecanica(state.difficulty));
+    iniciarLetra(state, state.m);
   }
 }
 
@@ -262,5 +272,5 @@ function publicView(state) {
 
 module.exports = {
   type, label, estimateSecondsPerRound, simultaneous,
-  createRound, answer, judge, tick, scores, carryOver, publicView
+  opciones, createRound, answer, judge, tick, scores, carryOver, publicView
 };

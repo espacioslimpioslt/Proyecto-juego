@@ -4,13 +4,13 @@
 // Reparte segundos para el rosco final.
 
 const { loadDecks, pickDeck, shuffle, shuffleOptions } = require('../contentLoader');
+const { resolver } = require('../opciones');
 
 const type = 'la-silla';
 const label = 'La Silla';
 const estimateSecondsPerRound = 90;
 
 const SEGUNDOS_POR_ACIERTO = 6;
-const ERRORES_PERMITIDOS = 2;
 
 const decks = loadDecks('el-rosco', 'la-silla');
 
@@ -21,7 +21,14 @@ function buildChain(chain) {
   };
 }
 
-function createRound({ entrantIds, usedDeckIds = [], region, adultsOnly, difficulty }) {
+// Ajustes que el anfitrión puede elegir en la sala (ver server/opciones.js).
+// Si no elige, cada uno sale de la dificultad.
+const opciones = [
+  { id: 'vidas', label: 'Errores permitidos', valores: [[1, '1 (muerte súbita)'], [2, '2'], [3, '3']], porDificultad: { facil: 3, normal: 2, dificil: 1 } }
+];
+
+function createRound({ entrantIds, usedDeckIds = [], region, adultsOnly, difficulty, opciones: elegidas }) {
+  const o = resolver(opciones, elegidas, difficulty);
   const deck = pickDeck(decks, usedDeckIds, { region, adultsOnly, difficulty });
   const chains = deck ? shuffle(deck.data.chains) : [];
 
@@ -43,6 +50,7 @@ function createRound({ entrantIds, usedDeckIds = [], region, adultsOnly, difficu
     theme: deck ? deck.data.theme : null,
     entrants,
     activeEntrant: entrantIds[0] || null,
+    erroresPermitidos: o.vidas,
     lastFeedback: null,
     finished: false
   };
@@ -92,7 +100,7 @@ function answer(state, entrantId, optionIndex) {
 
   entrant.index += 1;
   // Se corta la tanda por dos errores o por completar las 5 preguntas.
-  if (entrant.errors >= ERRORES_PERMITIDOS || entrant.index >= entrant.chain.questions.length) {
+  if (entrant.errors >= state.erroresPermitidos || entrant.index >= entrant.chain.questions.length) {
     entrant.done = true;
     passTurn(state);
   }
@@ -129,9 +137,20 @@ function publicView(state) {
     activeEntrant: state.activeEntrant,
     lastFeedback: state.lastFeedback,
     finished: state.finished,
-    erroresPermitidos: ERRORES_PERMITIDOS,
+    erroresPermitidos: state.erroresPermitidos,
     secondsPerHit: SEGUNDOS_POR_ACIERTO
   };
 }
 
-module.exports = { type, label, estimateSecondsPerRound, createRound, answer, scores, carryOver, publicView };
+// Reloj para responder (lo maneja el motor, si el anfitrión lo activó): si
+// se acaba el tiempo del turno, cuenta como respuesta equivocada y sigue.
+function turnoEnEspera(state) {
+  return !state.finished;
+}
+
+function alVencerTurno(state) {
+  if (!turnoEnEspera(state)) return;
+  answer(state, state.activeEntrant, -1);
+}
+
+module.exports = { type, label, estimateSecondsPerRound, opciones, createRound, alVencerTurno, turnoEnEspera, answer, scores, carryOver, publicView };

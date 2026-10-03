@@ -526,7 +526,7 @@ function parseTestNames(value) {
   return String(value || '').split(',').map((n) => n.trim()).filter(Boolean);
 }
 
-function sendConfig() {
+function sendConfig(extra = {}) {
   $('config-test-names').classList.toggle('hidden', !$('config-test').checked);
   const selectedGames = Array.from($('config-game-picker-list').querySelectorAll('input[data-game-id]:checked'))
     .map((input) => input.dataset.gameId);
@@ -541,13 +541,85 @@ function sendConfig() {
     difficulty: $('config-difficulty').value,
     testNamesA: parseTestNames($('config-test-names-a').value),
     testNamesB: parseTestNames($('config-test-names-b').value),
-    selectedGames
+    selectedGames,
+    tiempoRespuesta: Number($('config-tiempo-respuesta').value),
+    gameOptions: leerAjustesJuegos(),
+    ...extra
   });
 }
+
+// Ajustes de cada juego elegidos en la sala: { juego: { opcion: valor } }.
+function leerAjustesJuegos() {
+  const out = {};
+  // Solo lo que difiere de lo que da la dificultad: así, si después se
+  // cambia la dificultad, lo que no se tocó a mano se acomoda solo.
+  document.querySelectorAll('#config-ajustes select[data-juego]').forEach((sel) => {
+    if (sel.value === sel.dataset.defecto) return;
+    const g = sel.dataset.juego;
+    out[g] = out[g] || {};
+    out[g][sel.dataset.opcion] = sel.value;
+  });
+  return out;
+}
+
+// Tarjetas de formato ("Rápida", "Familia"...): un toque llena todo.
+function renderFormatos() {
+  const cont = $('config-formatos');
+  const todos = [...(room.formatos || []), { id: 'personalizada', nombre: '⚙️ Personalizada', desc: 'Elegí cada detalle' }];
+  const key = todos.map((f) => f.id).join() + room.formato;
+  if (cont.dataset.key === key) return;
+  cont.dataset.key = key;
+  cont.innerHTML = todos.map((f) => `
+    <button type="button" class="formato${room.formato === f.id ? ' on' : ''}" data-formato="${f.id}">
+      <b>${f.nombre}</b><small>${f.desc}</small>
+    </button>`).join('');
+}
+$('config-formatos').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-formato]');
+  if (!b) return;
+  if (window.Sfx) Sfx.play('pop');
+  if (b.dataset.formato === 'personalizada') {
+    $('config-ajustes-wrap').open = true;
+    sendConfig();
+  } else {
+    sendConfig({ formato: b.dataset.formato });
+  }
+});
+
+// Selectores de los ajustes de cada juego del Programa. Se rearman solo si
+// cambia qué juegos/opciones hay (no en cada actualización: si no, se cerraba
+// el selector que alguien estaba usando).
+function renderAjustesJuegos() {
+  const cont = $('config-ajustes');
+  const juegos = room.ajustesJuegos || [];
+  $('config-ajustes-wrap').classList.toggle('hidden', !juegos.length);
+  const key = juegos.map((j) => j.id + ':' + j.opciones.map((o) => o.id + o.porDefecto).join()).join('|');
+  if (cont.dataset.key !== key) {
+    cont.dataset.key = key;
+    cont.innerHTML = juegos.map((j) => `
+      <div class="ajuste-juego">
+        <p class="aj-name">${j.icon} ${esc(j.label)}</p>
+        ${j.opciones.map((o) => `
+          <label>${esc(o.label)}
+            <select data-juego="${j.id}" data-opcion="${o.id}" data-defecto="${esc(String(o.porDefecto))}">
+              ${o.valores.map((v) => `<option value="${esc(String(v.v))}">${esc(v.label)}${String(v.v) === String(o.porDefecto) ? ' (por defecto)' : ''}</option>`).join('')}
+            </select>
+          </label>`).join('')}
+      </div>`).join('');
+  }
+  cont.querySelectorAll('select[data-juego]').forEach((sel) => {
+    if (document.activeElement === sel) return;
+    const juego = juegos.find((j) => j.id === sel.dataset.juego);
+    const op = juego && juego.opciones.find((o) => o.id === sel.dataset.opcion);
+    const elegido = ((room.gameOptions || {})[sel.dataset.juego] || {})[sel.dataset.opcion];
+    sel.value = String(elegido !== undefined ? elegido : op.porDefecto);
+  });
+}
+$('config-ajustes').addEventListener('change', () => sendConfig());
 [
   'config-program', 'config-rounds', 'config-time', 'config-region', 'config-difficulty', 'config-adults',
-  'config-test', 'config-test-names-a', 'config-test-names-b'
-].forEach((id) => $(id).addEventListener('change', sendConfig));
+  'config-test', 'config-test-names-a', 'config-test-names-b', 'config-tiempo-respuesta'
+].forEach((id) => $(id).addEventListener('change', () => sendConfig()));
 
 // Programas "pick" (ej. Varios): en vez de sortear una cantidad de pruebas,
 // el anfitrión tilda a mano cuáles quiere jugar. Arranca con todo tildado
@@ -673,6 +745,16 @@ function renderLobby() {
     difficultySelect.dataset.filled = 'yes';
   }
   if (room.difficulty) difficultySelect.value = room.difficulty;
+
+  const trSelect = $('config-tiempo-respuesta');
+  if (trSelect.dataset.filled !== 'yes' && room.tiemposRespuesta) {
+    trSelect.innerHTML = room.tiemposRespuesta
+      .map((t) => `<option value="${t}">${t ? `${t} segundos` : 'Sin límite'}</option>`).join('');
+    trSelect.dataset.filled = 'yes';
+  }
+  if (document.activeElement !== trSelect) trSelect.value = String(room.tiempoRespuesta || 0);
+  renderFormatos();
+  renderAjustesJuegos();
 
   $('config-estimate').textContent = formatEstimate(room.estimatedSeconds);
 
@@ -1247,7 +1329,7 @@ function maybeFlashFeedback(round) {
   void board.offsetWidth; // fuerza el reflow para poder reiniciar la animación
   board.classList.add(fb.result === 'correct' ? 'flash-correct' : 'flash-wrong');
   if (window.Sfx) Sfx.play(fb.result === 'correct' ? 'acierto' : 'error');
-  const texto = fb.result === 'correct' ? (fb.secondsWon ? `+${fb.secondsWon}s` : '¡Bien!') : '✗';
+  const texto = fb.result === 'correct' ? (fb.secondsWon ? `+${fb.secondsWon}s` : '¡Bien!') : (fb.timeout ? '⏱ ¡Tiempo!' : '✗');
   flyToBank(texto, fb.entrantId, fb.result === 'correct');
 }
 
@@ -1326,6 +1408,8 @@ function renderGameHeader(round) {
   $('playing-round-label').innerHTML = `
     <span class="gh-icon">${GAME_TYPE_ICONS[round.type] || '🎮'}</span>
     <span class="gh-name">${esc(round.label || '')}</span>
+    ${room.turnoRestante !== null && room.turnoRestante !== undefined
+    ? `<span class="gh-timer${room.turnoRestante <= 5 ? ' danger' : ''}" title="Tiempo para responder">⏱ ${room.turnoRestante}</span>` : ''}
     <span class="gh-step">${room.currentRoundNumber}<small>/${room.totalRounds}</small></span>`;
 }
 

@@ -17,6 +17,7 @@
 //   equipo de quien votó, y el impostor suma para el suyo si escapa o roba.
 
 const { loadDecks, pickDeck, shuffle } = require('../contentLoader');
+const { resolver } = require('../opciones');
 
 const type = 'impostor';
 const label = 'El Impostor';
@@ -36,20 +37,6 @@ const PUNTOS_ROBO = 3;
 const SEGUNDOS_POR_PUNTO = 4;
 
 const OPCIONES_ROBO = 6;
-
-// La dificultad cambia cuánto sabe cada uno:
-// - fácil: todos ven la categoría, el impostor sabe que lo es.
-// - normal: nadie ve la categoría; el impostor sabe que lo es.
-// - difícil ("a ciegas"): el impostor recibe otra palabra de la misma
-//   categoría y cree que es uno más.
-const DIFICULTAD_MECANICA = {
-  facil: { casos: 3, vueltas: 2, categoriaVisible: true, aCiegas: false },
-  normal: { casos: 3, vueltas: 2, categoriaVisible: false, aCiegas: false },
-  dificil: { casos: 3, vueltas: 2, categoriaVisible: false, aCiegas: true }
-};
-function mecanica(difficulty) {
-  return DIFICULTAD_MECANICA[difficulty] || DIFICULTAD_MECANICA.normal;
-}
 
 const decks = loadDecks('varios', 'impostor');
 
@@ -239,8 +226,22 @@ function siguienteCaso(state) {
 
 // ---------- Interfaz del motor común ----------
 
-function createRound({ entrantIds, rosters = {}, usedDeckIds = [], region, adultsOnly, difficulty }) {
-  const m = mecanica(difficulty);
+// Ajustes que el anfitrión puede elegir en la sala (ver server/opciones.js).
+// Si no elige, cada uno sale de la dificultad.
+const opciones = [
+  { id: 'modo', label: 'Modo', valores: [['con-categoria', 'Con categoría'], ['sin-categoria', 'Sin categoría'], ['a-ciegas', 'A ciegas (el impostor no sabe que lo es)']], porDificultad: { facil: 'con-categoria', normal: 'sin-categoria', dificil: 'a-ciegas' } },
+  { id: 'casos', label: 'Casos', valores: [[2, '2'], [3, '3'], [4, '4'], [5, '5']], porDefecto: 3 },
+  { id: 'vueltas', label: 'Vueltas de pistas', valores: [[1, '1'], [2, '2'], [3, '3']], porDefecto: 2 }
+];
+
+function createRound({ entrantIds, rosters = {}, usedDeckIds = [], region, adultsOnly, difficulty, opciones: elegidas }) {
+  const o = resolver(opciones, elegidas, difficulty);
+  const m = {
+    casos: o.casos,
+    vueltas: o.vueltas,
+    categoriaVisible: o.modo === 'con-categoria',
+    aCiegas: o.modo === 'a-ciegas'
+  };
   const deck = pickDeck(decks, usedDeckIds, { region, adultsOnly, difficulty });
 
   const entrants = {};
@@ -455,5 +456,5 @@ function privateView(state, viewerId, isTestHost) {
 
 module.exports = {
   type, label, estimateSecondsPerRound, simultaneous, skipMemberGate, minJugadores,
-  createRound, answer, onRosterChange, judge, tick, scores, carryOver, publicView, privateView
+  opciones, createRound, answer, onRosterChange, judge, tick, scores, carryOver, publicView, privateView
 };

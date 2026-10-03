@@ -22,24 +22,13 @@
 // el hilo, aunque la gracia sea recitarla de memoria sin mirar.
 
 const { loadDecks, pickDeck, shuffle, shuffleOptions } = require('../contentLoader');
+const { resolver } = require('../opciones');
 
 const type = 'la-cadena';
 const label = 'La Cadena';
 const estimateSecondsPerRound = 100;
 
 const SEGUNDOS_POR_ESLABON = 5;
-
-// Sin mazos propios por dificultad (no hay contenido "mas dificil" en sí), lo
-// que cambia es cuantas preguntas hay en la tanda (el techo maximo de la
-// cadena) y cuanta ayuda visual se da para recitar -- ver publicView.
-const DIFICULTAD_MECANICA = {
-  facil: { preguntas: 6 },
-  normal: { preguntas: 10 },
-  dificil: { preguntas: 15 }
-};
-function mecanica(difficulty) {
-  return DIFICULTAD_MECANICA[difficulty] || DIFICULTAD_MECANICA.normal;
-}
 
 const decks = loadDecks('varios', 'la-cadena');
 
@@ -69,8 +58,15 @@ function contienePalabra(texto, palabra) {
   return !!p && t.includes(` ${p} `);
 }
 
-function createRound({ entrantIds, rosters = {}, usedDeckIds = [], region, adultsOnly, difficulty }) {
-  const m = mecanica(difficulty);
+// Ajustes que el anfitrión puede elegir en la sala (ver server/opciones.js).
+// Si no elige, cada uno sale de la dificultad.
+const opciones = [
+  { id: 'preguntas', label: 'Largo máximo de la cadena', valores: [[6, '6'], [10, '10'], [15, '15']], porDificultad: { facil: 6, normal: 10, dificil: 15 } }
+];
+
+function createRound({ entrantIds, rosters = {}, usedDeckIds = [], region, adultsOnly, difficulty, opciones: elegidas }) {
+  const o = resolver(opciones, elegidas, difficulty);
+  const m = { preguntas: o.preguntas };
   const deck = pickDeck(decks, usedDeckIds, { region, adultsOnly, difficulty });
   const pool = deck ? shuffle(deck.data.questions) : [];
 
@@ -237,4 +233,15 @@ function onRosterChange(state, rosters) {
   state.rosters = rosters;
 }
 
-module.exports = { type, label, estimateSecondsPerRound, createRound, answer, onRosterChange, judge, scores, carryOver, publicView };
+// Reloj para responder (lo maneja el motor, si el anfitrión lo activó): si
+// se acaba el tiempo del turno, cuenta como respuesta equivocada y sigue.
+function turnoEnEspera(state) {
+  return !state.finished;
+}
+
+function alVencerTurno(state) {
+  if (!turnoEnEspera(state)) return;
+  answer(state, state.activeEntrant, { recitar: '(se acabó el tiempo)' });
+}
+
+module.exports = { type, label, estimateSecondsPerRound, opciones, createRound, alVencerTurno, turnoEnEspera, answer, onRosterChange, judge, scores, carryOver, publicView };

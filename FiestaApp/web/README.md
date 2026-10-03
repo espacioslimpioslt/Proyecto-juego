@@ -28,6 +28,19 @@ npm start
 Abrir `http://localhost:3000` — un tab como anfitrión, y otro tab (o el celu, si
 está en la misma red) como invitado con el código que aparece.
 
+### Formatos y ajustes de cada juego
+En la sala de espera, lo primero es **¿Cómo quieren jugar?**: ⚡ Rápida,
+🎬 Clásica, 🏃 Maratón, 👨‍👩‍👧 Familia con chicos o 🔥 Desafío. Un toque llena
+la cantidad de pruebas, la dificultad, el tiempo de la final y el **tiempo
+para responder** de los juegos por turnos (si se acaba, cuenta como error y
+sigue el próximo: la partida nunca queda esperando).
+
+En **⚙️ Ajustes de cada juego** se puede retocar cada uno (letras y segundos
+de Tutifruti, vidas de La Silla, tamaño de la sopa, modo y casos del
+Impostor, etc.). Lo que no se toca sale de la dificultad. Cada juego declara
+sus ajustes en su archivo (`opciones`, ver `server/opciones.js`) y la sala
+los muestra sola.
+
 ### Jugar con gente que está lejos
 En la sala de espera hay un botón **📲 Invitar por WhatsApp** (y otro para
 copiar el link). El link lleva el código de la sala: quien lo abre cae directo

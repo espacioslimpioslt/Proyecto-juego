@@ -4,6 +4,7 @@
 // de ronda que le corresponda (ver server/roundTypes/).
 
 const fs = require('fs');
+const opcionesJuego = require('./opciones');
 const path = require('path');
 
 const roundTypes = {
@@ -134,6 +135,10 @@ function createRoom(hostPlayerId, hostName, initialProgramId, prefs = {}) {
     region: 'global', // desde donde estan jugando, para elegir el contenido
     adultsOnly: false, // habilita mazos para mayores de 18
     difficulty: 'normal',
+    formato: 'clasica',
+    tiempoRespuesta: 30, // segundos para responder en juegos por turnos (0 = sin límite)
+    gameOptions: {}, // ajustes elegidos por juego: { 'tutifruti': { letras: 5 }, ... }
+    turnoSegundos: 0, // cuánto lleva esperando el turno actual
     usedDeckIds: [], // temas ya jugados en esta partida, para no repetir
     usedLetters: [], // letras ya sorteadas (ej. Tutifruti), para no repetir
     gameSequence: [], // que juego toca en cada ronda
@@ -158,8 +163,11 @@ function createRoom(hostPlayerId, hostName, initialProgramId, prefs = {}) {
       teamsEnabled: true,
       region: prefs.region,
       adultsOnly: prefs.adultsOnly,
-      difficulty: prefs.difficulty
+      difficulty: prefs.difficulty,
+      tiempoRespuesta: 30
     });
+    // Arranca como "Clásica" si la dificultad guardada es la normal.
+    room.formato = room.difficulty === 'normal' ? 'clasica' : 'personalizada';
   }
   return room;
 }
@@ -279,6 +287,21 @@ function buildTestRoster(room) {
 
 const TIEMPOS_VALIDOS = [60, 90, 120, 180, 300]; // segundos por equipo
 
+// Reloj para responder en los juegos por turnos (0 = sin límite). Lo usan
+// los juegos que declaran alVencerTurno (ver eligiUna, laSilla, etc.).
+const TIEMPOS_RESPUESTA = [0, 15, 20, 30, 45, 60];
+
+// Formatos de un toque: llenan la configuración entera de una vez (y
+// vuelven los ajustes de cada juego a los de su dificultad). Después el
+// anfitrión puede retocar lo que quiera ("personalizada").
+const FORMATOS = {
+  rapida: { nombre: '⚡ Rápida', desc: '3 pruebas, ritmo ágil', roundCount: 3, difficulty: 'normal', baseTimeSeconds: 60, tiempoRespuesta: 20 },
+  clasica: { nombre: '🎬 Clásica', desc: '6 pruebas, el programa completo', roundCount: 6, difficulty: 'normal', baseTimeSeconds: 90, tiempoRespuesta: 30 },
+  maraton: { nombre: '🏃 Maratón', desc: '9 pruebas, la noche entera', roundCount: 9, difficulty: 'normal', baseTimeSeconds: 120, tiempoRespuesta: 30 },
+  familia: { nombre: '👨‍👩‍👧 Familia con chicos', desc: 'Fácil y sin apuro', roundCount: 3, difficulty: 'facil', baseTimeSeconds: 120, tiempoRespuesta: 0, adultsOnly: false },
+  desafio: { nombre: '🔥 Desafío', desc: 'Difícil y contrarreloj', roundCount: 6, difficulty: 'dificil', baseTimeSeconds: 60, tiempoRespuesta: 15 }
+};
+
 // Dificultad: filtra el contenido (preguntas mas o menos dificiles, donde ya
 // hay mazos escritos para eso) y, en los juegos sin mazos por dificultad,
 // ajusta el tiempo/tamaño del desafio -- ver DIFICULTAD_MECANICA en cada
@@ -315,10 +338,30 @@ function sanitizeSelectedGames(program, selectedGames) {
   return (Array.isArray(selectedGames) ? selectedGames : []).filter((g) => validos.has(g));
 }
 
-function setConfig(room, hostPlayerId, {
-  programId, roundCount, teamsEnabled, testMode, baseTimeSeconds, region, adultsOnly, difficulty,
-  testNamesA, testNamesB, selectedGames
-}) {
+// Los ajustes que vienen del celu se quedan solo si existen en el juego.
+function sanitizeGameOptions(program, gameOptions) {
+  const out = {};
+  [...(program.games || []), program.finalGame].filter((g) => roundTypes[g]).forEach((g) => {
+    const limpias = opcionesJuego.limpiar(roundTypes[g].opciones, (gameOptions || {})[g]);
+    if (Object.keys(limpias).length) out[g] = limpias;
+  });
+  return out;
+}
+
+function setConfig(room, hostPlayerId, config) {
+  let {
+    roundCount, baseTimeSeconds, difficulty, adultsOnly, tiempoRespuesta, gameOptions
+  } = config;
+  const {
+    programId, teamsEnabled, testMode, region, testNamesA, testNamesB, selectedGames, formato
+  } = config;
+  // Un formato de un toque pisa esos campos y limpia los ajustes por juego.
+  const preset = FORMATOS[formato];
+  if (preset) {
+    ({ roundCount, baseTimeSeconds, difficulty, tiempoRespuesta } = preset);
+    if (preset.adultsOnly !== undefined) adultsOnly = preset.adultsOnly;
+    gameOptions = {};
+  }
   if (!isHost(room, hostPlayerId)) return { error: 'Solo el anfitrion puede configurar la partida.' };
   const program = programs[programId];
   if (!program) return { error: 'Ese Programa no existe.' };
@@ -336,6 +379,9 @@ function setConfig(room, hostPlayerId, {
   room.difficulty = DIFICULTADES.some((d) => d.id === difficulty) ? difficulty : 'normal';
   room.testNamesA = sanitizeTestNames(testNamesA);
   room.testNamesB = sanitizeTestNames(testNamesB);
+  room.formato = preset ? formato : 'personalizada';
+  room.tiempoRespuesta = TIEMPOS_RESPUESTA.includes(Number(tiempoRespuesta)) ? Number(tiempoRespuesta) : 0;
+  room.gameOptions = sanitizeGameOptions(program, gameOptions);
 
   if (esPick) {
     // Sin rosco final que gaste tiempo: la duracion estimada es solo la
@@ -428,9 +474,11 @@ function beginRound(room) {
     usedLetters: room.usedLetters,
     region: room.region,
     adultsOnly: room.adultsOnly,
-    difficulty: room.difficulty
+    difficulty: room.difficulty,
+    opciones: (room.gameOptions || {})[gameType] || {}
   });
   room.roundState.gameType = gameType;
+  room.turnoSegundos = 0;
   if (room.roundState.deckId) room.usedDeckIds.push(room.roundState.deckId);
   if (room.roundState.letter) room.usedLetters.push(room.roundState.letter);
   // Cada juego arranca rotando desde el primer integrante de cada equipo.
@@ -567,6 +615,7 @@ function submitAnswer(room, playerId, payload) {
   // como Adivina la Cancion) necesitan rotar tambien a OTRO equipo ademas del
   // que hizo esta accion -- lo piden devolviendo advanceAlso con sus ids.
   (result.advanceAlso || []).forEach((id) => advanceMemberTurn(room, id));
+  room.turnoSegundos = 0;
   if (room.roundState.finished) finishRound(room);
   return { room };
 }
@@ -582,6 +631,7 @@ function pasapalabra(room, playerId) {
   const { error } = roundType.pasapalabra(room.roundState, entrantId);
   if (error) return { error };
   advanceMemberTurn(room, entrantId);
+  room.turnoSegundos = 0;
   if (room.roundState.finished) finishRound(room);
   return { room };
 }
@@ -596,6 +646,7 @@ function judgeWord(room, hostPlayerId, payload) {
   const result = roundType.judge(room.roundState, payload);
   if (result.error) return { error: result.error };
   (result.advanceAlso || []).forEach((id) => advanceMemberTurn(room, id));
+  room.turnoSegundos = 0;
   if (room.roundState.finished) finishRound(room);
   return { room };
 }
@@ -604,10 +655,32 @@ function judgeWord(room, hostPlayerId, payload) {
 function tickRoom(room) {
   if (room.phase !== 'playing' || !room.roundState) return false;
   const roundType = roundTypeOf(room);
-  if (!roundType.tick) return false;
-  roundType.tick(room.roundState);
+  let cambio = false;
+  if (roundType.tick) {
+    roundType.tick(room.roundState);
+    cambio = true;
+  }
+  // Reloj para responder: si el turno lleva más de lo permitido, el juego lo
+  // da por perdido (alVencerTurno) y pasa al que sigue.
+  if (!room.roundState.finished && relojDeTurnoActivo(room)) {
+    room.turnoSegundos = (room.turnoSegundos || 0) + 1;
+    cambio = true;
+    if (room.turnoSegundos >= room.tiempoRespuesta) {
+      const quien = room.roundState.activeEntrant;
+      roundType.alVencerTurno(room.roundState);
+      if (quien) advanceMemberTurn(room, quien);
+      room.turnoSegundos = 0;
+      room.roundState.lastFeedback = { ...(room.roundState.lastFeedback || {}), timeout: true };
+    }
+  }
   if (room.roundState.finished) finishRound(room);
-  return true;
+  return cambio;
+}
+
+function relojDeTurnoActivo(room) {
+  const roundType = roundTypeOf(room);
+  return !!(room.tiempoRespuesta && roundType && roundType.alVencerTurno
+    && (!roundType.turnoEnEspera || roundType.turnoEnEspera(room.roundState)));
 }
 
 function finishRound(room) {
@@ -732,6 +805,18 @@ function publicState(room, viewerId) {
     phase: room.phase,
     players: room.players.map((p) => ({ id: p.id, name: p.name, team: p.team, connected: p.connected !== false })),
     locked: !!room.locked,
+    formato: room.formato,
+    formatos: Object.entries(FORMATOS).map(([id, f]) => ({ id, nombre: f.nombre, desc: f.desc })),
+    tiempoRespuesta: room.tiempoRespuesta,
+    tiemposRespuesta: TIEMPOS_RESPUESTA,
+    gameOptions: room.gameOptions || {},
+    // Ajustes disponibles de cada juego del Programa (para dibujar la sala).
+    ajustesJuegos: program
+      ? [...(program.games || []), program.finalGame].filter((g) => roundTypes[g] && (roundTypes[g].opciones || []).length)
+        .map((g) => ({ id: g, label: roundTypes[g].label, icon: ICONS[g] || '🎮', opciones: opcionesJuego.publico(roundTypes[g].opciones, room.difficulty) }))
+      : [],
+    // Reloj para responder del turno actual (null si no corre).
+    turnoRestante: room.phase === 'playing' && relojDeTurnoActivo(room) ? Math.max(room.tiempoRespuesta - (room.turnoSegundos || 0), 0) : null,
     endedEarly: !!room.endedEarly,
     programId: room.programId,
     programName: program ? program.name : null,
