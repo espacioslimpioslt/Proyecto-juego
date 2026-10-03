@@ -737,6 +737,7 @@ function renderBanks(round) {
       ${lives}
       ${members.length ? `<span class="tb-members">${members.join(', ')}</span>` : ''}
     `;
+    if (!esRosco) bumpIfChanged(`${room.code}-${room.currentRoundNumber}-${entrantId}`, main, box.querySelector('.tb-time'));
     container.appendChild(box);
   });
 }
@@ -830,8 +831,13 @@ function boardLaSilla(round, container) {
   return q ? q.options : null;
 }
 
+let dondeEstabaMemo = null;
+let dondeRecienTapado = false;
 function boardDondeEstaba(round, container) {
   const ask = round.askItem;
+  // Solo la primera vez que se tapa el panel las cartas "se dan vuelta".
+  dondeRecienTapado = dondeEstabaMemo === true && !round.memorizando;
+  dondeEstabaMemo = round.memorizando;
   const box = document.createElement('div');
   box.className = 'board';
   box.innerHTML = round.memorizando
@@ -853,7 +859,7 @@ function boardDondeEstaba(round, container) {
   for (let i = 0; i < 9; i++) {
     const cell = document.createElement('button');
     const visible = round.items && round.items[i];
-    let cls = 'grid-cell' + (visible ? '' : ' hidden-cell');
+    let cls = 'grid-cell' + (visible ? '' : ' hidden-cell') + (!visible && dondeRecienTapado ? ' flip-in' : '') + (visible && round.memorizando ? ' memo' : '');
     if (feedback && feedback.correctCell === i) cls += ' correct';
     cell.className = cls;
     cell.textContent = visible ? visible.emoji : '';
@@ -1241,6 +1247,8 @@ function maybeFlashFeedback(round) {
   void board.offsetWidth; // fuerza el reflow para poder reiniciar la animación
   board.classList.add(fb.result === 'correct' ? 'flash-correct' : 'flash-wrong');
   if (window.Sfx) Sfx.play(fb.result === 'correct' ? 'acierto' : 'error');
+  const texto = fb.result === 'correct' ? (fb.secondsWon ? `+${fb.secondsWon}s` : '¡Bien!') : '✗';
+  flyToBank(texto, fb.entrantId, fb.result === 'correct');
 }
 
 const BOARDS = {
@@ -1271,6 +1279,153 @@ const GAME_TYPE_ICONS = {
   impostor: '🕵️'
 };
 
+// ---------- Capa "show" común a todos los juegos ----------
+// Identidad de cada prueba (color + cómo se juega en una línea), la
+// presentación con cuenta regresiva al arrancar cada prueba, puntos que
+// "vuelan" al marcador y confeti en los finales.
+const GAME_THEME = {
+  'rosco-por-turnos': ['#ffb23f', '#ff6b3d'],
+  'eligi-una': ['#3de6ff', '#5b8dd6'],
+  'la-silla': ['#ffd23f', '#ff9f1c'],
+  'donde-estaba': ['#3ddc84', '#1fb6a6'],
+  'sopa-de-letras': ['#8b5cff', '#3de6ff'],
+  'palabras-cruzadas': ['#ff3d7f', '#8b5cff'],
+  tutifruti: ['#ff6b3d', '#ff3d7f'],
+  'la-cadena': ['#3de6ff', '#3ddc84'],
+  'adivina-la-cancion': ['#ff3d7f', '#ffb23f'],
+  mimica: ['#ffd23f', '#3ddc84'],
+  'palabra-prohibida': ['#ff4d5e', '#ff9f1c'],
+  'duelo-torres': ['#5b8dd6', '#e0637a'],
+  'escalera-final': ['#ffb23f', '#3de6ff'],
+  impostor: ['#ff3d7f', '#8b5cff']
+};
+const GAME_HOWTO = {
+  'rosco-por-turnos': 'Una palabra por letra. Acertás y seguís; errás o pasás y le toca al otro. El reloj corre solo en tu turno.',
+  'eligi-una': 'Diez preguntas por equipo, cuatro opciones. Cada acierto suma segundos para la final.',
+  'la-silla': 'Cinco preguntas que empiezan con la misma letra. Con dos errores, se corta.',
+  'donde-estaba': 'Memoricen el panel. Cuando se tape, digan dónde estaba cada imagen.',
+  'sopa-de-letras': 'Cada equipo, su propia sopa. Tocá la primera y la última letra de cada palabra. Gana el más rápido.',
+  'palabras-cruzadas': 'Completen las palabras que cruzan la base. Cada equipo, su tablero, al mismo tiempo.',
+  tutifruti: 'Una letra, seis categorías. ¡El primero en completar todo corta a los demás!',
+  'la-cadena': 'Recitá la cadena completa y sumá un eslabón nuevo, todo de un tirón.',
+  'adivina-la-cancion': 'Un equipo pone música, el otro adivina. ¡Tocá el botón apenas la sepas!',
+  mimica: 'Uno actúa en silencio, el otro equipo adivina en voz alta.',
+  'palabra-prohibida': 'Describí la palabra sin decir ninguna de las prohibidas.',
+  'duelo-torres': 'Uno contra uno, preguntas alternadas. El primero que se equivoca, cae.',
+  'escalera-final': 'Subí escalón por escalón. Si caés, volvés al último que plantaste.',
+  impostor: 'Todos tienen la misma palabra... menos uno. Den pistas y descubran al impostor.'
+};
+function gameTheme(type) { return GAME_THEME[type] || ['#ffb23f', '#ff3d7f']; }
+
+// Encabezado de la prueba: ícono, nombre y "1 / 3" con el color del juego.
+function renderGameHeader(round) {
+  const [a, b] = gameTheme(round.type);
+  const screen = $('screen-playing');
+  screen.style.setProperty('--game-a', a);
+  screen.style.setProperty('--game-b', b);
+  $('playing-round-label').innerHTML = `
+    <span class="gh-icon">${GAME_TYPE_ICONS[round.type] || '🎮'}</span>
+    <span class="gh-name">${esc(round.label || '')}</span>
+    <span class="gh-step">${room.currentRoundNumber}<small>/${room.totalRounds}</small></span>`;
+}
+
+// Presentación al arrancar cada prueba: ícono grande, nombre, cómo se juega
+// y 3-2-1. Se puede saltear tocando. No frena al servidor: es solo pantalla.
+let introShownFor = null;
+function maybeRoundIntro(round, roundKey) {
+  if (introShownFor === roundKey) return;
+  introShownFor = roundKey;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const [a, b] = gameTheme(round.type);
+  const intro = document.createElement('div');
+  intro.className = 'round-intro';
+  intro.style.setProperty('--game-a', a);
+  intro.style.setProperty('--game-b', b);
+  intro.innerHTML = `
+    <div class="ri-rays"></div>
+    <div class="ri-body">
+      <p class="ri-step">Prueba ${room.currentRoundNumber} de ${room.totalRounds}</p>
+      <div class="ri-icon">${GAME_TYPE_ICONS[round.type] || '🎮'}</div>
+      <h2 class="ri-name">${esc(round.label || '')}</h2>
+      <p class="ri-howto">${GAME_HOWTO[round.type] || ''}</p>
+      <div class="ri-count"><span>3</span><span>2</span><span>1</span><span>¡YA!</span></div>
+    </div>`;
+  const cerrar = () => { intro.classList.add('out'); setTimeout(() => intro.remove(), 400); };
+  intro.addEventListener('click', cerrar);
+  document.body.appendChild(intro);
+  if (window.Sfx) { Sfx.play('redoble'); setTimeout(() => Sfx.play('turno'), 2300); }
+  setTimeout(cerrar, 2900);
+}
+
+// Marcador: cuando cambia un número, "salta".
+const lastBankValues = {};
+function bumpIfChanged(key, value, el) {
+  if (lastBankValues[key] !== undefined && lastBankValues[key] !== value) {
+    el.classList.remove('bump');
+    void el.offsetWidth;
+    el.classList.add('bump');
+  }
+  lastBankValues[key] = value;
+}
+
+// Puntos que vuelan desde el tablero hasta el marcador del equipo.
+function flyToBank(text, entrantId, good) {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const board = document.querySelector('#game-board .board');
+  const banks = [...document.querySelectorAll('#time-banks .time-bank')];
+  const ids = Object.keys((room.round || {}).entrants || {});
+  const target = banks[ids.indexOf(entrantId)];
+  if (!board) return;
+  const from = board.getBoundingClientRect();
+  const fly = document.createElement('div');
+  fly.className = 'fly-points' + (good ? '' : ' bad');
+  fly.textContent = text;
+  fly.style.left = `${from.left + from.width / 2}px`;
+  fly.style.top = `${from.top + from.height / 2}px`;
+  document.body.appendChild(fly);
+  requestAnimationFrame(() => {
+    if (target && good) {
+      const to = target.getBoundingClientRect();
+      fly.style.transform = `translate(${to.left + to.width / 2 - (from.left + from.width / 2)}px, ${to.top + to.height / 2 - (from.top + from.height / 2)}px) scale(0.6)`;
+    } else {
+      fly.style.transform = 'translate(0, -60px)';
+    }
+    fly.classList.add('go');
+  });
+  setTimeout(() => fly.remove(), 1100);
+}
+
+// Confeti en canvas (sin librerías). Se dispara en finales y podios.
+function confetti(segundos = 2.8) {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const c = document.createElement('canvas');
+  c.className = 'confetti';
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr;
+  document.body.appendChild(c);
+  const g = c.getContext('2d');
+  g.scale(dpr, dpr);
+  const colores = ['#ffb23f', '#ff3d7f', '#3de6ff', '#8b5cff', '#3ddc84', '#ffffff'];
+  const piezas = Array.from({ length: 160 }, () => ({
+    x: innerWidth / 2 + (Math.random() - 0.5) * 80, y: innerHeight * 0.35,
+    vx: (Math.random() - 0.5) * 12, vy: -Math.random() * 13 - 4,
+    r: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
+    w: 6 + Math.random() * 6, h: 4 + Math.random() * 4, col: colores[Math.floor(Math.random() * colores.length)]
+  }));
+  const t0 = performance.now();
+  (function paso(t) {
+    const vivo = (t - t0) / 1000 < segundos;
+    g.clearRect(0, 0, innerWidth, innerHeight);
+    piezas.forEach((p) => {
+      p.vy += 0.32; p.vx *= 0.99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      g.save(); g.translate(p.x, p.y); g.rotate(p.r);
+      g.fillStyle = p.col; g.globalAlpha = vivo ? 1 : 0.6;
+      g.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); g.restore();
+    });
+    if (vivo) requestAnimationFrame(paso); else c.remove();
+  }(t0));
+}
+
 // Se llama DESPUÉS de dibujar el tablero (no antes): el ícono y el color se
 // aplican sobre la tarjeta ".board" real que cada juego acaba de crear, no
 // sobre el contenedor exterior -- así el CSS (".board::before") lo puede leer
@@ -1296,6 +1451,33 @@ function tutifrutiCanAct(round) {
 // por ronda/estado, y las actualizaciones de segundo a segundo solo tocan el
 // contador de texto.
 let tutiFormBuiltFor = null;
+
+// La letra sale como en una tragamonedas: pasan letras rápido y frena en la
+// que tocó. Solo la primera vez que aparece cada letra.
+let tutiSlotShown = null;
+function tutiSlotMachine(el, letra, key) {
+  if (!el || tutiSlotShown === key) return;
+  tutiSlotShown = key;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const abc = 'ABCDEFGHIJLMNOPRSTUV';
+  el.classList.add('spinning');
+  let n = 0;
+  const vueltas = 16;
+  const tick = () => {
+    n += 1;
+    if (n >= vueltas) {
+      el.textContent = letra;
+      el.classList.remove('spinning');
+      el.classList.add('landed');
+      if (window.Sfx) Sfx.play('acierto');
+      return;
+    }
+    el.textContent = abc[Math.floor(Math.random() * abc.length)];
+    if (window.Sfx && n % 2 === 0) Sfx.play('pop');
+    setTimeout(tick, 40 + n * 9); // frena de a poco
+  };
+  tick();
+}
 
 // En Modo Prueba (un solo celu probando la partida entera) hay que poder
 // completar las respuestas de CADA equipo, uno por uno -- a diferencia de los
@@ -1372,6 +1554,7 @@ function renderTutifrutiWriting(round, container, roundKey) {
     <div class="timer-bar"><div class="timer-bar-fill" id="tuti-timebar" style="width:100%"></div></div>
   `;
   container.appendChild(box);
+  tutiSlotMachine(box.querySelector('.tuti-letter'), round.letter, `${roundKey}-${round.rondaActual}`);
 
   if (iAmTestHost) {
     const switcher = document.createElement('div');
@@ -1538,6 +1721,7 @@ function renderCancion(round, container) {
     <p class="board-clue">${stateText}</p>
     <p class="board-counter">Canción ${round.number} de ${round.total} · cada acierto suma ${round.secondsPerAcierto}s</p>
     <div class="cancion-scoreboard">${marcador}</div>
+    ${round.phase === 'buzzing' ? `<div class="eq" aria-hidden="true">${'<i></i>'.repeat(14)}</div>` : ''}
   `;
   container.appendChild(box);
 
@@ -1977,10 +2161,6 @@ function renderDuelo(round, container) {
   const iAmTestHost = room.testMode && iAmHost;
   const miEquipo = myEntrantId();
 
-  const marcador = Object.entries(round.entrants)
-    .map(([id, e]) => `<span class="cancion-score">${entrantLabel(id)}: ${e.torres} 🗼 (+${e.secondsWon}s)</span>`)
-    .join('');
-
   const esCampeonTurno = round.turnoDe === 'campeon';
   const nombreEnTurno = esCampeonTurno ? round.campeonName : round.retadorName;
   const idEnTurno = esCampeonTurno ? round.campeonId : round.retadorId;
@@ -1988,11 +2168,26 @@ function renderDuelo(round, container) {
 
   const box = document.createElement('div');
   box.className = 'board';
+  // Cara a cara: el campeón (con corona) contra el retador; brilla el que
+  // tiene que responder. Debajo de cada uno, las torres ganadas.
+  const lado = (team, nombre, rol, enTurno) => {
+    const e = round.entrants[team] || {};
+    const torres = '🗼'.repeat(Math.min(e.torres || 0, 8)) || '—';
+    return `<div class="vs-side${enTurno ? ' on' : ''}" style="--team-color:${teamColor(team) || 'var(--accent)'}">
+      <div class="vs-avatar">${esc((nombre || '?').charAt(0).toUpperCase())}${rol === 'campeon' ? '<span class="vs-crown">👑</span>' : ''}</div>
+      <p class="vs-name">${esc(nombre || '...')}</p>
+      <p class="vs-team">${esc(entrantLabel(team))}</p>
+      <p class="vs-towers">${torres}</p>
+    </div>`;
+  };
   box.innerHTML = `
-    <p class="board-topic">${round.theme || 'Duelo de Torres'}</p>
-    <p class="board-clue">👑 ${entrantLabel(round.campeonTeam)}${round.campeonName ? ` (${esc(round.campeonName)})` : ''} defiende la torre · 🗡 reta ${entrantLabel(round.retadorTeam)}${round.retadorName ? ` (${esc(round.retadorName)})` : ''}</p>
-    <p class="board-counter">Duelo ${round.number} de ${round.total} · responde ${nombreEnTurno || '...'} · cada torre suma ${round.secondsPerTorre}s</p>
-    <div class="cancion-scoreboard">${marcador}</div>
+    <p class="board-topic">${round.theme || 'Duelo de Torres'} · Duelo ${round.number} de ${round.total}</p>
+    <div class="vs-stage">
+      ${lado(round.campeonTeam, round.campeonName, 'campeon', esCampeonTurno)}
+      <span class="vs-badge">VS</span>
+      ${lado(round.retadorTeam, round.retadorName, 'retador', !esCampeonTurno)}
+    </div>
+    <p class="board-counter">Responde ${esc(nombreEnTurno || '...')} · cada torre suma ${round.secondsPerTorre}s</p>
   `;
   container.appendChild(box);
 
@@ -2309,11 +2504,19 @@ function renderEscalera(round, container) {
   const miEquipo = myEntrantId();
   const puedoJugar = iAmTestHost || miEquipo === round.activeEntrant;
 
-  const escalones = Array.from({ length: round.totalEscalones }, (_, i) => {
-    const activo = round.entrants[round.activeEntrant] || {};
-    const n = i + 1;
-    const cls = n <= (activo.step || 0) ? 'silla-step current' : 'silla-step';
-    return `<span class="${cls}">${n}</span>`;
+  // Una escalera vertical por equipo: escalón alcanzado iluminado, el
+  // plantado con bandera, y la del equipo que sube, brillando.
+  const escaleras = Object.entries(round.entrants).map(([id, e]) => {
+    const pasos = Array.from({ length: round.totalEscalones }, (_, i) => {
+      const n = round.totalEscalones - i;
+      const cls = ['ld-step', n <= (e.step || 0) ? 'on' : '', n === e.banked && e.banked ? 'banked' : '', n === (e.step || 0) ? 'top' : ''].join(' ');
+      return `<span class="${cls}"><i>${n}</i>${n === e.banked && e.banked ? '<b>🏳</b>' : ''}</span>`;
+    }).join('');
+    return `<div class="ladder${id === round.activeEntrant ? ' active' : ''}${e.out ? ' out' : ''}" style="--team-color:${teamColor(id) || 'var(--accent)'}">
+      <div class="ld-steps">${pasos}</div>
+      <p class="ld-name">${esc(entrantLabel(id))}</p>
+      <p class="ld-time">${e.out ? (e.banked ? `🏳 ${e.banked}` : 'afuera') : formatTime(e.timeLeft || 0)}</p>
+    </div>`;
   }).join('');
 
   const box = document.createElement('div');
@@ -2321,7 +2524,7 @@ function renderEscalera(round, container) {
   box.innerHTML = `
     <p class="board-topic">${round.theme || 'Escalera Final'}</p>
     <p class="board-clue">Sube ${entrantLabel(round.activeEntrant)} — escalón ${(round.entrants[round.activeEntrant] || {}).step || 0} de ${round.totalEscalones}</p>
-    <div class="silla-chain">${escalones}</div>
+    <div class="ladder-duo">${escaleras}</div>
   `;
   container.appendChild(box);
 
@@ -2387,8 +2590,8 @@ function renderPlaying() {
     lastRoundKey = roundKey;
   }
 
-  $('playing-round-label').textContent =
-    `Prueba ${room.currentRoundNumber} de ${room.totalRounds} — ${round.label || ''}`;
+  renderGameHeader(round);
+  maybeRoundIntro(round, roundKey);
 
   // Siempre visible: cuánto tiempo lleva acumulado cada equipo para el rosco
   // final — es la mecánica central de El Rosco. En Programas sin rosco final
@@ -2397,8 +2600,8 @@ function renderPlaying() {
   const banner = $('carry-banner');
   if (room.hasFinalGame && !esFinalAhora && room.timeCarryOver) {
     banner.classList.remove('hidden');
-    banner.innerHTML = '⏱ Para la prueba final: ' + Object.entries(room.timeCarryOver)
-      .map(([id, seg]) => `<b>${entrantLabel(id)} ${formatTime(seg)}</b>`).join(' · ');
+    banner.innerHTML = '<span class="cb-label">⏱ Tiempo para la final</span>' + Object.entries(room.timeCarryOver)
+      .map(([id, seg]) => `<span class="cb-chip" style="--team-color:${teamColor(id) || 'var(--accent)'}">${esc(entrantLabel(id))} <b>${formatTime(seg)}</b></span>`).join('');
   } else {
     banner.classList.add('hidden');
   }
@@ -2549,6 +2752,7 @@ function renderScoreList(container, sorted, showDelta) {
   sorted.forEach(([entrantId, points], i) => {
     const row = document.createElement('div');
     row.className = 'score-row' + (i === 0 && sorted.length > 1 ? ' leader' : '');
+    row.style.setProperty('--i', i);
     const color = teamColor(entrantId);
     if (color) row.style.setProperty('--team-color', color);
     const delta = showDelta && room.lastRoundPoints ? room.lastRoundPoints[entrantId] : null;
@@ -2559,6 +2763,7 @@ function renderScoreList(container, sorted, showDelta) {
   });
 }
 
+let lastRoundConfetti = null;
 function renderRoundResult() {
   const sorted = Object.entries(room.scores).sort((a, b) => b[1] - a[1]);
   renderScoreList($('roundresult-scores'), sorted, true);
@@ -2583,6 +2788,10 @@ function renderRoundResult() {
   }
 
   const leader = sorted[0];
+  if (leader && lastRoundConfetti !== `${room.code}-${room.currentRoundNumber}`) {
+    lastRoundConfetti = `${room.code}-${room.currentRoundNumber}`;
+    confetti(1.6);
+  }
   if (leader) {
     narrate(`fin-${room.currentRoundNumber}`,
       `Termina ${round.label || 'la prueba'}. Va ganando ${entrantLabel(leader[0])} con ${leader[1]} puntos.`);
@@ -2598,6 +2807,7 @@ function renderResults() {
   if (leader && window.Sfx && lastFanfarria !== room.code + room.currentRoundNumber) {
     lastFanfarria = room.code + room.currentRoundNumber;
     Sfx.play('fanfarria');
+    confetti(3.2);
   }
 
   const banner = $('winner-banner');

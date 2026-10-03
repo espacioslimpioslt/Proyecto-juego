@@ -29,7 +29,24 @@ tiene WebGL o pidió "reducir movimiento", se ve una versión quieta.
   que muestran cómo se juega; se pausan fuera de pantalla.
 - **Reel grande en "Crear sala"**.
 
-## Fase 3 — Dentro del juego (pendiente)
+## Fase 3 — Dentro del juego ✅ (primera pasada)
+Hecho:
+- Encabezado de cada prueba con ícono, nombre y "1/3" en el color del juego
+  (`GAME_THEME` en `app.js`).
+- Presentación al arrancar cada prueba: ícono, nombre, cómo se juega en una
+  línea y cuenta 3-2-1 con redoble (se saltea tocando).
+- Marcador estilo TV: el equipo de turno brilla y los números "saltan" al
+  cambiar. Tiempo para la final en fichas.
+- Respuestas como fichas A/B/C/D que entran escalonadas.
+- Puntos que vuelan del tablero al marcador; confeti en el resultado de cada
+  prueba y en el final.
+- Momentos propios: escaleras verticales por equipo (Escalera Final), cara a
+  cara con corona (Duelo), cartas que se dan vuelta al taparse (¿Dónde
+  Estaba?), letra tragamonedas (Tutifruti), eslabones (La Cadena),
+  ecualizador y botón que late (Adiviná la Canción), letra activa que late
+  (Rosco), palabra secreta con brillo (Mímica / Palabra Prohibida).
+
+Pendiente de esta fase:
 - Presentación de cada prueba: cortina, nombre, cuenta regresiva 3-2-1.
 - Puntos que "vuelan" al marcador, temblor en los errores.
 - Podio final con confeti y reflector.
