@@ -66,6 +66,13 @@ function candidates(room, sockets) {
       }
       case 'adivina-la-cancion':
         sub(s, { intento: true }); break;
+      case 'encuesta':
+        if (st.respuestas) sub(s, { respuesta: Math.random() < 0.5 ? pick(st.respuestas).texto : 'cualquier cosa' });
+        break;
+      case 'caja-fuerte':
+        if (st.fase === 'oferta') sub(s, { trato: Math.random() < 0.3 });
+        else if (st.cajas) sub(s, { caja: pick(st.cajas).n });
+        break;
       case 'impostor': {
         const c = st.caso;
         if (!c) break;
@@ -87,6 +94,8 @@ function candidates(room, sockets) {
   if (t === 'tutifruti') st.pendingJudgements.filter((p) => p.decided === null).forEach((p) => jud({ entrantId: p.entrantId, category: p.category, accept: Math.random() < 0.5 }));
   if (t === 'mimica' || t === 'palabra-prohibida') { jud({ elegirModo: pick(['azar', 'rotativo']) }); if (Math.random() < 0.1) jud({ confirmarManual: true }); if (t === 'palabra-prohibida') jud({ falta: true }); }
   if (t === 'la-cadena' && Math.random() < 0.1) jud({ confirmarManual: true });
+  if (t === 'encuesta' && Math.random() < 0.05) jud(st.fase === 'resultado' ? { siguiente: true } : { revelar: R(6) });
+  if (t === 'caja-fuerte' && Math.random() < 0.05) jud({ siguiente: true });
   if (t === 'impostor' && Math.random() < 0.05) jud(pick([{ saltarTurno: true }, { cerrarVotacion: true }, { siguienteCaso: true }]));
   if (t === 'adivina-la-cancion') { jud({ ok: Math.random() < 0.5 }); if (Math.random() < 0.1) jud({ skip: true }); }
   return out;
@@ -97,7 +106,7 @@ function play({ programId, difficulty, players = 4, disconnectAt = null, label }
   const room = rooms.createRoom(ids[0], 'Host', programId, { difficulty });
   ids.slice(1).forEach((id, i) => rooms.joinRoom(room.code, id, 'P' + (i + 1)));
   const cfg = { programId, roundCount: pick([3, 6, 9]), teamsEnabled: true, difficulty, baseTimeSeconds: 90 };
-  if (programId === 'varios') cfg.selectedGames = ['impostor', 'mimica', 'adivina-la-cancion', 'la-cadena', 'palabra-prohibida'];
+  if (programId === 'varios') cfg.selectedGames = ['impostor', 'encuesta', 'caja-fuerte', 'mimica', 'adivina-la-cancion', 'la-cadena', 'palabra-prohibida'];
   // Formato de un toque, o personalizada con ajustes y reloj al azar.
   if (Math.random() < 0.3) {
     cfg.formato = pick(['rapida', 'clasica', 'maraton', 'familia', 'desafio']);

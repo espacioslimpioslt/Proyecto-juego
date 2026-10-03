@@ -21,7 +21,9 @@ const roundTypes = {
   'palabra-prohibida': require('./roundTypes/palabraProhibida'),
   'duelo-torres': require('./roundTypes/dueloTorres'),
   'escalera-final': require('./roundTypes/escaleraFinal'),
-  impostor: require('./roundTypes/impostor')
+  impostor: require('./roundTypes/impostor'),
+  encuesta: require('./roundTypes/encuesta'),
+  'caja-fuerte': require('./roundTypes/cajaFuerte')
 };
 
 // Catalogo de Programas: se arma solo escaneando `programs/*/manifest.json`.
@@ -94,7 +96,9 @@ const ICONS = {
   'palabra-prohibida': '🤐',
   'duelo-torres': '🗼',
   'escalera-final': '🪜',
-  impostor: '🕵️'
+  impostor: '🕵️',
+  encuesta: '📊',
+  'caja-fuerte': '💼'
 };
 
 // El catalogo se muestra ANTES de crear una sala (pantalla de portada), asi que
@@ -796,7 +800,7 @@ function publicState(room, viewerId) {
   const program = room.programId ? programs[room.programId] : null;
   const roundType = roundTypeOf(room);
   const privado = room.roundState && roundType && roundType.privateView && viewerId
-    ? roundType.privateView(room.roundState, viewerId, room.testMode && isHost(room, viewerId))
+    ? roundType.privateView(room.roundState, viewerId, room.testMode && isHost(room, viewerId), isHost(room, viewerId))
     : null;
 
   return {

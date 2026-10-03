@@ -9,6 +9,8 @@
   "sequenceMode": "pick",
   "games": [
     "impostor",
+    "encuesta",
+    "caja-fuerte",
     "mimica",
     "adivina-la-cancion",
     "la-cadena",

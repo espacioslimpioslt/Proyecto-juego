@@ -191,6 +191,26 @@ function validarImpostor(deck) {
   console.log(`   ${(deck.categorias || []).length} categorías, ${todas.length} palabras`);
 }
 
+// --- La Encuesta: 4 a 8 respuestas por pregunta, puntos que suman cerca de
+// 100, sin respuestas (ni alias) repetidos entre sí ---
+function validarEncuesta(deck) {
+  (deck.encuestas || []).forEach((e, i) => {
+    const donde = `encuesta ${i + 1} ("${e.pregunta}")`;
+    const rs = e.respuestas || [];
+    if (rs.length < 4 || rs.length > 8) aviso(`${donde}: tiene ${rs.length} respuestas (van de 4 a 8)`);
+    const suma = rs.reduce((a, r) => a + (r.puntos || 0), 0);
+    if (suma < 85 || suma > 100) aviso(`${donde}: los puntos suman ${suma} (deberían sumar entre 85 y 100)`);
+    const deQuien = new Map(); // forma normalizada -> índice de respuesta
+    rs.forEach((r, k) => [r.texto, ...(r.alias || [])].forEach((a) => {
+      const n = norm(a);
+      if (deQuien.has(n) && deQuien.get(n) !== k) aviso(`${donde}: "${a}" aparece en dos respuestas distintas`);
+      deQuien.set(n, k);
+    }));
+    for (let k = 1; k < rs.length; k++) if (rs[k].puntos > rs[k - 1].puntos) aviso(`${donde}: las respuestas tienen que ir de mayor a menor puntaje`);
+  });
+  console.log(`   ${(deck.encuestas || []).length} encuestas`);
+}
+
 const VALIDADORES = {
   rosco: validarRosco,
   'eligi-una': validarPreguntas,
@@ -204,7 +224,8 @@ const VALIDADORES = {
   'palabra-prohibida': validarPalabraProhibida,
   'duelo-torres': validarPreguntas,
   'escalera-final': validarPreguntas,
-  impostor: validarImpostor
+  impostor: validarImpostor,
+  encuesta: validarEncuesta
 };
 
 // Recorre TODOS los Programas (El Rosco, Varios, los que se sumen despues),
