@@ -68,11 +68,16 @@ falla. Sirve mientras se prueba; antes de abrirlo a más gente, pasarlo a
 
 ## Si algo falla
 
-- **Error 500 al abrir el sitio**: iisnode deja registros en la carpeta
-  `iisnode/` del sitio (está activado `loggingEnabled`). Ese archivo dice el
-  error de Node.
+- **"This page isn't working" / el sitio no abre**: mirar **Registros →
+  Registros de eventos** del panel. Si dice que el grupo de aplicaciones
+  finalizó inesperadamente, el problema es la configuración de IIS
+  (`web.config`), no el juego.
+- **Página de error con texto**: es Node avisando qué falló
+  (`devErrorsEnabled="true"`). Ese texto dice qué corregir.
 - **La página carga pero no se puede crear sala**: revisar `/api/salud`; si
   no responde, Node no arrancó (ver el registro de arriba).
-- **Cambios que no se ven**: iisnode reinicia Node solo cuando cambia
-  `web.config`, `app.js` o algún `.js` del servidor. Si se cambió solo algo de
-  `public/` (pantallas), alcanza con recargar el navegador.
+- **Cambios que no se ven**: iisnode reinicia Node cuando cambia
+  `web.config` o un `.js` de la raíz. Si se cambiaron archivos de `server/`,
+  pulsar **Reanudar** en "Acciones rápidas" para que tome los cambios. Si se
+  cambió solo algo de `public/` (pantallas), alcanza con recargar el
+  navegador.
