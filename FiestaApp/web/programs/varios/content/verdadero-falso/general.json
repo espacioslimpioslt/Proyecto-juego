@@ -1,0 +1,255 @@
+{
+  "theme": "Verdadero o Falso — general",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "difficulty": "normal",
+  "afirmaciones": [
+    {
+      "texto": "El corazón humano tiene cuatro cavidades.",
+      "verdadero": true,
+      "dato": "Dos aurículas y dos ventrículos."
+    },
+    {
+      "texto": "Los murciélagos son ciegos.",
+      "verdadero": false,
+      "dato": "Ven, y muchos además se orientan con ecolocalización."
+    },
+    {
+      "texto": "El Monte Everest es la montaña más alta del mundo sobre el nivel del mar.",
+      "verdadero": true,
+      "dato": "Mide unos 8.849 metros."
+    },
+    {
+      "texto": "La Gran Muralla China se ve a simple vista desde la Luna.",
+      "verdadero": false,
+      "dato": "Es un mito: es larguísima pero muy angosta."
+    },
+    {
+      "texto": "A nivel del mar, el agua hierve a 100 °C.",
+      "verdadero": true,
+      "dato": "En la montaña hierve antes, porque hay menos presión."
+    },
+    {
+      "texto": "Los pulpos tienen tres corazones.",
+      "verdadero": true,
+      "dato": "Dos bombean sangre a las branquias y uno al resto del cuerpo."
+    },
+    {
+      "texto": "El Sol es una estrella.",
+      "verdadero": true,
+      "dato": "Es una estrella mediana, de tipo enana amarilla."
+    },
+    {
+      "texto": "Venus es el planeta más caliente del sistema solar.",
+      "verdadero": true,
+      "dato": "Su atmósfera atrapa el calor: más que Mercurio, que está más cerca del Sol."
+    },
+    {
+      "texto": "Botánicamente, el tomate es una verdura y no un fruto.",
+      "verdadero": false,
+      "dato": "Es un fruto: tiene semillas y nace de la flor."
+    },
+    {
+      "texto": "La capital de Australia es Sídney.",
+      "verdadero": false,
+      "dato": "Es Canberra."
+    },
+    {
+      "texto": "Las arañas son insectos.",
+      "verdadero": false,
+      "dato": "Son arácnidos: tienen ocho patas, los insectos seis."
+    },
+    {
+      "texto": "El oro es más denso que la plata.",
+      "verdadero": true,
+      "dato": "Casi el doble: un lingote de oro pesa mucho más que uno igual de plata."
+    },
+    {
+      "texto": "Un año en Mercurio dura menos que un año en la Tierra.",
+      "verdadero": true,
+      "dato": "Da la vuelta al Sol en unos 88 días."
+    },
+    {
+      "texto": "La Mona Lisa fue pintada por Miguel Ángel.",
+      "verdadero": false,
+      "dato": "La pintó Leonardo da Vinci."
+    },
+    {
+      "texto": "Los pingüinos viven en el Polo Norte.",
+      "verdadero": false,
+      "dato": "Viven en el hemisferio sur; en el Polo Norte no hay pingüinos."
+    },
+    {
+      "texto": "El diamante está hecho de carbono.",
+      "verdadero": true,
+      "dato": "Igual que el grafito de los lápices, pero ordenado distinto."
+    },
+    {
+      "texto": "Los peces dorados tienen una memoria de solo 3 segundos.",
+      "verdadero": false,
+      "dato": "Pueden recordar cosas durante meses."
+    },
+    {
+      "texto": "El sonido viaja más rápido en el agua que en el aire.",
+      "verdadero": true,
+      "dato": "Unas cuatro veces más rápido."
+    },
+    {
+      "texto": "Los camellos guardan agua en la joroba.",
+      "verdadero": false,
+      "dato": "La joroba es grasa, una reserva de energía."
+    },
+    {
+      "texto": "El cuerpo humano adulto tiene 206 huesos.",
+      "verdadero": true,
+      "dato": "Los bebés nacen con más, y algunos se van soldando."
+    },
+    {
+      "texto": "Un rayo nunca cae dos veces en el mismo lugar.",
+      "verdadero": false,
+      "dato": "El Empire State recibe decenas de rayos por año."
+    },
+    {
+      "texto": "Brasil es el país más grande de Sudamérica.",
+      "verdadero": true,
+      "dato": "Ocupa casi la mitad del continente."
+    },
+    {
+      "texto": "El océano Pacífico es el más grande del mundo.",
+      "verdadero": true,
+      "dato": "Es más grande que toda la tierra firme junta."
+    },
+    {
+      "texto": "Las jirafas tienen la misma cantidad de vértebras en el cuello que los humanos.",
+      "verdadero": true,
+      "dato": "Siete, solo que muchísimo más largas."
+    },
+    {
+      "texto": "La luz del Sol tarda unos 8 minutos en llegar a la Tierra.",
+      "verdadero": true,
+      "dato": "Recorre unos 150 millones de kilómetros."
+    },
+    {
+      "texto": "Los koalas son osos.",
+      "verdadero": false,
+      "dato": "Son marsupiales, como los canguros."
+    },
+    {
+      "texto": "El tango nació en el Río de la Plata.",
+      "verdadero": true,
+      "dato": "Entre Buenos Aires y Montevideo, a fines del siglo XIX."
+    },
+    {
+      "texto": "El ajedrez se juega en un tablero de 64 casillas.",
+      "verdadero": true,
+      "dato": "Ocho por ocho."
+    },
+    {
+      "texto": "Los humanos usamos solo el 10% del cerebro.",
+      "verdadero": false,
+      "dato": "Es un mito: usamos todo el cerebro, aunque no todo a la vez."
+    },
+    {
+      "texto": "Plutón es oficialmente un planeta del sistema solar.",
+      "verdadero": false,
+      "dato": "Desde 2006 se lo considera un planeta enano."
+    },
+    {
+      "texto": "La miel puede durar miles de años sin echarse a perder.",
+      "verdadero": true,
+      "dato": "Se encontró miel comestible en tumbas egipcias."
+    },
+    {
+      "texto": "Los avestruces esconden la cabeza en la tierra cuando tienen miedo.",
+      "verdadero": false,
+      "dato": "Es un mito: cuando hay peligro, corren (y muy rápido)."
+    },
+    {
+      "texto": "La Antártida es el continente más seco del mundo.",
+      "verdadero": true,
+      "dato": "Llueve y nieva tan poco que se la considera un desierto."
+    },
+    {
+      "texto": "El esmalte de los dientes es lo más duro del cuerpo humano.",
+      "verdadero": true,
+      "dato": "Más duro que cualquier hueso."
+    },
+    {
+      "texto": "El Titanic se hundió en su primer viaje.",
+      "verdadero": true,
+      "dato": "En abril de 1912."
+    },
+    {
+      "texto": "Los delfines son mamíferos.",
+      "verdadero": true,
+      "dato": "Respiran aire y amamantan a sus crías."
+    },
+    {
+      "texto": "Marte tiene dos lunas.",
+      "verdadero": true,
+      "dato": "Se llaman Fobos y Deimos."
+    },
+    {
+      "texto": "Los toros se enojan por el color rojo.",
+      "verdadero": false,
+      "dato": "No distinguen bien el rojo: reaccionan al movimiento de la capa."
+    },
+    {
+      "texto": "El chocolate es tóxico para los perros.",
+      "verdadero": true,
+      "dato": "Tiene teobromina, que a ellos les hace mal."
+    },
+    {
+      "texto": "Los colibríes pueden volar hacia atrás.",
+      "verdadero": true,
+      "dato": "Son las únicas aves que lo hacen de verdad."
+    },
+    {
+      "texto": "Los caballitos de mar machos son los que llevan las crías.",
+      "verdadero": true,
+      "dato": "La hembra pone los huevos en una bolsa del macho."
+    },
+    {
+      "texto": "El ornitorrinco es un mamífero que pone huevos.",
+      "verdadero": true,
+      "dato": "Es uno de los pocos mamíferos que lo hacen."
+    },
+    {
+      "texto": "El Vaticano es el país más chico del mundo.",
+      "verdadero": true,
+      "dato": "Tiene menos de medio kilómetro cuadrado."
+    },
+    {
+      "texto": "En el fútbol, cada equipo tiene 12 jugadores en la cancha.",
+      "verdadero": false,
+      "dato": "Son 11, contando al arquero."
+    },
+    {
+      "texto": "Los cuernos de los rinocerontes son de hueso.",
+      "verdadero": false,
+      "dato": "Son de queratina, como nuestras uñas."
+    },
+    {
+      "texto": "Thomas Edison inventó el teléfono.",
+      "verdadero": false,
+      "dato": "La patente del teléfono fue de Alexander Graham Bell."
+    },
+    {
+      "texto": "Comer zanahorias hace ver en la oscuridad.",
+      "verdadero": false,
+      "dato": "Es un mito difundido en la Segunda Guerra Mundial para esconder el uso del radar."
+    },
+    {
+      "texto": "El agua totalmente pura es muy buena conductora de la electricidad.",
+      "verdadero": false,
+      "dato": "Conduce muy poco: lo que conduce son las sales disueltas."
+    },
+    {
+      "texto": "La Mona Lisa original está en un museo de Madrid.",
+      "verdadero": false,
+      "dato": "Está en el Louvre, en París (el Prado de Madrid tiene una copia de la época)."
+    }
+  ]
+}

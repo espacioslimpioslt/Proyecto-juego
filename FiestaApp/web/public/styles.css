@@ -1469,3 +1469,58 @@ h1 { letter-spacing: -0.01em; }
 /* Formularios de una línea (Impostor, La Encuesta): campo flexible + botón a su medida. */
 .imp-form input[type="text"] { flex: 1 1 auto; width: auto; min-width: 0; margin-top: 0; }
 .imp-form .btn { width: auto; flex: 0 0 auto; }
+
+/* ---------- Verdadero o Falso ---------- */
+.vf-afirmacion { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.15rem, 4.6vw, 1.6rem); line-height: 1.3; text-align: center; margin: 1rem 0 0.4rem; }
+.vf-veredicto { text-align: center; font-family: var(--font-display); font-weight: 900; font-size: clamp(1.6rem, 7vw, 2.4rem); margin: 0.6rem 0 0.2rem; animation: ri-pop 0.5s cubic-bezier(.34, 1.56, .64, 1); }
+.vf-es-v .vf-veredicto { color: var(--ok); text-shadow: 0 0 24px rgba(61, 220, 132, 0.6); }
+.vf-es-f .vf-veredicto { color: var(--error); text-shadow: 0 0 24px rgba(255, 77, 94, 0.6); }
+.vf-dato { text-align: center; color: var(--text-dim); margin: 0.4rem 0 0; }
+.vf-equipos { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; margin: 0.8rem 0; }
+.vf-chip { padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--team-color); opacity: 0.75; }
+.vf-chip.listo { opacity: 1; }
+.vf-chip.ok { background: var(--ok-bg); border-color: var(--ok); }
+.vf-chip b { color: var(--ok); }
+.vf-botones { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-top: 0.4rem; }
+.vf-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.3rem; min-height: 7.5rem; border: none; border-radius: 20px; color: #fff; font-size: 2rem; cursor: pointer; transition: transform 0.12s var(--ease-out), filter 0.12s; touch-action: manipulation; }
+.vf-btn span { font-family: var(--font-display); font-weight: 900; font-size: 1rem; letter-spacing: 0.06em; }
+.vf-btn:active { transform: scale(0.95); }
+.vf-btn:disabled { filter: grayscale(0.7) brightness(0.7); }
+.vf-v { background: linear-gradient(135deg, #3ddc84, #1fa463); box-shadow: 0 14px 30px -12px rgba(61, 220, 132, 0.9); }
+.vf-f { background: linear-gradient(135deg, #ff4d5e, #c22a3a); box-shadow: 0 14px 30px -12px rgba(255, 77, 94, 0.9); }
+.vf-siguiente { display: block; margin: 0.6rem auto 0; }
+
+/* ---------- La Torre (3D) ---------- */
+.torre-board { padding-bottom: 0.8rem; }
+.torre-stage { position: relative; margin: 0.6rem -0.4rem 0; border-radius: 18px; overflow: hidden; min-height: 300px; touch-action: manipulation; user-select: none; -webkit-user-select: none; cursor: pointer;
+  background: radial-gradient(120% 80% at 50% 0%, rgba(139, 92, 255, 0.28), transparent 60%), radial-gradient(90% 60% at 50% 110%, rgba(61, 230, 255, 0.18), transparent 60%), #090b24; }
+.torre-canvas { display: block; }
+.torre-hud { position: absolute; top: 0.6rem; left: 0.7rem; right: 0.7rem; display: flex; justify-content: space-between; align-items: flex-start; pointer-events: none; z-index: 1; }
+.th-altura { display: flex; flex-direction: column; line-height: 1; }
+.th-altura b { font-family: var(--font-display); font-weight: 900; font-size: 2.6rem; text-shadow: 0 0 18px rgba(61, 230, 255, 0.6); }
+.th-altura small { color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.65rem; }
+.th-combo { font-family: var(--font-display); font-weight: 900; font-size: 1.2rem; color: var(--accent); animation: ri-pop 0.4s cubic-bezier(.34, 1.56, .64, 1); }
+.torre-tap { position: absolute; left: 0; right: 0; bottom: 0.6rem; margin: 0; text-align: center; font-weight: 700; pointer-events: none; opacity: 0; }
+.torre-tap.activo { opacity: 1; animation: torre-latido 1.2s ease-in-out infinite; }
+@keyframes torre-latido { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+.torre-resultado { text-align: center; margin: 0.8rem 0; padding: 0.9rem; border-radius: 16px; background: var(--glass); border: 1px solid var(--line); animation: ri-pop 0.5s cubic-bezier(.34, 1.56, .64, 1); }
+.torre-resultado p { margin: 0 0 0.3rem; font-weight: 700; }
+.torre-resultado > b { display: block; font-family: var(--font-display); font-weight: 900; font-size: 3rem; color: var(--cyan); }
+#torre-final .btn { display: block; margin: 0 auto; }
+/* Sin WebGL: vista plana de costado */
+.torre-2d { display: flex; align-items: center; }
+.t2-pista { position: relative; width: 100%; height: 120px; }
+.t2-arriba, .t2-movil { position: absolute; height: 40px; transform: translateX(-50%); border-radius: 6px; }
+.t2-arriba { bottom: 20px; background: var(--violet); }
+.t2-movil { bottom: 62px; background: var(--cyan); }
+@media (prefers-reduced-motion: reduce) { .torre-tap.activo { animation: none; } }
+
+/* ---------- Ganador de cada juego ---------- */
+.juego-ganador { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin: 0.2rem 0 0.8rem; padding: 0.6rem 0.9rem; border-radius: 14px; background: var(--glass); border: 1px solid var(--line); font-weight: 600; animation: ri-pop 0.5s cubic-bezier(.34, 1.56, .64, 1); }
+.juego-ganador:empty { display: none; }
+.jg-copa { font-size: 1.6rem; }
+.por-juego { margin: 1rem 0; }
+.por-juego:empty { display: none; }
+.pj-fila { display: flex; justify-content: space-between; gap: 0.6rem; padding: 0.5rem 0.2rem; border-bottom: 1px solid var(--line); font-size: 0.92rem; }
+.pj-fila span:last-child { text-align: right; }
+.correct-answer:empty { display: none; }

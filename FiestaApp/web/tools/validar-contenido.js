@@ -211,6 +211,26 @@ function validarEncuesta(deck) {
   console.log(`   ${(deck.encuestas || []).length} encuestas`);
 }
 
+// --- Verdadero o Falso: afirmaciones con respuesta booleana, sin repetidas,
+// y un mazo que no sea todo verdadero (o todo falso) ---
+function validarVerdaderoFalso(deck) {
+  const vistas = new Set();
+  const lista = deck.afirmaciones || [];
+  lista.forEach((a, i) => {
+    const donde = `afirmación ${i + 1} ("${a.texto}")`;
+    if (!a.texto || a.texto.length < 10) aviso(`${donde}: texto vacío o muy corto`);
+    if (typeof a.verdadero !== 'boolean') aviso(`${donde}: falta "verdadero" (true/false)`);
+    if (!a.dato) aviso(`${donde}: falta el dato curioso`);
+    const n = norm(a.texto || '');
+    if (vistas.has(n)) aviso(`${donde}: repetida`);
+    vistas.add(n);
+  });
+  const ver = lista.filter((a) => a.verdadero).length;
+  if (lista.length < 16) aviso(`tiene ${lista.length} afirmaciones (mínimo 16)`);
+  if (ver < lista.length * 0.3 || ver > lista.length * 0.7) aviso(`${ver} de ${lista.length} son verdaderas: conviene más equilibrio`);
+  console.log(`   ${lista.length} afirmaciones (${ver} verdaderas)`);
+}
+
 const VALIDADORES = {
   rosco: validarRosco,
   'eligi-una': validarPreguntas,
@@ -225,7 +245,8 @@ const VALIDADORES = {
   'duelo-torres': validarPreguntas,
   'escalera-final': validarPreguntas,
   impostor: validarImpostor,
-  encuesta: validarEncuesta
+  encuesta: validarEncuesta,
+  'verdadero-falso': validarVerdaderoFalso
 };
 
 // Recorre TODOS los Programas (El Rosco, Varios, los que se sumen despues),

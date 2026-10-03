@@ -1,0 +1,140 @@
+{
+  "theme": "Verdadero o Falso — para chicos",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "difficulty": "facil",
+  "afirmaciones": [
+    {
+      "texto": "La Torre Eiffel está en París.",
+      "verdadero": true,
+      "dato": "Está en Francia, y se puede subir hasta arriba."
+    },
+    {
+      "texto": "Las arañas tienen ocho patas.",
+      "verdadero": true,
+      "dato": "Por eso no son insectos: los insectos tienen seis."
+    },
+    {
+      "texto": "El Sol gira alrededor de la Tierra.",
+      "verdadero": false,
+      "dato": "Es al revés: la Tierra gira alrededor del Sol."
+    },
+    {
+      "texto": "Los peces respiran con branquias.",
+      "verdadero": true,
+      "dato": "Sacan el oxígeno del agua."
+    },
+    {
+      "texto": "El hielo es agua congelada.",
+      "verdadero": true,
+      "dato": "El agua se congela a 0 °C."
+    },
+    {
+      "texto": "Los pájaros son mamíferos.",
+      "verdadero": false,
+      "dato": "Son aves: tienen plumas y ponen huevos."
+    },
+    {
+      "texto": "Una semana tiene siete días.",
+      "verdadero": true,
+      "dato": "De lunes a domingo."
+    },
+    {
+      "texto": "La Luna tiene luz propia.",
+      "verdadero": false,
+      "dato": "Refleja la luz del Sol."
+    },
+    {
+      "texto": "Las mariposas antes fueron orugas.",
+      "verdadero": true,
+      "dato": "La oruga hace un capullo y sale convertida en mariposa."
+    },
+    {
+      "texto": "Los tiburones son mamíferos.",
+      "verdadero": false,
+      "dato": "Son peces."
+    },
+    {
+      "texto": "Las plantas necesitan luz para crecer.",
+      "verdadero": true,
+      "dato": "Con la luz fabrican su alimento."
+    },
+    {
+      "texto": "El elefante es el animal terrestre más grande.",
+      "verdadero": true,
+      "dato": "Un elefante africano puede pesar más de seis toneladas."
+    },
+    {
+      "texto": "En el fútbol, solo el arquero puede agarrar la pelota con las manos.",
+      "verdadero": true,
+      "dato": "Y solo dentro de su área."
+    },
+    {
+      "texto": "El 2 es un número impar.",
+      "verdadero": false,
+      "dato": "Es par: se puede dividir en dos partes iguales."
+    },
+    {
+      "texto": "Las ranas, cuando son chiquitas, son renacuajos.",
+      "verdadero": true,
+      "dato": "Viven en el agua y después les salen las patas."
+    },
+    {
+      "texto": "Los gatos pueden ver en la oscuridad total.",
+      "verdadero": false,
+      "dato": "Ven muy bien con poquita luz, pero sin nada de luz no ven."
+    },
+    {
+      "texto": "El agua del mar es salada.",
+      "verdadero": true,
+      "dato": "Tiene sales disueltas, sobre todo sal común."
+    },
+    {
+      "texto": "Un triángulo tiene cuatro lados.",
+      "verdadero": false,
+      "dato": "Tiene tres."
+    },
+    {
+      "texto": "Los dinosaurios vivieron al mismo tiempo que las personas.",
+      "verdadero": false,
+      "dato": "Se extinguieron millones de años antes de que existiéramos."
+    },
+    {
+      "texto": "La ballena es un pez.",
+      "verdadero": false,
+      "dato": "Es un mamífero: respira aire."
+    },
+    {
+      "texto": "Los pingüinos pueden volar.",
+      "verdadero": false,
+      "dato": "No vuelan, pero nadan rapidísimo."
+    },
+    {
+      "texto": "El mate se toma con bombilla.",
+      "verdadero": true,
+      "dato": "Una costumbre de Argentina, Uruguay, Paraguay y el sur de Brasil."
+    },
+    {
+      "texto": "La Tierra es el tercer planeta desde el Sol.",
+      "verdadero": true,
+      "dato": "Antes están Mercurio y Venus."
+    },
+    {
+      "texto": "Las abejas fabrican miel.",
+      "verdadero": true,
+      "dato": "Con el néctar de las flores."
+    },
+    {
+      "texto": "El arcoíris aparece cuando hay sol y lluvia al mismo tiempo.",
+      "verdadero": true,
+      "dato": "La luz se separa en colores al pasar por las gotas."
+    },
+    {
+      "texto": "Los perros sudan por la lengua.",
+      "verdadero": false,
+      "dato": "Jadean para refrescarse; sudan un poco por las patitas."
+    }
+  ]
+}

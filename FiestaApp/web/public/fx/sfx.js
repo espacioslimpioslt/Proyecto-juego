@@ -70,6 +70,9 @@
     // Cambio de pantalla.
     whoosh() { ruido({ dur: 0.35, desde: 300, hasta: 3500, vol: 0.25 }); },
     // Toque de botón.
+    // La Torre: golpe seco al apoyar un bloque, y campanita que sube con el combo.
+    bloque() { tono(140, { tipo: 'sine', dur: 0.14, vol: 0.5, glide: 70 }); ruido({ dur: 0.08, desde: 900, hasta: 300, vol: 0.2 }); },
+    perfecto(combo = 1) { const f = 660 * Math.pow(1.06, Math.min(combo, 12)); tono(f, { tipo: 'triangle', dur: 0.18 }); tono(f * 1.5, { tipo: 'sine', dur: 0.3, cuando: 0.07, vol: 0.4 }); },
     pop() { tono(620, { tipo: 'sine', dur: 0.08, vol: 0.35, glide: 900 }); },
     // Te toca: dos notas que suben.
     turno() { tono(660, { tipo: 'triangle', dur: 0.12 }); tono(990, { tipo: 'triangle', dur: 0.2, cuando: 0.11 }); },
@@ -82,10 +85,10 @@
     }
   };
 
-  function play(nombre) {
+  function play(nombre, ...args) {
     if (!activo || !ctx || ctx.state !== 'running') return;
     const s = SONIDOS[nombre];
-    if (s) { try { s(); } catch (e) { /* un sonido nunca rompe el juego */ } }
+    if (s) { try { s(...args); } catch (e) { /* un sonido nunca rompe el juego */ } }
   }
 
   function setActivo(v) {

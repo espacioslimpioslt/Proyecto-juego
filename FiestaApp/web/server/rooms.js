@@ -23,7 +23,9 @@ const roundTypes = {
   'escalera-final': require('./roundTypes/escaleraFinal'),
   impostor: require('./roundTypes/impostor'),
   encuesta: require('./roundTypes/encuesta'),
-  'caja-fuerte': require('./roundTypes/cajaFuerte')
+  'caja-fuerte': require('./roundTypes/cajaFuerte'),
+  'verdadero-falso': require('./roundTypes/verdaderoFalso'),
+  torre: require('./roundTypes/torre')
 };
 
 // Catalogo de Programas: se arma solo escaneando `programs/*/manifest.json`.
@@ -98,7 +100,9 @@ const ICONS = {
   'escalera-final': '🪜',
   impostor: '🕵️',
   encuesta: '📊',
-  'caja-fuerte': '💼'
+  'caja-fuerte': '💼',
+  'verdadero-falso': '⚡',
+  torre: '🧱'
 };
 
 // El catalogo se muestra ANTES de crear una sala (pantalla de portada), asi que
@@ -557,6 +561,7 @@ function startGame(room, hostPlayerId) {
   room.timeCarryOver = {};
   room.usedDeckIds = [];
   room.usedLetters = [];
+  room.historial = [];
   entrantIds(room).forEach((id) => { room.scores[id] = 0; });
   beginRound(room);
   return { room };
@@ -694,6 +699,9 @@ function finishRound(room) {
     room.scores[entrantId] = (room.scores[entrantId] || 0) + pts;
   });
   room.lastRoundPoints = pointsThisRound;
+  // Cada juego tiene su propio ganador, además del ganador del programa.
+  room.historial = room.historial || [];
+  room.historial.push({ type: room.roundState.gameType, label: roundType.label, icon: ICONS[room.roundState.gameType] || '🎮', puntos: pointsThisRound });
 
   // Los mini-juegos REPARTEN segundos (se acumulan); el rosco los GASTA (queda
   // lo que sobro). Por eso uno suma sobre lo anterior y el otro lo reemplaza.
@@ -743,6 +751,7 @@ function playAgain(room, hostPlayerId) {
   room.memberTurnIndex = {};
   room.lastRoundPoints = null;
   room.lastRoundSeconds = null;
+  room.historial = [];
   room.endedEarly = false;
   return { room };
 }
@@ -854,6 +863,7 @@ function publicState(room, viewerId) {
     timeCarryOver: room.timeCarryOver,
     lastRoundSeconds: room.lastRoundSeconds || null,
     lastRoundPoints: room.lastRoundPoints,
+    historial: room.historial || [],
     scores: room.scores,
     availablePrograms: Object.values(programs).map((p) => ({ id: p.id, name: p.name }))
   };
