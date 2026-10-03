@@ -52,6 +52,20 @@ en Linux o Mac sirve igual en el Windows del hosting.
 | **¿El servidor se reinicia o se duerme?** | Mirar `arrancado` en `/api/salud` en distintos momentos del día. Si cambia sin que hayamos subido nada, se reinició | Las salas viven en memoria: un reinicio corta las partidas en curso. Ahí conviene guardar las salas en la base de datos gratuita |
 | **¿Un solo proceso de Node?** | `web.config` ya pide uno solo (`nodeProcessCountPerApplication="1"`) | Si el hosting lo ignorara y abriera varios, cada proceso tendría salas distintas y la gente "no encontraría" la sala. Se nota porque el código de sala a veces dice que no existe |
 
+## Lo que pasó en la primera publicación (oct 2026)
+
+Con el primer `web.config` (que tenía `watchedFiles` con subcarpetas,
+`loggingEnabled`, `hiddenSegments`, etc.) el proceso de IIS se caía apenas
+arrancaba: en **Registros → Registros de eventos** aparecía tres veces "el
+grupo de aplicaciones finalizó inesperadamente". Con el `web.config` simple
+que está ahora en el repo (solo el handler, la regla de reescritura, WebSocket
+de IIS apagado y un único proceso) anduvo sin tocar nada más. **No sumarle
+opciones a `<iisnode>` sin probarlas de a una.**
+
+`devErrorsEnabled="true"` muestra en el navegador el error de Node si algo
+falla. Sirve mientras se prueba; antes de abrirlo a más gente, pasarlo a
+`false`.
+
 ## Si algo falla
 
 - **Error 500 al abrir el sitio**: iisnode deja registros en la carpeta
