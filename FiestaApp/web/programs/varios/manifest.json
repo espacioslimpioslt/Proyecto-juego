@@ -8,6 +8,7 @@
   "supportsTeams": true,
   "sequenceMode": "pick",
   "games": [
+    "impostor",
     "mimica",
     "adivina-la-cancion",
     "la-cadena",

@@ -12,7 +12,7 @@ jobs:
       - name: Visitar el sitio
         run: |
           for url in http://soyparticipante.runasp.net https://soyparticipante.runasp.net; do
-            for ruta in / /api/salud; do
+            for ruta in / /api/salud /api/catalog; do
               echo "===== $url$ruta"
               curl -sS -o /tmp/body -w "codigo HTTP: %{http_code} | tiempo: %{time_total}s | redirige a: %{redirect_url}\n" -m 30 "$url$ruta" || echo "(no se pudo conectar)"
               head -c 600 /tmp/body 2>/dev/null; echo

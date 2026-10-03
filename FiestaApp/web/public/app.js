@@ -605,7 +605,8 @@ function renderBanks(round) {
     // En el rosco se muestra el reloj; en las pruebas, los segundos ganados.
     const main = esRosco
       ? formatTime(state.timeLeft)
-      : `+${state.secondsWon || 0}s`;
+      : round.type === 'impostor' ? `${state.points || 0} pts`
+        : `+${state.secondsWon || 0}s`;
 
     // La Silla muestra las vidas que le quedan al equipo.
     const lives = round.erroresPermitidos !== undefined && state.errors !== undefined
@@ -1147,7 +1148,8 @@ const GAME_TYPE_ICONS = {
   mimica: '🎭',
   'palabra-prohibida': '🤐',
   'duelo-torres': '🗼',
-  'escalera-final': '🪜'
+  'escalera-final': '🪜',
+  impostor: '🕵️'
 };
 
 // Se llama DESPUÉS de dibujar el tablero (no antes): el ícono y el color se
@@ -1921,6 +1923,265 @@ function renderDuelo(round, container) {
 // Mismo espíritu que el Rosco (reloj propio por equipo, solo corre en su
 // turno), pero subiendo escalones en vez de letras, y con la opción de
 // plantarse para guardar el escalón a salvo de una caída futura.
+// ---------- El Impostor (pistas escritas por turno, votación, robo final) ----------
+// El reloj manda una actualización por segundo: si reconstruyéramos todo en
+// cada una, se borraría la pista que alguien está escribiendo. Se rearma solo
+// cuando cambia algo de verdad (fase, turno, pistas, votos) y el resto de las
+// veces solo se actualiza el reloj.
+let impostorBuiltFor = null;
+let impostorComo = null; // modo prueba: por quién vota el anfitrión
+
+function impostorJugador(round, id) {
+  return (round.jugadores || []).find((p) => p.id === id) || null;
+}
+
+function impostorNombreHtml(round, id, fallback) {
+  const p = impostorJugador(round, id);
+  const color = p ? teamColor(p.team) : null;
+  return `<span class="imp-name"${color ? ` style="--team-color:${color}"` : ''}>${esc(p ? p.name : fallback || '?')}</span>`;
+}
+
+function impostorTitular(round) {
+  switch (round.phase) {
+    case 'pistas': return round.turnoNombre
+      ? `Pista de ${esc(round.turnoNombre)} — vuelta ${round.vuelta} de ${round.totalVueltas}`
+      : 'Ronda de pistas';
+    case 'votacion': return '🗳 ¿Quién es el impostor?';
+    case 'robo': return `🚨 ¡Atraparon a ${esc(round.impostorName || '')}! Última chance de robar el caso`;
+    case 'revelacion': return '🎬 Revelación';
+    default: return '';
+  }
+}
+
+function impostorTimerTexto(round) {
+  return `⏱ ${formatTime(Math.max(round.secondsLeft, 0))}`;
+}
+
+// La carta secreta: hay que mantenerla apretada para verla, así el de al lado
+// no espía de reojo. Se tapa sola al soltar.
+function impostorCartaSecreta(privado) {
+  const card = document.createElement('button');
+  card.type = 'button';
+  card.className = 'imp-card';
+  let dorso;
+  if (privado.rol === 'impostor') {
+    dorso = `<strong class="imp-card-title">🕵️ Sos el impostor</strong>
+      <small>${privado.categoria ? `Categoría: <b>${esc(privado.categoria)}</b>. ` : ''}No sabés la palabra: escuchá las pistas y disimulá.</small>`;
+  } else if (privado.rol === 'tripulante') {
+    dorso = `<small>Tu palabra es</small><strong class="imp-card-word">${esc(privado.palabra)}</strong>
+      <small>Dá pistas que la rodeen sin decirla.</small>`;
+  } else {
+    dorso = '<small>Estás mirando este caso.</small>';
+  }
+  card.innerHTML = `
+    <span class="imp-card-front">🔒 Mantené apretado para ver tu palabra</span>
+    <span class="imp-card-back">${dorso}</span>`;
+  const ver = (e) => { e.preventDefault(); card.classList.add('revealed'); };
+  const tapar = () => card.classList.remove('revealed');
+  card.addEventListener('pointerdown', ver);
+  ['pointerup', 'pointerleave', 'pointercancel', 'blur'].forEach((ev) => card.addEventListener(ev, tapar));
+  card.addEventListener('contextmenu', (e) => e.preventDefault());
+  card.addEventListener('keydown', (e) => { if (e.key === ' ' || e.key === 'Enter') ver(e); });
+  card.addEventListener('keyup', tapar);
+  return card;
+}
+
+function renderImpostor(round, container, roundKey) {
+  const iAmTestHost = room.testMode && myId === room.hostId;
+  const iAmHost = myId === room.hostId;
+  const privado = round.privado || {};
+
+  if (round.faltanJugadores) {
+    container.innerHTML = '<div class="board"><p class="board-clue">El Impostor necesita al menos 3 jugadores.</p></div>';
+    return;
+  }
+
+  const buildKey = [roundKey, round.number, round.phase, round.turnoDe, (round.pistas || []).length,
+    (round.yaVotaron || []).length, privado.miVoto || '', round.roboGuess || '', impostorComo || ''].join('|');
+  if (buildKey === impostorBuiltFor) {
+    const t = $('imp-timer');
+    if (t) t.textContent = impostorTimerTexto(round);
+    const bar = $('imp-bar');
+    if (bar) bar.innerHTML = progressBarHtml(round.secondsLeft, round.secondsMax);
+    return;
+  }
+  const pistasAntes = impostorBuiltFor && impostorBuiltFor.split('|')[0] === roundKey
+    ? Number(impostorBuiltFor.split('|')[4]) : 0;
+  impostorBuiltFor = buildKey;
+  container.innerHTML = '';
+
+  const modoTexto = { 'con-categoria': 'Con categoría', 'sin-categoria': 'Sin categoría', 'a-ciegas': 'A ciegas' }[round.modo] || '';
+  const box = document.createElement('div');
+  box.className = 'board imp-board';
+  box.innerHTML = `
+    <p class="board-topic">Caso ${round.number} de ${round.total} · ${modoTexto}</p>
+    <p class="board-clue">${impostorTitular(round)}</p>
+    ${round.categoria && round.phase !== 'revelacion' ? `<p class="imp-categoria">Categoría: <b>${esc(round.categoria)}</b></p>` : ''}
+    ${round.phase !== 'revelacion' ? `<p class="board-counter" id="imp-timer">${impostorTimerTexto(round)}</p><div id="imp-bar">${progressBarHtml(round.secondsLeft, round.secondsMax)}</div>` : ''}
+  `;
+  container.appendChild(box);
+
+  // Carta secreta (o, en modo prueba, todo a la vista para poder probar).
+  if (round.phase !== 'revelacion') {
+    if (privado.modoPrueba) {
+      const info = document.createElement('p');
+      info.className = 'imp-prueba muted';
+      info.innerHTML = `Modo prueba — impostor: <b>${esc(privado.impostorName)}</b> · palabra: <b>${esc(privado.palabra)}</b>`
+        + (privado.palabraImpostor ? ` · la del impostor: <b>${esc(privado.palabraImpostor)}</b>` : '');
+      container.appendChild(info);
+    } else if (privado.rol) {
+      container.appendChild(impostorCartaSecreta(privado));
+    }
+  }
+
+  // Una fila por jugador con todas sus pistas, en el orden en que hablan: es
+  // más corto que una pista por renglón y sirve más para deducir ("¿quién
+  // dijo cosas que no pegan?"). En la votación, se vota tocando la fila.
+  const pistas = round.pistas || [];
+  const jugadores = round.jugadores || [];
+  const yaVotaron = new Set(round.yaVotaron || []);
+  let votante = myId;
+  if (round.phase === 'votacion' && iAmTestHost) {
+    const pendientes = jugadores.filter((p) => !yaVotaron.has(p.id));
+    if (!impostorComo || !jugadores.some((p) => p.id === impostorComo)) impostorComo = (pendientes[0] || jugadores[0] || {}).id;
+    votante = impostorComo;
+    const sel = document.createElement('label');
+    sel.className = 'imp-como';
+    sel.innerHTML = `Votando como <select id="imp-como">${jugadores.map((p) =>
+      `<option value="${esc(p.id)}"${p.id === impostorComo ? ' selected' : ''}>${esc(p.name)}${yaVotaron.has(p.id) ? ' ✔' : ''}</option>`).join('')}</select>`;
+    container.appendChild(sel);
+    sel.querySelector('select').addEventListener('change', (e) => { impostorComo = e.target.value; impostorBuiltFor = null; renderPlaying(); });
+  }
+  const puedeVotar = round.phase === 'votacion' && (iAmTestHost || jugadores.some((p) => p.id === myId));
+  const lista = document.createElement('div');
+  lista.className = 'imp-clues' + (puedeVotar ? ' votando' : '');
+  jugadores.forEach((j) => {
+    const suyas = pistas.map((p, i) => ({ ...p, i })).filter((p) => p.id === j.id);
+    const escribiendo = round.phase === 'pistas' && round.turnoDe === j.id;
+    const chips = suyas.map((p) => `<span class="imp-chip${p.i >= pistasAntes ? ' nueva' : ''}${p.skipped ? ' salteada' : ''}">${p.skipped ? 'pasó' : esc(p.text)}</span>`).join('')
+      + (escribiendo ? '<span class="imp-chip escribiendo">✍️ escribiendo…</span>' : '');
+    const votable = puedeVotar && j.id !== votante;
+    const row = document.createElement(votable ? 'button' : 'div');
+    const elegido = round.phase === 'votacion' && !iAmTestHost && privado.miVoto === j.id;
+    row.className = 'imp-row' + (escribiendo ? ' activo' : '') + (votable ? ' votable' : '') + (elegido ? ' elegido' : '')
+      + (round.phase === 'revelacion' && j.id === round.impostorId ? ' impostor' : '');
+    const color = teamColor(j.team);
+    if (color) row.style.setProperty('--team-color', color);
+    row.innerHTML = `${impostorNombreHtml(round, j.id, j.name)}<span class="imp-chips">${chips || '<span class="imp-chip vacia">—</span>'}</span>`
+      + (round.phase === 'votacion' && yaVotaron.has(j.id) ? '<span class="imp-voto-ok" title="Ya votó">✔</span>' : '')
+      + (votable ? `<span class="imp-votar">${elegido ? 'Tu voto' : 'Votar'}</span>` : '')
+      + (round.phase === 'revelacion' && j.id === round.impostorId ? '<span class="imp-votar imp-badge">🕵️ Impostor</span>' : '');
+    if (votable) {
+      row.type = 'button';
+      row.addEventListener('click', () => {
+        socket.emit('submit-answer', iAmTestHost ? { voto: j.id, como: votante } : { voto: j.id });
+        if (iAmTestHost) impostorComo = null; // pasa solo al siguiente que falta votar
+      });
+    }
+    lista.appendChild(row);
+  });
+  container.appendChild(lista);
+
+  const acciones = document.createElement('div');
+  acciones.className = 'imp-actions';
+  container.appendChild(acciones);
+  let msg = '';
+
+  if (round.phase === 'pistas') {
+    const meToca = round.turnoDe === myId;
+    if (meToca || iAmTestHost) {
+      if (meToca && navigator.vibrate) navigator.vibrate(120);
+      const form = document.createElement('form');
+      form.className = 'imp-form';
+      form.innerHTML = `
+        <input id="imp-input" type="text" maxlength="30" autocomplete="off"
+          placeholder="${iAmTestHost && !meToca ? `Pista de ${esc(round.turnoNombre)}` : 'Tu pista (sin decir la palabra)'}" />
+        <button class="btn btn-solid" type="submit">Mandar</button>`;
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const val = $('imp-input').value.trim();
+        if (val) socket.emit('submit-answer', { pista: val });
+      });
+      acciones.appendChild(form);
+      setTimeout(() => { const i = $('imp-input'); if (i) i.focus(); }, 50);
+      msg = meToca ? '¡Te toca! Una pista corta (hasta 3 palabras).' : `Modo prueba — escribís por ${round.turnoNombre}.`;
+    } else {
+      msg = `Le toca a ${round.turnoNombre || '...'}.`;
+    }
+    if (iAmHost) {
+      const skip = document.createElement('button');
+      skip.className = 'btn btn-ghost mimica-safety';
+      skip.textContent = '⏭ Saltar este turno';
+      skip.addEventListener('click', () => socket.emit('judge-word', { saltarTurno: true }));
+      acciones.appendChild(skip);
+    }
+  } else if (round.phase === 'votacion') {
+    msg = (puedeVotar ? 'Tocá a quien sospechás. ' : '') + `Votaron ${yaVotaron.size} de ${jugadores.length}.`
+      + (!iAmTestHost && privado.miVoto ? ' Podés cambiar tu voto hasta que se cierre.' : '');
+    if (iAmHost) {
+      const cerrar = document.createElement('button');
+      cerrar.className = 'btn btn-ghost mimica-safety';
+      cerrar.textContent = 'Cerrar la votación ya';
+      cerrar.addEventListener('click', () => socket.emit('judge-word', { cerrarVotacion: true }));
+      acciones.appendChild(cerrar);
+    }
+  } else if (round.phase === 'robo') {
+    const soyElImpostor = round.impostorId === myId;
+    if (soyElImpostor || iAmTestHost) {
+      const p = document.createElement('p');
+      p.className = 'imp-robo-titulo';
+      p.textContent = soyElImpostor ? '¡Te atraparon! Si adivinás la palabra, te robás el caso:' : `Robo de ${round.impostorName}: ¿cuál era la palabra?`;
+      acciones.appendChild(p);
+      const grid = document.createElement('div');
+      grid.className = 'imp-vote-grid';
+      (round.roboOptions || []).forEach((w, i) => {
+        const b = document.createElement('button');
+        b.className = 'imp-vote';
+        b.textContent = w;
+        b.addEventListener('click', () => socket.emit('submit-answer', { robo: i }));
+        grid.appendChild(b);
+      });
+      acciones.appendChild(grid);
+      msg = 'Elegí rápido: el reloj corre.';
+    } else {
+      msg = `${round.impostorName} está intentando adivinar la palabra para robarse el caso…`;
+    }
+  } else if (round.phase === 'revelacion') {
+    const r = round.resultado || {};
+    const titulo = r.robado ? '🦹 ¡Se robó el caso adivinando la palabra!'
+      : r.atrapado ? '🎯 ¡Lo atraparon!'
+        : r.empate ? '🤝 Empate en la votación: el impostor se escapa'
+          : `😈 Se escapó: acusaron a ${esc(r.acusadoName || '')}`;
+    const votos = Object.entries(round.votos || {})
+      .map(([v, t]) => `<li>${impostorNombreHtml(round, v)} → ${impostorNombreHtml(round, t)}</li>`).join('');
+    const reveal = document.createElement('div');
+    reveal.className = 'imp-reveal';
+    reveal.innerHTML = `
+      <p class="imp-reveal-label">El impostor era</p>
+      <p class="imp-reveal-name">${impostorNombreHtml(round, round.impostorId, round.impostorName)}</p>
+      <p class="imp-reveal-word">La palabra era <b>${esc(round.palabra || '')}</b>${round.categoria ? ` (${esc(round.categoria)})` : ''}</p>
+      ${round.palabraImpostor ? `<p class="imp-reveal-word">Al impostor le tocó <b>${esc(round.palabraImpostor)}</b>, sin saber que era el impostor</p>` : ''}
+      <p class="imp-reveal-result">${titulo}</p>
+      ${votos ? `<ul class="imp-votos">${votos}</ul>` : ''}
+      <p class="muted sm-desc">Cada voto acertado suma ${round.puntos.votoCorrecto} para tu equipo · el impostor suma ${round.puntos.escapa} si escapa o ${round.puntos.robo} si roba.</p>`;
+    acciones.appendChild(reveal);
+    if (iAmHost) {
+      const sig = document.createElement('button');
+      sig.className = 'btn btn-solid';
+      sig.textContent = round.number >= round.total ? 'Terminar ▶' : 'Siguiente caso ▶';
+      sig.addEventListener('click', () => socket.emit('judge-word', { siguienteCaso: true }));
+      acciones.appendChild(sig);
+    }
+    msg = `Sigue solo en ${Math.max(round.secondsLeft, 0)} s.`;
+    narrate(`impostor-revela-${roundKey}-${round.number}`, `El impostor era ${round.impostorName}. La palabra era ${round.palabra}.`);
+  }
+
+  if (round.phase === 'pistas' && (round.pistas || []).length === 0) {
+    narrate(`impostor-caso-${roundKey}-${round.number}`, `Caso ${round.number}. Miren su palabra en secreto. ¡Que empiecen las pistas!`);
+  }
+  $('playing-turn-msg').textContent = msg;
+}
+
 function renderEscalera(round, container) {
   container.innerHTML = '';
   const iAmHost = myId === room.hostId;
@@ -2099,6 +2360,17 @@ function renderPlaying() {
     return;
   }
 
+  // El Impostor: cada uno ve algo distinto (su palabra o su rol) y hay un
+  // campo de texto que no se puede rearmar en cada segundo -- flujo propio.
+  if (round.type === 'impostor') {
+    $('btn-pasapalabra').classList.add('hidden');
+    $('playing-options').innerHTML = '';
+    renderImpostor(round, container, roundKey);
+    applyGameIdentity(round);
+    maybeFlashFeedback(round);
+    return;
+  }
+
   // Escalera Final: como el Rosco (reloj propio por equipo) pero con un
   // botón extra para plantarse -- necesita su propio flujo.
   if (round.type === 'escalera-final') {
@@ -2244,6 +2516,7 @@ $('btn-back-home').addEventListener('click', () => {
   tutiAutoLockKey = null;
   mimicaBuiltFor = null;
   prohibidaBuiltFor = null;
+  impostorBuiltFor = null;
   sopaBuiltFor = null;
   cruzadasBuiltFor = null;
   stopVoiceListening();

@@ -66,11 +66,28 @@ function candidates(room, sockets) {
       }
       case 'adivina-la-cancion':
         sub(s, { intento: true }); break;
+      case 'impostor': {
+        const c = st.caso;
+        if (!c) break;
+        if (c.phase === 'pistas') {
+          // A veces los que saben la palabra intentan decirla: el servidor
+          // tiene que rechazarlo. (El impostor no la sabe; si la "adivinara"
+          // como pista, se acepta: rechazarla le confirmaria cual es.)
+          const sabe = s !== c.impostorId;
+          sub(s, { pista: sabe && Math.random() < 0.2 ? c.word : pick(['rojo', 'grande', 'casa', 'rapido', 'dulce']) });
+        } else if (c.phase === 'votacion') {
+          sub(s, { voto: pick(c.order).id });
+        } else if (c.phase === 'robo') {
+          sub(s, { robo: R(c.roboOptions.length) });
+        }
+        break;
+      }
     }
   }
   if (t === 'tutifruti') st.pendingJudgements.filter((p) => p.decided === null).forEach((p) => jud({ entrantId: p.entrantId, category: p.category, accept: Math.random() < 0.5 }));
   if (t === 'mimica' || t === 'palabra-prohibida') { jud({ elegirModo: pick(['azar', 'rotativo']) }); if (Math.random() < 0.1) jud({ confirmarManual: true }); if (t === 'palabra-prohibida') jud({ falta: true }); }
   if (t === 'la-cadena' && Math.random() < 0.1) jud({ confirmarManual: true });
+  if (t === 'impostor' && Math.random() < 0.05) jud(pick([{ saltarTurno: true }, { cerrarVotacion: true }, { siguienteCaso: true }]));
   if (t === 'adivina-la-cancion') { jud({ ok: Math.random() < 0.5 }); if (Math.random() < 0.1) jud({ skip: true }); }
   return out;
 }
@@ -80,7 +97,7 @@ function play({ programId, difficulty, players = 4, disconnectAt = null, label }
   const room = rooms.createRoom(ids[0], 'Host', programId, { difficulty });
   ids.slice(1).forEach((id, i) => rooms.joinRoom(room.code, id, 'P' + (i + 1)));
   const cfg = { programId, roundCount: pick([3, 6, 9]), teamsEnabled: true, difficulty, baseTimeSeconds: 90 };
-  if (programId === 'varios') cfg.selectedGames = ['mimica', 'adivina-la-cancion', 'la-cadena', 'palabra-prohibida'];
+  if (programId === 'varios') cfg.selectedGames = ['impostor', 'mimica', 'adivina-la-cancion', 'la-cadena', 'palabra-prohibida'];
   rooms.setConfig(room, ids[0], cfg);
   let r = rooms.startGame(room, ids[0]);
   if (r.error) return { label, error: 'start: ' + r.error };
@@ -132,6 +149,17 @@ function play({ programId, difficulty, players = 4, disconnectAt = null, label }
         : kind === 'pasa' ? rooms.pasapalabra(room, s) : rooms.judgeWord(room, s, v);
       if (res.error) errors.set(res.error.replace(/Le toca a .*?\./, 'Le toca a X.'), (errors.get(res.error) || 0) + 1);
       rooms.publicState(room); // que no explote serializar
+      // El Impostor: la palabra secreta nunca puede llegarle al celu del
+      // impostor mientras se juega (ni escondida en el estado).
+      const c = room.roundState && room.roundState.caso;
+      if (room.roundState && room.roundState.gameType === 'impostor' && c && (c.phase === 'pistas' || c.phase === 'votacion')) {
+        const visto = JSON.stringify(rooms.publicState(room, c.impostorId));
+        if (visto.includes(`"${c.word}"`)) return { label, exception: `FUGA: el impostor recibe la palabra "${c.word}"`, game: 'impostor' };
+        const otro = c.order.find((x) => x.id !== c.impostorId);
+        if (otro && JSON.stringify(rooms.publicState(room, otro.id)).includes(`"impostorId":"${c.impostorId}"`)) {
+          return { label, exception: 'FUGA: se sabe quien es el impostor antes de tiempo', game: 'impostor' };
+        }
+      }
     } catch (e) {
       return { label, exception: e.stack.split('\n').slice(0, 4).join(' | '), game: room.roundState && room.roundState.gameType };
     }
@@ -145,7 +173,8 @@ const N = Number(process.argv[2] || 15);
 for (const programId of ['el-rosco', 'ahora-caigo', 'varios']) {
   for (const difficulty of ['facil', 'normal', 'dificil']) {
     for (let i = 0; i < N; i++) {
-      const players = pick([2, 3, 4, 5, 7]);
+      // Varios incluye El Impostor, que necesita al menos 3 personas.
+      const players = programId === 'varios' ? pick([3, 4, 5, 7]) : pick([2, 3, 4, 5, 7]);
       const disconnectAt = Math.random() < 0.5 ? 50 + R(400) : null;
       results.push(play({ programId, difficulty, players, disconnectAt, label: `${programId}/${difficulty}/${players}j${disconnectAt ? '/desc@' + disconnectAt : ''}` }));
     }
