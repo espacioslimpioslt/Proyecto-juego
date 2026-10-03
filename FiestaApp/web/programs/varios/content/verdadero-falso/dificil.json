@@ -1,0 +1,155 @@
+{
+  "theme": "Verdadero o Falso — difícil",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "difficulty": "dificil",
+  "afirmaciones": [
+    {
+      "texto": "En Venus, un día dura más que un año.",
+      "verdadero": true,
+      "dato": "Tarda más en girar sobre sí mismo que en dar la vuelta al Sol."
+    },
+    {
+      "texto": "Medido desde el centro de la Tierra, el Everest es la cumbre más alejada.",
+      "verdadero": false,
+      "dato": "Es el Chimborazo, en Ecuador, por el abultamiento del ecuador."
+    },
+    {
+      "texto": "Los tiburones existen desde antes que los árboles.",
+      "verdadero": true,
+      "dato": "Hay tiburones desde hace unos 450 millones de años; árboles, desde hace unos 385."
+    },
+    {
+      "texto": "Cleopatra vivió más cerca en el tiempo de la llegada a la Luna que de la construcción de la Gran Pirámide.",
+      "verdadero": true,
+      "dato": "La pirámide ya tenía unos 2.500 años cuando ella nació."
+    },
+    {
+      "texto": "Las bananas son levemente radiactivas.",
+      "verdadero": true,
+      "dato": "Por el potasio que tienen. Totalmente inofensivo."
+    },
+    {
+      "texto": "La Universidad de Oxford es más antigua que el Imperio azteca.",
+      "verdadero": true,
+      "dato": "En Oxford ya se enseñaba a fines del siglo XI; Tenochtitlan se fundó en 1325."
+    },
+    {
+      "texto": "Los pulpos tienen sangre azul.",
+      "verdadero": true,
+      "dato": "Usan cobre (hemocianina) en vez de hierro para llevar oxígeno."
+    },
+    {
+      "texto": "El idioma oficial de Brasil es el español.",
+      "verdadero": false,
+      "dato": "Es el portugués."
+    },
+    {
+      "texto": "El animal nacional de Escocia es el unicornio.",
+      "verdadero": true,
+      "dato": "Aparece en su escudo real."
+    },
+    {
+      "texto": "La Coca-Cola originalmente era verde.",
+      "verdadero": false,
+      "dato": "Es un mito: siempre fue de color caramelo."
+    },
+    {
+      "texto": "Contando los desiertos polares, el Sahara es el desierto más grande del mundo.",
+      "verdadero": false,
+      "dato": "El más grande es la Antártida; el Sahara es el desierto cálido más grande."
+    },
+    {
+      "texto": "Un rayo es más caliente que la superficie del Sol.",
+      "verdadero": true,
+      "dato": "Puede llegar a unos 30.000 °C; la superficie del Sol tiene unos 5.500."
+    },
+    {
+      "texto": "Las uñas y el pelo siguen creciendo después de la muerte.",
+      "verdadero": false,
+      "dato": "La piel se retrae y eso hace que parezcan más largos."
+    },
+    {
+      "texto": "Estados Unidos le compró Alaska a Rusia.",
+      "verdadero": true,
+      "dato": "En 1867."
+    },
+    {
+      "texto": "El primer Mundial de fútbol se jugó en Uruguay.",
+      "verdadero": true,
+      "dato": "En 1930, y lo ganó Uruguay."
+    },
+    {
+      "texto": "Los flamencos son rosados por lo que comen.",
+      "verdadero": true,
+      "dato": "Los pigmentos de algas y crustáceos tiñen sus plumas."
+    },
+    {
+      "texto": "Albert Einstein ganó el Nobel por la teoría de la relatividad.",
+      "verdadero": false,
+      "dato": "Lo ganó por explicar el efecto fotoeléctrico."
+    },
+    {
+      "texto": "La palabra «robot» viene de una obra de teatro checa.",
+      "verdadero": true,
+      "dato": "De R.U.R., de Karel Čapek, en 1920."
+    },
+    {
+      "texto": "El volcán más alto del sistema solar está en Marte.",
+      "verdadero": true,
+      "dato": "Es el Monte Olimpo, unas dos veces y media el Everest."
+    },
+    {
+      "texto": "Hay más árboles en la Tierra que estrellas en la Vía Láctea.",
+      "verdadero": true,
+      "dato": "Se calculan unos 3 billones de árboles, contra unos cientos de miles de millones de estrellas."
+    },
+    {
+      "texto": "La Antártida le pertenece a un solo país por un tratado internacional.",
+      "verdadero": false,
+      "dato": "El Tratado Antártico deja en suspenso los reclamos de soberanía."
+    },
+    {
+      "texto": "La Gran Muralla China es una sola muralla continua.",
+      "verdadero": false,
+      "dato": "Son muchos tramos construidos en distintas épocas."
+    },
+    {
+      "texto": "El cerebro humano no siente dolor.",
+      "verdadero": true,
+      "dato": "No tiene receptores de dolor; por eso hay cirugías con el paciente despierto."
+    },
+    {
+      "texto": "Los girasoles jóvenes siguen al Sol durante el día.",
+      "verdadero": true,
+      "dato": "Cuando maduran, quedan mirando al este."
+    },
+    {
+      "texto": "El Amazonas lleva más agua al mar que cualquier otro río del mundo.",
+      "verdadero": true,
+      "dato": "Más que los siete siguientes juntos."
+    },
+    {
+      "texto": "La Estatua de la Libertad fue un regalo de Inglaterra a Estados Unidos.",
+      "verdadero": false,
+      "dato": "Fue un regalo de Francia, en 1886."
+    },
+    {
+      "texto": "Big Ben es el nombre de la torre del reloj de Londres.",
+      "verdadero": false,
+      "dato": "Big Ben es la campana; la torre se llama Torre Isabel."
+    },
+    {
+      "texto": "Los vikingos usaban cascos con cuernos.",
+      "verdadero": false,
+      "dato": "Es un invento del siglo XIX, de vestuarios de ópera."
+    },
+    {
+      "texto": "Las serpientes tienen párpados.",
+      "verdadero": false,
+      "dato": "Tienen una escama transparente que les cubre el ojo."
+    }
+  ]
+}
