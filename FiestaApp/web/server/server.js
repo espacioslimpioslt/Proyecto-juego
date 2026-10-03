@@ -26,6 +26,27 @@ app.get('/api/difficulties', (req, res) => {
   res.json(rooms.DIFICULTADES);
 });
 
+// Para revisar el hosting: si "arrancado" cambia sin que hayamos subido nada,
+// el servidor se reinicio solo (y se cortaron las partidas en curso).
+const arrancado = new Date().toISOString();
+app.get('/api/salud', (req, res) => {
+  // Como esta conectado cada celu: "websocket" (lo ideal) o "polling" (el
+  // hosting no deja pasar WebSockets; funciona igual, un poco mas lento).
+  const transportes = {};
+  for (const s of io.of('/').sockets.values()) {
+    const t = s.conn.transport.name;
+    transportes[t] = (transportes[t] || 0) + 1;
+  }
+  res.json({
+    transportes,
+    ok: true,
+    node: process.version,
+    arrancado,
+    segundosPrendido: Math.round(process.uptime()),
+    salas: [...rooms.allRooms()].length
+  });
+});
+
 // ---------- Identidad del jugador ----------
 // El jugador NO es la conexion (socket): en un celu la conexion se corta
 // todo el tiempo (se bloquea la pantalla, se cambia de app, se va el wifi
