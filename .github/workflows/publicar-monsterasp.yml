@@ -1,0 +1,60 @@
+# Publica FiestaApp/web en MonsterASP por FTP cada vez que se actualiza
+# main (o a mano desde la pestaña "Actions" -> "Run workflow").
+#
+# Necesita tres "secrets" en el repo (Settings -> Secrets and variables ->
+# Actions -> New repository secret), con los datos de "Acceso FTP/SFTP" del
+# panel de MonsterASP:
+#   FTP_SERVER    ej. sitio95765.siteasp.net
+#   FTP_USERNAME  ej. sitio95765
+#   FTP_PASSWORD  la contraseña FTP del sitio
+name: Publicar en MonsterASP
+
+on:
+  push:
+    branches: [main]
+    paths: ['FiestaApp/web/**', '.github/workflows/publicar-monsterasp.yml']
+  workflow_dispatch:
+
+concurrency:
+  group: publicar-monsterasp
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: FiestaApp/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Antes de publicar: el contenido tiene que validar y el motor no puede
+      # trabarse. Si algo falla, no se sube nada.
+      - name: Probar
+        run: |
+          npm ci
+          node tools/validar-contenido.js
+          node tools/simular-partidas.js 10
+
+      - name: Armar el paquete
+        run: |
+          rm -rf ../deploy && mkdir ../deploy
+          cp -r app.js web.config package.json package-lock.json server public programs ../deploy/
+          cd ../deploy
+          npm ci --omit=dev
+          # iisnode reinicia Node cuando cambia un .js de la raiz: dejar la
+          # version en app.js hace que tome los cambios de server/ solo.
+          echo "// version ${GITHUB_SHA}" >> app.js
+
+      - name: Subir por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: FiestaApp/deploy/
+          server-dir: wwwroot/

@@ -4,7 +4,30 @@ MonsterASP corre aplicaciones Node.js dentro de IIS (el servidor web de
 Windows) con el módulo **iisnode**. No ejecuta `npm install` en el servidor:
 hay que subir la app con la carpeta `node_modules` ya armada.
 
-## Qué se sube
+## Publicación automática (recomendada)
+
+`.github/workflows/publicar-monsterasp.yml` publica solo cada vez que se
+actualiza `main`: prueba el contenido y el motor (si algo falla, no sube
+nada), arma el paquete con `node_modules` y lo sube por FTP a `wwwroot`.
+También se puede correr a mano desde la pestaña **Actions** del repo →
+**Publicar en MonsterASP** → **Run workflow**.
+
+Configuración, una sola vez: en GitHub, **Settings → Secrets and variables →
+Actions → New repository secret**, crear estos tres con los datos de
+"Acceso FTP/SFTP" del panel de MonsterASP:
+
+| Secret | Valor |
+|---|---|
+| `FTP_SERVER` | el servidor, ej. `sitio95765.siteasp.net` |
+| `FTP_USERNAME` | el usuario, ej. `sitio95765` |
+| `FTP_PASSWORD` | la contraseña FTP |
+
+La contraseña queda guardada cifrada en GitHub: no aparece en el código ni
+en los registros.
+
+## Publicación a mano (si hace falta)
+
+### Qué se sube
 
 Todo lo que está dentro de `FiestaApp/web/` **menos** `tools/`, y con
 `node_modules` instalado solo con las dependencias de producción:
