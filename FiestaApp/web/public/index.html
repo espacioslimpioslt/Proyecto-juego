@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Soy Participante</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div id="error-toast" class="toast hidden"></div>
+
+<header class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <button id="btn-menu-open" class="menu-btn" aria-label="Abrir menú">☰</button>
+    <span class="brand">SOY<span class="brand-accent">PARTICIPANTE</span></span>
+    <span id="room-code-badge" class="room-code-badge hidden"></span>
+  </div>
+</header>
+
+<div id="menu-backdrop" class="menu-backdrop hidden"></div>
+<aside id="side-menu" class="side-menu">
+  <div class="side-menu-head">
+    <span class="brand">MENÚ</span>
+    <button id="btn-menu-close" class="menu-close" aria-label="Cerrar menú">✕</button>
+  </div>
+
+  <div class="side-menu-section">
+    <p class="sm-title">Preferencias por defecto</p>
+    <p class="muted sm-desc">Se guardan en este celu y se aplican solas la próxima vez que armes una sala — igual las podés cambiar puntualmente en cada sala de espera.</p>
+    <label>¿Desde dónde jugás normalmente?
+      <select id="pref-region"></select>
+    </label>
+    <label>Dificultad
+      <select id="pref-difficulty"></select>
+    </label>
+    <label class="checkbox-row">
+      <input id="pref-adults" type="checkbox" />
+      Mostrar temas para mayores de 18 por defecto
+    </label>
+    <label class="checkbox-row">
+      <input id="pref-voice" type="checkbox" checked />
+      Conductor con voz activado por defecto
+    </label>
+  </div>
+
+  <div class="side-menu-section">
+    <p class="sm-title">Cuenta</p>
+    <button class="sm-locked" disabled>🔒 Iniciar sesión — Próximamente</button>
+    <button class="sm-locked" disabled>🔒 Guardar partidas sin terminar — Próximamente</button>
+    <button class="sm-locked" disabled>🔒 Historial de partidas — Próximamente</button>
+    <p class="muted sm-desc">Todavía no hay guardado entre sesiones — se suma cuando el proyecto tenga una base de datos propia.</p>
+  </div>
+</aside>
+
+<main id="app" class="wide-app">
+
+  <!-- Portada estilo plataforma de streaming -->
+  <section id="screen-start" class="screen screen-wide">
+
+    <!-- Hero: el programa destacado -->
+    <div class="hero" id="hero"></div>
+
+    <!-- Filas horizontales por categoría -->
+    <div id="rows-container" class="rows-container"></div>
+
+  </section>
+
+  <section id="screen-create" class="screen hidden">
+    <h1 id="create-title">Crear sala</h1>
+    <p id="create-program-desc" class="muted"></p>
+    <div id="create-games" class="games-preview"></div>
+    <label>Tu nombre
+      <input id="create-name" type="text" maxlength="20" placeholder="Ej: Leandro" />
+    </label>
+    <button id="btn-create-submit" class="btn btn-solid">Crear sala</button>
+    <button class="btn btn-ghost btn-back" data-back="screen-start">Volver</button>
+  </section>
+
+  <section id="screen-join" class="screen hidden">
+    <h1>Entrar a una sala</h1>
+    <label>Código de sala
+      <input id="join-code" type="text" maxlength="4" placeholder="Ej: AB3K" autocapitalize="characters" />
+    </label>
+    <label>Tu nombre
+      <input id="join-name" type="text" maxlength="20" placeholder="Ej: Leandro" />
+    </label>
+    <button id="btn-join-submit" class="btn btn-solid">Entrar</button>
+    <button class="btn btn-ghost btn-back" data-back="screen-start">Volver</button>
+  </section>
+
+  <!-- Sala de espera -->
+  <section id="screen-lobby" class="screen hidden">
+    <h1>Sala de espera</h1>
+    <p class="muted">Compartí este código con el grupo:</p>
+    <div id="lobby-code" class="big-code"></div>
+    <ul id="lobby-players" class="player-list"></ul>
+    <div id="lobby-host-controls" class="hidden">
+      <label>Programa
+        <select id="config-program"></select>
+      </label>
+      <label class="checkbox-row">
+        <input id="config-voice" type="checkbox" checked />
+        Conductor con voz (lee las consignas en voz alta)
+      </label>
+      <label id="config-rounds-label">Cantidad de pruebas
+        <select id="config-rounds">
+          <option value="3">3 pruebas</option>
+          <option value="6" selected>6 pruebas</option>
+          <option value="9">9 pruebas</option>
+        </select>
+      </label>
+      <div id="config-game-picker" class="hidden">
+        <p class="muted sm-desc">Elegí qué juegos querés jugar (uno o varios) — se suman los puntos de todos.</p>
+        <div id="config-game-picker-list" class="game-picker-list"></div>
+      </div>
+      <label id="config-time-label">Tiempo base por equipo en la prueba final
+        <select id="config-time">
+          <option value="60">1 minuto</option>
+          <option value="90" selected>1 min 30 s</option>
+          <option value="120">2 minutos</option>
+          <option value="180">3 minutos</option>
+          <option value="300">5 minutos</option>
+        </select>
+      </label>
+      <p id="config-time-desc" class="muted">A ese tiempo se le suman los segundos que ganen en las pruebas previas.</p>
+      <label>¿Desde dónde están jugando?
+        <select id="config-region"></select>
+      </label>
+      <label>Dificultad
+        <select id="config-difficulty"></select>
+      </label>
+      <label class="checkbox-row">
+        <input id="config-adults" type="checkbox" />
+        Solo mayores de 18 (habilita temas para grandes)
+      </label>
+      <label class="checkbox-row">
+        <input id="config-test" type="checkbox" />
+        Modo prueba (jugar solo, controlando todos los equipos)
+      </label>
+      <div id="config-test-names" class="hidden">
+        <p class="muted sm-desc">Para probar de verdad cómo rota todo (Mímica, La Cadena, etc.), poné nombres inventados para cada equipo — se juega igual que con gente real, vos los controlás a todos.</p>
+        <label>Nombres Equipo A (separados por coma)
+          <input id="config-test-names-a" type="text" placeholder="Ej: Juan, María, Pedro" />
+        </label>
+        <label>Nombres Equipo B (separados por coma)
+          <input id="config-test-names-b" type="text" placeholder="Ej: Ana, Lucas" />
+        </label>
+      </div>
+      <p id="config-estimate" class="muted"></p>
+      <div id="config-sequence" class="muted"></div>
+      <button id="btn-start-game" class="btn btn-solid">Empezar</button>
+    </div>
+    <p id="lobby-waiting-msg" class="muted hidden">Esperando a que el anfitrión arranque...</p>
+  </section>
+
+  <!-- Prueba en juego -->
+  <section id="screen-playing" class="screen hidden">
+    <p class="muted" id="playing-round-label"></p>
+    <div id="carry-banner" class="carry-banner"></div>
+    <div id="time-banks" class="time-banks"></div>
+    <div id="game-board"></div>
+    <div id="playing-options" class="options-grid"></div>
+    <button id="btn-pasapalabra" class="btn btn-ghost hidden">Pasapalabra</button>
+    <p id="playing-turn-msg" class="muted"></p>
+  </section>
+
+  <!-- Resultado de la prueba -->
+  <section id="screen-roundResult" class="screen hidden">
+    <h1 id="roundresult-title">Fin de la prueba</h1>
+    <p id="roundresult-correct" class="correct-answer"></p>
+    <div id="roundresult-scores" class="score-list"></div>
+    <button id="btn-continue" class="btn btn-solid hidden">Siguiente prueba</button>
+    <p id="roundresult-waiting-msg" class="muted hidden">Esperando al anfitrión...</p>
+  </section>
+
+  <!-- Resultados finales -->
+  <section id="screen-results" class="screen hidden">
+    <div id="winner-banner" class="winner-banner"></div>
+    <h1>Fin del programa</h1>
+    <div id="final-scores" class="score-list"></div>
+    <p class="muted">Gracias por participar 🎉</p>
+
+    <div class="results-actions">
+      <button id="btn-play-again" class="btn btn-solid hidden">🔁 Jugar de nuevo</button>
+      <button id="btn-back-home" class="btn btn-ghost">Volver al inicio</button>
+    </div>
+
+    <p class="section-title results-suggest-title">🎬 También en cartelera</p>
+    <div id="results-suggestions" class="row-scroll results-suggestions"></div>
+  </section>
+
+</main>
+
+<nav class="bottom-tabs visible" id="bottom-tabs">
+  <a href="#row-cartelera" class="bt-item bt-active" data-bt="inicio">
+    <span class="bt-icon">🏠</span><span class="bt-label">Inicio</span>
+  </a>
+  <a href="#row-ranking" class="bt-item" data-bt="rankings">
+    <span class="bt-icon">🏆</span><span class="bt-label">Rankings</span>
+  </a>
+  <a href="#row-proximamente" class="bt-item" data-bt="pronto">
+    <span class="bt-icon">🔜</span><span class="bt-label">Pronto</span>
+  </a>
+  <button type="button" id="btn-go-join" class="bt-item bt-btn">
+    <span class="bt-icon">🔑</span><span class="bt-label">Código</span>
+  </button>
+</nav>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

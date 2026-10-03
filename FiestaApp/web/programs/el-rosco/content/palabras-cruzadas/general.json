@@ -1,0 +1,38 @@
+{
+  "theme": "Palabras Cruzadas — general",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "boards": [
+    {
+      "topic": "Cosas de todos los días",
+      "base": { "word": "TELEFONO", "clue": "Aparato con el que se habla a distancia" },
+      "crosses": [
+        { "word": "MESA", "clue": "Mueble sobre el que se apoya la comida", "baseIndex": 1, "wordIndex": 1, "options": ["MESA", "SILLA", "CAMA", "BANCO"], "correctIndex": 0 },
+        { "word": "PERRO", "clue": "Animal doméstico que ladra", "baseIndex": 3, "wordIndex": 1, "options": ["GATO", "PERRO", "PATO", "POLLO"], "correctIndex": 1 },
+        { "word": "SOL", "clue": "Astro que ilumina el día", "baseIndex": 5, "wordIndex": 1, "options": ["LUNA", "SOL", "MAR", "CIELO"], "correctIndex": 1 },
+        { "word": "MANO", "clue": "Parte del cuerpo con cinco dedos", "baseIndex": 6, "wordIndex": 2, "options": ["PIE", "MANO", "BRAZO", "CODO"], "correctIndex": 1 }
+      ]
+    },
+    {
+      "topic": "Naturaleza",
+      "base": { "word": "MONTANA", "clue": "Elevación natural muy grande del terreno" },
+      "crosses": [
+        { "word": "MAR", "clue": "Gran extensión de agua salada", "baseIndex": 0, "wordIndex": 0, "options": ["RIO", "MAR", "LAGO", "AGUA"], "correctIndex": 1 },
+        { "word": "OSO", "clue": "Animal grande y peludo que hiberna", "baseIndex": 1, "wordIndex": 0, "options": ["OSO", "LOBO", "ZORRO", "PUMA"], "correctIndex": 0 },
+        { "word": "NUBE", "clue": "Se forma en el cielo y trae lluvia", "baseIndex": 2, "wordIndex": 0, "options": ["NIEVE", "NUBE", "NIEBLA", "VIENTO"], "correctIndex": 1 },
+        { "word": "ARENA", "clue": "Cubre el suelo de la playa y del desierto", "baseIndex": 4, "wordIndex": 0, "options": ["ARENA", "TIERRA", "PIEDRA", "BARRO"], "correctIndex": 0 }
+      ]
+    },
+    {
+      "topic": "La casa",
+      "base": { "word": "VENTANA", "clue": "Abertura de la pared por la que entra la luz" },
+      "crosses": [
+        { "word": "VASO", "clue": "Recipiente para tomar agua", "baseIndex": 0, "wordIndex": 0, "options": ["PLATO", "VASO", "TAZA", "JARRA"], "correctIndex": 1 },
+        { "word": "NIDO", "clue": "Casa que arman los pájaros", "baseIndex": 2, "wordIndex": 0, "options": ["CUEVA", "NIDO", "COLMENA", "MADRIGUERA"], "correctIndex": 1 },
+        { "word": "TECHO", "clue": "Parte de arriba que cubre la casa", "baseIndex": 3, "wordIndex": 0, "options": ["PISO", "TECHO", "PARED", "PUERTA"], "correctIndex": 1 },
+        { "word": "AGUA", "clue": "Líquido transparente que sale de la canilla", "baseIndex": 6, "wordIndex": 0, "options": ["AIRE", "AGUA", "ACEITE", "ALCOHOL"], "correctIndex": 1 }
+      ]
+    }
+  ]
+}

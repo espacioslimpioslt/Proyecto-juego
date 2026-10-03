@@ -1,0 +1,29 @@
+{
+  "theme": "Preguntas fáciles",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "difficulty": "facil",
+  "questions": [
+    { "clue": "¿De qué color es el cielo en un día despejado?", "options": ["Azul", "Verde", "Rojo", "Amarillo"], "correctIndex": 0 },
+    { "clue": "¿Cuántas patas tiene un perro?", "options": ["Dos", "Cuatro", "Seis", "Ocho"], "correctIndex": 1 },
+    { "clue": "¿Qué animal dice 'muu'?", "options": ["El perro", "El gato", "La vaca", "El pato"], "correctIndex": 2 },
+    { "clue": "¿Cuántos días tiene una semana?", "options": ["Cinco", "Seis", "Siete", "Ocho"], "correctIndex": 2 },
+    { "clue": "¿De qué color es una banana madura?", "options": ["Amarilla", "Roja", "Azul", "Violeta"], "correctIndex": 0 },
+    { "clue": "¿Qué astro ilumina la noche?", "options": ["El sol", "La luna", "Una nube", "Un cometa"], "correctIndex": 1 },
+    { "clue": "¿Cuántos meses tiene un año?", "options": ["Diez", "Once", "Doce", "Trece"], "correctIndex": 2 },
+    { "clue": "¿Qué animal es el rey de la selva?", "options": ["El tigre", "El león", "El elefante", "El oso"], "correctIndex": 1 },
+    { "clue": "¿En qué estación del año hace más calor?", "options": ["Invierno", "Otoño", "Verano", "Primavera"], "correctIndex": 2 },
+    { "clue": "¿Cuántos dedos hay en una mano?", "options": ["Cuatro", "Cinco", "Seis", "Diez"], "correctIndex": 1 },
+    { "clue": "¿Qué bebida se hace con café y leche?", "options": ["Té", "Jugo", "Cortado", "Gaseosa"], "correctIndex": 2 },
+    { "clue": "¿Qué forma tiene una pelota?", "options": ["Cuadrada", "Redonda", "Triangular", "Ovalada"], "correctIndex": 1 },
+    { "clue": "¿Cuál es el primer día de la semana en el calendario?", "options": ["Lunes", "Domingo", "Sábado", "Martes"], "correctIndex": 0 },
+    { "clue": "¿Qué animal construye una tela para atrapar insectos?", "options": ["La araña", "La mariposa", "El escarabajo", "La abeja"], "correctIndex": 0 },
+    { "clue": "¿De qué color es el pasto?", "options": ["Verde", "Azul", "Marrón", "Gris"], "correctIndex": 0 },
+    { "clue": "¿Cuántas ruedas tiene una bicicleta?", "options": ["Una", "Dos", "Tres", "Cuatro"], "correctIndex": 1 },
+    { "clue": "¿Qué usamos para escribir en un pizarrón?", "options": ["Lápiz", "Tiza", "Pincel", "Birome"], "correctIndex": 1 },
+    { "clue": "¿Qué animal es conocido por su cuello muy largo?", "options": ["La jirafa", "El caballo", "El elefante", "El hipopótamo"], "correctIndex": 0 },
+    { "clue": "¿Cuál es el planeta en el que vivimos?", "options": ["Marte", "Tierra", "Venus", "Júpiter"], "correctIndex": 1 },
+    { "clue": "¿Qué comida se hornea y suele tener velitas para los cumpleaños?", "options": ["Torta", "Pan", "Empanada", "Tarta"], "correctIndex": 0 }
+  ]
+}

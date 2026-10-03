@@ -1,0 +1,28 @@
+{
+  "theme": "Cine, música y TV",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "questions": [
+    { "clue": "¿Qué estudio creó la película Toy Story?", "options": ["Disney", "Pixar", "DreamWorks", "Warner"], "correctIndex": 1 },
+    { "clue": "¿Cuántas cuerdas tiene una guitarra clásica?", "options": ["Cuatro", "Seis", "Ocho", "Doce"], "correctIndex": 1 },
+    { "clue": "¿Qué banda británica formaron Lennon y McCartney?", "options": ["Queen", "The Beatles", "Pink Floyd", "The Who"], "correctIndex": 1 },
+    { "clue": "¿En qué ciudad está el famoso cartel de Hollywood?", "options": ["Nueva York", "Los Ángeles", "Chicago", "Miami"], "correctIndex": 1 },
+    { "clue": "¿Qué personaje dice 'que la fuerza te acompañe'?", "options": ["Han Solo", "Obi-Wan Kenobi", "Chewbacca", "R2-D2"], "correctIndex": 1 },
+    { "clue": "¿Cómo se llama el estudio japonés de El viaje de Chihiro?", "options": ["Toei", "Studio Ghibli", "Madhouse", "Bones"], "correctIndex": 1 },
+    { "clue": "¿Qué instrumento toca principalmente un baterista?", "options": ["Bajo", "Batería", "Teclado", "Violín"], "correctIndex": 1 },
+    { "clue": "¿Qué película tiene un barco que choca con un iceberg?", "options": ["Poseidón", "Titanic", "Náufrago", "Life of Pi"], "correctIndex": 1 },
+    { "clue": "¿Qué superhéroe usa un traje de hierro?", "options": ["Thor", "Iron Man", "Hulk", "Ant-Man"], "correctIndex": 1 },
+    { "clue": "¿Qué género musical hizo famoso a Bob Marley?", "options": ["Ska", "Reggae", "Salsa", "Blues"], "correctIndex": 1 },
+    { "clue": "¿Cómo se llama el mago protagonista de la saga de Hogwarts?", "options": ["Ron Weasley", "Harry Potter", "Draco Malfoy", "Neville"], "correctIndex": 1 },
+    { "clue": "¿Qué premio entrega la Academia de Hollywood?", "options": ["Grammy", "Óscar", "Emmy", "Globo de Oro"], "correctIndex": 1 },
+    { "clue": "¿Qué animal es Simba en El Rey León?", "options": ["Tigre", "León", "Leopardo", "Guepardo"], "correctIndex": 1 },
+    { "clue": "¿Qué plataforma de streaming tiene una N roja como logo?", "options": ["Hulu", "Netflix", "Disney+", "Prime Video"], "correctIndex": 1 },
+    { "clue": "¿Qué instrumento tiene teclas blancas y negras?", "options": ["Arpa", "Piano", "Flauta", "Trompeta"], "correctIndex": 1 },
+    { "clue": "¿Quién dirigió la película Jurassic Park?", "options": ["George Lucas", "Steven Spielberg", "James Cameron", "Ridley Scott"], "correctIndex": 1 },
+    { "clue": "¿Qué color es el erizo mascota de Sega?", "options": ["Rojo", "Azul", "Verde", "Amarillo"], "correctIndex": 1 },
+    { "clue": "¿Cómo se llama la ciudad que protege Batman?", "options": ["Metrópolis", "Ciudad Gótica", "Central City", "Star City"], "correctIndex": 1 },
+    { "clue": "¿Qué baile es Patrimonio de la Humanidad y nació en el Río de la Plata?", "options": ["Salsa", "Tango", "Samba", "Cumbia"], "correctIndex": 1 },
+    { "clue": "¿Qué fontanero es la mascota de Nintendo?", "options": ["Luigi", "Mario", "Wario", "Yoshi"], "correctIndex": 1 }
+  ]
+}

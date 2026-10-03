@@ -1,0 +1,28 @@
+{
+  "theme": "Argentina y el Cono Sur",
+  "language": "es",
+  "regions": ["ar", "uy", "cl", "pe"],
+  "minAge": 0,
+  "letters": [
+    { "letter": "A", "clueType": "contiene", "clue": "Capital de Argentina, junto al Río de la Plata", "options": ["Montevideo", "Buenos Aires", "Santiago", "Lima"], "correctIndex": 1 },
+    { "letter": "B", "clueType": "empieza", "clue": "Tubo de metal con el que se toma el mate", "options": ["Bandeja", "Bombilla", "Boquilla", "Bombacha"], "correctIndex": 1 },
+    { "letter": "C", "clueType": "empieza", "clue": "Cadena montañosa que separa Argentina de Chile", "options": ["Cantábrica", "Cordillera de los Andes", "Costera", "Central"], "correctIndex": 1 },
+    { "letter": "D", "clueType": "contiene", "clue": "Apellido del futbolista argentino campeón del mundo en 1986", "options": ["Kempes", "Maradona", "Passarella", "Batistuta"], "correctIndex": 1 },
+    { "letter": "E", "clueType": "empieza", "clue": "Provincia argentina del litoral cuyo nombre habla de dos ríos", "options": ["Esquel", "Entre Ríos", "Escobar", "Estancia"], "correctIndex": 1 },
+    { "letter": "F", "clueType": "contiene", "clue": "Provincia argentina más austral, la del fin del mundo", "options": ["Formosa", "Tierra del Fuego", "Chubut", "Santa Cruz"], "correctIndex": 1 },
+    { "letter": "G", "clueType": "empieza", "clue": "Trabajador rural típico de la pampa argentina", "options": ["Granjero", "Gaucho", "Guaraní", "Ganadero"], "correctIndex": 1 },
+    { "letter": "H", "clueType": "empieza", "clue": "Ave nacional argentina, conocida por su nido de barro", "options": ["Halcón", "Hornero", "Cóndor", "Carancho"], "correctIndex": 1 },
+    { "letter": "I", "clueType": "contiene", "clue": "Nombre que eligió el papa argentino al asumir en 2013", "options": ["Benedicto", "Francisco", "Juan Pablo", "Pío"], "correctIndex": 1 },
+    { "letter": "J", "clueType": "empieza", "clue": "Provincia argentina del noroeste, famosa por el Cerro de los Siete Colores", "options": ["Jujuy", "Junín", "Jáchal", "Jesús María"], "correctIndex": 0 },
+    { "letter": "L", "clueType": "empieza", "clue": "Ciudad capital de la provincia de Buenos Aires", "options": ["Luján", "La Plata", "Lomas", "Lanús"], "correctIndex": 1 },
+    { "letter": "M", "clueType": "contiene", "clue": "Apellido del libertador de Argentina, Chile y Perú", "options": ["Belgrano", "San Martín", "Rivadavia", "Sarmiento"], "correctIndex": 1 },
+    { "letter": "N", "clueType": "contiene", "clue": "Baile rioplatense declarado Patrimonio de la Humanidad", "options": ["Cumbia", "Tango", "Chacarera", "Zamba"], "correctIndex": 1 },
+    { "letter": "O", "clueType": "termina", "clue": "Océano que baña las costas de Argentina y Uruguay", "options": ["Pacífico", "Atlántico", "Índico", "Ártico"], "correctIndex": 1 },
+    { "letter": "P", "clueType": "empieza", "clue": "Llanura extensa y fértil del centro de Argentina", "options": ["Puna", "Pampa", "Patagonia", "Paraná"], "correctIndex": 1 },
+    { "letter": "R", "clueType": "empieza", "clue": "Río que separa Argentina de Uruguay y da nombre a la región", "options": ["Río Negro", "Río de la Plata", "Río Paraná", "Río Colorado"], "correctIndex": 1 },
+    { "letter": "S", "clueType": "empieza", "clue": "Capital de Chile", "options": ["Salta", "Santiago", "Sucre", "San Juan"], "correctIndex": 1 },
+    { "letter": "T", "clueType": "empieza", "clue": "Provincia argentina donde se declaró la Independencia en 1816", "options": ["Tandil", "Tucumán", "Trelew", "Tigre"], "correctIndex": 1 },
+    { "letter": "V", "clueType": "empieza", "clue": "Bebida que se produce en Mendoza a partir de la uva malbec", "options": ["Vermut", "Vino", "Vodka", "Vinagre"], "correctIndex": 1 },
+    { "letter": "Z", "clueType": "empieza", "clue": "Pájaro de canto muy apreciado, común en el Río de la Plata", "options": ["Zorzal", "Zorro", "Zonda", "Zancudo"], "correctIndex": 0 }
+  ]
+}

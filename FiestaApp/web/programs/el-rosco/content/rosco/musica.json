@@ -1,0 +1,250 @@
+{
+  "theme": "Música",
+  "language": "es",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "letters": [
+    {
+      "letter": "A",
+      "clueType": "empieza",
+      "clue": "Instrumento de cuerdas verticales que se toca sentado y con pedales",
+      "options": [
+        "Acordeón",
+        "Arpa",
+        "Alto",
+        "Armónica"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "B",
+      "clueType": "empieza",
+      "clue": "Instrumento de percusión que se toca con palillos y pedales",
+      "options": [
+        "Bombo",
+        "Batería",
+        "Bongó",
+        "Bandoneón"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "C",
+      "clueType": "empieza",
+      "clue": "Grupo de personas que cantan juntas",
+      "options": [
+        "Cuarteto",
+        "Coro",
+        "Compás",
+        "Clave"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "D",
+      "clueType": "empieza",
+      "clue": "Persona que dirige a una orquesta con una batuta",
+      "options": [
+        "Dueto",
+        "Director",
+        "Danzante",
+        "Doblador"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "E",
+      "clueType": "contiene",
+      "clue": "Banda británica de los años 60 formada en Liverpool",
+      "options": [
+        "Queen",
+        "Beatles",
+        "Rolling Stones",
+        "Pink Floyd"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "F",
+      "clueType": "empieza",
+      "clue": "Instrumento de viento que se sostiene de costado",
+      "options": [
+        "Fagot",
+        "Flauta",
+        "Fliscorno",
+        "Fuelle"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "G",
+      "clueType": "empieza",
+      "clue": "Instrumento de seis cuerdas, emblema del rock",
+      "options": [
+        "Gong",
+        "Guitarra",
+        "Güiro",
+        "Glockenspiel"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "H",
+      "clueType": "empieza",
+      "clue": "Género urbano basado en rimas habladas sobre una base",
+      "options": [
+        "House",
+        "Hip hop",
+        "Hard rock",
+        "Heavy"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "I",
+      "clueType": "empieza",
+      "clue": "Nombre general de los objetos con los que se produce música",
+      "options": [
+        "Intervalos",
+        "Instrumentos",
+        "Improvisación",
+        "Intérpretes"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "J",
+      "clueType": "empieza",
+      "clue": "Género nacido en Nueva Orleans, famoso por su improvisación",
+      "options": [
+        "Jingle",
+        "Jazz",
+        "Jota",
+        "Jam"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "L",
+      "clueType": "contiene",
+      "clue": "Instrumento de arco, más grande que el violín, que se toca entre las piernas",
+      "options": [
+        "Viola",
+        "Violonchelo",
+        "Contrabajo",
+        "Laúd"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "M",
+      "clueType": "empieza",
+      "clue": "Persona que se dedica a tocar un instrumento",
+      "options": [
+        "Maestro",
+        "Músico",
+        "Melómano",
+        "Mezzo"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "N",
+      "clueType": "empieza",
+      "clue": "Cada uno de los sonidos do, re, mi, fa, sol...",
+      "options": [
+        "Nocturno",
+        "Notas",
+        "Negras",
+        "Números"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "O",
+      "clueType": "empieza",
+      "clue": "Conjunto grande de músicos con cuerdas, vientos y percusión",
+      "options": [
+        "Ópera",
+        "Orquesta",
+        "Octeto",
+        "Obertura"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "P",
+      "clueType": "empieza",
+      "clue": "Instrumento de teclas blancas y negras",
+      "options": [
+        "Pandereta",
+        "Piano",
+        "Platillo",
+        "Percusión"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "R",
+      "clueType": "empieza",
+      "clue": "Género de Elvis Presley y los Rolling Stones",
+      "options": [
+        "Rap",
+        "Rock",
+        "Reggae",
+        "Rumba"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "S",
+      "clueType": "empieza",
+      "clue": "Instrumento de viento dorado y curvo, muy usado en jazz",
+      "options": [
+        "Sitar",
+        "Saxofón",
+        "Sintetizador",
+        "Sonaja"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "T",
+      "clueType": "empieza",
+      "clue": "Instrumento de viento metal con tres pistones",
+      "options": [
+        "Tuba",
+        "Trompeta",
+        "Trombón",
+        "Timbal"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "V",
+      "clueType": "empieza",
+      "clue": "Instrumento de cuatro cuerdas que se apoya en el mentón",
+      "options": [
+        "Vibráfono",
+        "Violín",
+        "Viola",
+        "Voz"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "Z",
+      "clueType": "empieza",
+      "clue": "Danza folclórica argentina que se baila con pañuelo",
+      "options": [
+        "Zarzuela",
+        "Zamba",
+        "Zapateo",
+        "Zortziko"
+      ],
+      "correctIndex": 1
+    }
+  ]
+}

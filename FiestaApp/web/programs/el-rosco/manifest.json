@@ -1,0 +1,18 @@
+{
+  "id": "el-rosco",
+  "name": "El Rosco",
+  "tagline": "Ganá segundos en las pruebas y jugátelos todos en el rosco final.",
+  "description": "El programa de palabras: cinco pruebas para acumular tiempo y un rosco de la A a la Z para definirlo todo.",
+  "minPlayers": 2,
+  "maxPlayers": 10,
+  "supportsTeams": true,
+  "games": [
+    "eligi-una",
+    "la-silla",
+    "donde-estaba",
+    "sopa-de-letras",
+    "palabras-cruzadas",
+    "tutifruti"
+  ],
+  "finalGame": "rosco-por-turnos"
+}

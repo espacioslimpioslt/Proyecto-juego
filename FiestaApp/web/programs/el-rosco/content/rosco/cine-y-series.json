@@ -1,0 +1,250 @@
+{
+  "theme": "Cine y series",
+  "language": "es",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "letters": [
+    {
+      "letter": "A",
+      "clueType": "empieza",
+      "clue": "Película de James Cameron con seres azules en el planeta Pandora",
+      "options": [
+        "Alien",
+        "Avatar",
+        "Amelie",
+        "Aquaman"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "B",
+      "clueType": "empieza",
+      "clue": "Superhéroe enmascarado que protege Ciudad Gótica",
+      "options": [
+        "Batman",
+        "Blade",
+        "Bumblebee",
+        "Buzz"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "C",
+      "clueType": "empieza",
+      "clue": "Clásico de 1942 ambientado en Marruecos: 'siempre nos quedará París'",
+      "options": [
+        "Cabaret",
+        "Casablanca",
+        "Chicago",
+        "Coco"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "D",
+      "clueType": "contiene",
+      "clue": "Estudio de animación fundado por Walt, dueño de Mickey Mouse",
+      "options": [
+        "Dreamworks",
+        "Disney",
+        "Pixar",
+        "Illumination"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "E",
+      "clueType": "empieza",
+      "clue": "Extraterrestre de Spielberg que solo quería volver a su casa",
+      "options": [
+        "Elliot",
+        "E.T.",
+        "Alf",
+        "Yoda"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "F",
+      "clueType": "contiene",
+      "clue": "Saga de autos veloces protagonizada por Vin Diesel",
+      "options": [
+        "Rápidos y Furiosos",
+        "Drive",
+        "Le Mans",
+        "Turbo"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "G",
+      "clueType": "empieza",
+      "clue": "Personaje verde y gruñón que quería robarse la Navidad",
+      "options": [
+        "Gollum",
+        "Grinch",
+        "Groot",
+        "Gru"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "H",
+      "clueType": "empieza",
+      "clue": "Mago adolescente con una cicatriz en la frente",
+      "options": [
+        "Hagrid",
+        "Harry Potter",
+        "Hércules",
+        "Hulk"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "I",
+      "clueType": "empieza",
+      "clue": "Arqueólogo aventurero con sombrero y látigo",
+      "options": [
+        "Iron Man",
+        "Indiana Jones",
+        "Ícaro",
+        "Iceman"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "J",
+      "clueType": "empieza",
+      "clue": "Parque de la película donde clonan dinosaurios",
+      "options": [
+        "Jumanji",
+        "Jurassic Park",
+        "Jaws",
+        "Joker"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "L",
+      "clueType": "contiene",
+      "clue": "Animal protagonista de la película animada de Disney sobre Simba",
+      "options": [
+        "Tigre",
+        "León",
+        "Lobo",
+        "Leopardo"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "M",
+      "clueType": "empieza",
+      "clue": "Estudio de superhéroes con Iron Man, Thor y el Capitán América",
+      "options": [
+        "Miramax",
+        "Marvel",
+        "MGM",
+        "Metro"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "N",
+      "clueType": "empieza",
+      "clue": "Plataforma de streaming famosa por su N roja",
+      "options": [
+        "Now",
+        "Netflix",
+        "Nickelodeon",
+        "NBC"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "O",
+      "clueType": "empieza",
+      "clue": "Premio máximo del cine de Hollywood, una estatuilla dorada",
+      "options": [
+        "Óscar",
+        "Olimpo",
+        "Orfeo",
+        "Ónix"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "P",
+      "clueType": "empieza",
+      "clue": "Estudio de animación que creó Toy Story",
+      "options": [
+        "Paramount",
+        "Pixar",
+        "Pathé",
+        "Prime"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "R",
+      "clueType": "empieza",
+      "clue": "Personaje que interpreta Kate Winslet en Titanic",
+      "options": [
+        "Rita",
+        "Rose",
+        "Raquel",
+        "Rebecca"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "S",
+      "clueType": "empieza",
+      "clue": "Saga espacial de Luke Skywalker y Darth Vader",
+      "options": [
+        "Stargate",
+        "Star Wars",
+        "Star Trek",
+        "Solaris"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "T",
+      "clueType": "empieza",
+      "clue": "Película de Cameron sobre el barco que chocó con un iceberg",
+      "options": [
+        "Tenet",
+        "Titanic",
+        "Troya",
+        "Twister"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "V",
+      "clueType": "contiene",
+      "clue": "Villano de Star Wars que resulta ser el padre de Luke",
+      "options": [
+        "Voldemort",
+        "Darth Vader",
+        "Vito",
+        "Venom"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "Z",
+      "clueType": "empieza",
+      "clue": "Héroe enmascarado que firma con una marca de espada",
+      "options": [
+        "Zeus",
+        "Zorro",
+        "Zoro",
+        "Zatanna"
+      ],
+      "correctIndex": 1
+    }
+  ]
+}

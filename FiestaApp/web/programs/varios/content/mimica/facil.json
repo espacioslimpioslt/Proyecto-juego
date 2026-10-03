@@ -1,0 +1,16 @@
+{
+  "theme": "Mímica fácil",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "difficulty": "facil",
+  "words": [
+    "dormir", "nadar", "bailar", "perro", "gato", "fútbol", "cocinar",
+    "manejar", "llorar", "reír", "elefante", "mono", "correr", "cantar",
+    "leer", "pescar", "volar", "saltar", "peinarse", "lavarse los dientes",
+    "andar en bicicleta", "tomar una foto", "abrir un regalo", "tenis",
+    "boxeo", "payaso", "robot", "fantasma", "superhéroe", "bebé llorando",
+    "gallina", "vaca", "serpiente", "mago", "pintor", "jardinero",
+    "manejar un auto", "tocar la guitarra", "comer helado", "escalar"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "theme": "Cultura general",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "letters": [
+    { "letter": "A", "clueType": "termina", "clue": "Fruta amarilla y curva que pelan los monos", "options": ["Banana", "Melón", "Kiwi", "Durazno"], "correctIndex": 0 },
+    { "letter": "B", "clueType": "empieza", "clue": "Persona que apaga incendios", "options": ["Buzo", "Bombero", "Barrendero", "Boticario"], "correctIndex": 1 },
+    { "letter": "C", "clueType": "empieza", "clue": "Bebida caliente oscura que muchos toman a la mañana", "options": ["Cacao", "Café", "Caldo", "Cerveza"], "correctIndex": 1 },
+    { "letter": "D", "clueType": "empieza", "clue": "Piezas duras de la boca con las que se mastica", "options": ["Dedos", "Dientes", "Dorsales", "Discos"], "correctIndex": 1 },
+    { "letter": "E", "clueType": "empieza", "clue": "Punto de luz que se ve en el cielo de noche", "options": ["Eclipse", "Estrella", "Espacio", "Esfera"], "correctIndex": 1 },
+    { "letter": "F", "clueType": "empieza", "clue": "Elemento que quema, da luz y calor", "options": ["Farol", "Fuego", "Fósforo", "Faro"], "correctIndex": 1 },
+    { "letter": "G", "clueType": "empieza", "clue": "Animal doméstico que maúlla", "options": ["Gallo", "Gato", "Ganso", "Gusano"], "correctIndex": 1 },
+    { "letter": "H", "clueType": "empieza", "clue": "Lugar donde se atiende a los enfermos", "options": ["Hotel", "Hospital", "Herrería", "Hangar"], "correctIndex": 1 },
+    { "letter": "I", "clueType": "empieza", "clue": "Porción de tierra rodeada de agua por todos lados", "options": ["Istmo", "Isla", "Iceberg", "Interior"], "correctIndex": 1 },
+    { "letter": "J", "clueType": "empieza", "clue": "Persona que dicta sentencia en un juicio", "options": ["Jurado", "Juez", "Jefe", "Jinete"], "correctIndex": 1 },
+    { "letter": "L", "clueType": "termina", "clue": "Deporte más popular del mundo, once contra once", "options": ["Básquet", "Fútbol", "Vóley", "Rugby"], "correctIndex": 1 },
+    { "letter": "M", "clueType": "empieza", "clue": "Fruta roja o verde con la que se hace la sidra", "options": ["Mandarina", "Manzana", "Melón", "Mora"], "correctIndex": 1 },
+    { "letter": "N", "clueType": "termina", "clue": "Vehículo grande que transporta carga por la ruta", "options": ["Auto", "Camión", "Tren", "Moto"], "correctIndex": 1 },
+    { "letter": "O", "clueType": "termina", "clue": "Estación más fría del año", "options": ["Otoño", "Invierno", "Verano", "Primavera"], "correctIndex": 1 },
+    { "letter": "P", "clueType": "empieza", "clue": "Animal doméstico que ladra", "options": ["Pato", "Perro", "Pavo", "Puma"], "correctIndex": 1 },
+    { "letter": "R", "clueType": "termina", "clue": "Acción de ingerir alimentos", "options": ["Beber", "Comer", "Morder", "Probar"], "correctIndex": 1 },
+    { "letter": "S", "clueType": "termina", "clue": "Día de la semana anterior al sábado", "options": ["Jueves", "Viernes", "Lunes", "Martes"], "correctIndex": 1 },
+    { "letter": "T", "clueType": "empieza", "clue": "Vehículo que circula sobre rieles", "options": ["Tranvía", "Tren", "Taxi", "Trineo"], "correctIndex": 1 },
+    { "letter": "V", "clueType": "empieza", "clue": "Material transparente del que está hecha una ventana", "options": ["Vitral", "Vidrio", "Ventanal", "Visor"], "correctIndex": 1 },
+    { "letter": "Z", "clueType": "termina", "clue": "Número que sigue al nueve", "options": ["Once", "Diez", "Ocho", "Doce"], "correctIndex": 1 }
+  ]
+}

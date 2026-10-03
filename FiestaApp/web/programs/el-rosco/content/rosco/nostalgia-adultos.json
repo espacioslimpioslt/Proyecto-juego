@@ -1,0 +1,28 @@
+{
+  "theme": "Nostalgia de los 80 y 90",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 18,
+  "letters": [
+    { "letter": "A", "clueType": "contiene", "clue": "Cinta magnética en la que se grababa música antes del CD", "options": ["Vinilo", "Casete", "Disquete", "Microfilm"], "correctIndex": 1 },
+    { "letter": "B", "clueType": "empieza", "clue": "Formato de video de Sony que perdió la guerra contra el VHS", "options": ["Blu-ray", "Betamax", "Bluetooth", "Bobina"], "correctIndex": 1 },
+    { "letter": "C", "clueType": "contiene", "clue": "Teléfono con una rueda numerada que había que girar", "options": ["Inalámbrico", "Teléfono a disco", "Portero", "Intercomunicador"], "correctIndex": 1 },
+    { "letter": "D", "clueType": "empieza", "clue": "Soporte cuadrado y flexible donde se guardaban archivos antes del USB", "options": ["Disco rígido", "Disquete", "Cinta", "Tarjeta"], "correctIndex": 1 },
+    { "letter": "E", "clueType": "contiene", "clue": "Consola de Nintendo de los 80 en la que salió Mario Bros", "options": ["Atari", "NES", "Master System", "Odyssey"], "correctIndex": 1 },
+    { "letter": "F", "clueType": "empieza", "clue": "Máquina que enviaba documentos por la línea telefónica", "options": ["Fotocopiadora", "Fax", "Télex", "Impresora"], "correctIndex": 1 },
+    { "letter": "G", "clueType": "empieza", "clue": "Consola portátil de Nintendo, con pantalla en blanco y negro", "options": ["Genesis", "Game Boy", "Gizmo", "Gamegear"], "correctIndex": 1 },
+    { "letter": "H", "clueType": "empieza", "clue": "Electrodoméstico que calienta la comida en segundos, novedad en los 80", "options": ["Heladera", "Horno microondas", "Hervidor", "Hornalla"], "correctIndex": 1 },
+    { "letter": "I", "clueType": "empieza", "clue": "Programa de chat de los 90 en el que cada uno tenía un número de usuario", "options": ["IRC", "ICQ", "Instagram", "Internet"], "correctIndex": 1 },
+    { "letter": "J", "clueType": "empieza", "clue": "En los 90 se iba al salón de máquinas a gastar fichas en estos", "options": ["Jarrones", "Juegos", "Jarras", "Joyas"], "correctIndex": 1 },
+    { "letter": "L", "clueType": "contiene", "clue": "Disco negro grande que se escucha con una púa", "options": ["Casete", "Vinilo", "Compacto", "Cartucho"], "correctIndex": 1 },
+    { "letter": "M", "clueType": "empieza", "clue": "Canal de televisión que popularizó los videoclips musicales", "options": ["Much", "MTV", "Mega", "Music21"], "correctIndex": 1 },
+    { "letter": "N", "clueType": "empieza", "clue": "Empresa japonesa creadora de Mario Bros y Zelda", "options": ["Namco", "Nintendo", "NEC", "Konami"], "correctIndex": 1 },
+    { "letter": "O", "clueType": "contiene", "clue": "Juego de arcade de dos paletas y una bolita, uno de los primeros", "options": ["Tetris", "Pong", "Snake", "Arkanoid"], "correctIndex": 1 },
+    { "letter": "P", "clueType": "empieza", "clue": "Juego del comecocos amarillo que escapa de los fantasmas", "options": ["Pinball", "Pac-Man", "Pitfall", "Prince"], "correctIndex": 1 },
+    { "letter": "R", "clueType": "contiene", "clue": "Cubo de colores que se arma girando sus caras", "options": ["Rompecabezas", "Cubo Rubik", "Tangram", "Dominó"], "correctIndex": 1 },
+    { "letter": "S", "clueType": "empieza", "clue": "Consola rival de Nintendo, la del erizo azul", "options": ["Super", "Sega", "Sony", "Spectrum"], "correctIndex": 1 },
+    { "letter": "T", "clueType": "empieza", "clue": "Aparato pesado de tubo que presidía todos los livings", "options": ["Tocadiscos", "Televisor", "Teléfono", "Tostadora"], "correctIndex": 1 },
+    { "letter": "V", "clueType": "contiene", "clue": "Negocio donde se alquilaban películas los fines de semana", "options": ["Videoclub", "Kiosco", "Librería", "Disquería"], "correctIndex": 0 },
+    { "letter": "Z", "clueType": "contiene", "clue": "Sonido característico del módem al conectarse a internet", "options": ["Zumbido", "Chirrido", "Silbido", "Pitido"], "correctIndex": 0 }
+  ]
+}

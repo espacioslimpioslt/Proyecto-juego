@@ -1,0 +1,13 @@
+{
+  "name": "fiestaapp-web",
+  "version": "0.1.0",
+  "description": "Motor comun (la cascara) de la app de fiesta: sala, codigo, equipos, rondas y puntaje. Los Programas (El Rosco y demas) se conectan como tipos de ronda.",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}

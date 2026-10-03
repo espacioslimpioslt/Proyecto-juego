@@ -1,0 +1,29 @@
+{
+  "theme": "La Silla — fácil",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "difficulty": "facil",
+  "chains": [
+    {
+      "letter": "P",
+      "questions": [
+        { "clue": "Animal doméstico que ladra", "options": ["Perro", "Gato", "Pato", "Loro"], "correctIndex": 0 },
+        { "clue": "Fruta con cáscara verde o amarilla, dulce y jugosa, con forma alargada", "options": ["Pera", "Manzana", "Uva", "Kiwi"], "correctIndex": 0 },
+        { "clue": "Ave que dice 'cuac cuac' y nada en el agua", "options": ["Paloma", "Pato", "Pavo", "Pingüino"], "correctIndex": 1 },
+        { "clue": "Lugar al aire libre con hamacas y toboganes para que jueguen los chicos", "options": ["Patio", "Plaza", "Pasillo", "Portón"], "correctIndex": 1 },
+        { "clue": "Instrumento musical de teclas blancas y negras", "options": ["Piano", "Pandereta", "Platillo", "Pícolo"], "correctIndex": 0 }
+      ]
+    },
+    {
+      "letter": "S",
+      "questions": [
+        { "clue": "Astro que da luz durante el día", "options": ["Satélite", "Sol", "Sombra", "Sirio"], "correctIndex": 1 },
+        { "clue": "Mueble con respaldo en el que nos sentamos", "options": ["Sofá", "Silla", "Sillón", "Soporte"], "correctIndex": 1 },
+        { "clue": "Condimento blanco que se le pone a la comida", "options": ["Salsa", "Sal", "Sésamo", "Semilla"], "correctIndex": 1 },
+        { "clue": "Fruta roja con semillitas por fuera, típica del verano", "options": ["Sandía", "Frutilla", "Cereza", "Ciruela"], "correctIndex": 0 },
+        { "clue": "Animal que se arrastra por el suelo, no tiene patas y puede ser venenoso", "options": ["Sapo", "Serpiente", "Salamandra", "Escorpión"], "correctIndex": 1 }
+      ]
+    }
+  ]
+}

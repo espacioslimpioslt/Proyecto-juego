@@ -1,0 +1,19 @@
+{
+  "theme": "Mímica difícil",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "difficulty": "dificil",
+  "words": [
+    "impaciencia", "pedir disculpas", "democracia", "nostalgia",
+    "burocracia", "procrastinar", "envidia", "sospecha", "negociar",
+    "traición", "diplomacia", "arrepentirse", "improvisar", "competencia",
+    "generosidad", "hipnosis", "reencarnación", "ansiedad", "gravedad",
+    "telepatía", "revolución", "meditar", "contradicción", "coincidencia",
+    "instinto", "curiosidad", "perseverancia", "hacer trampa",
+    "quedarse dormido en clase", "buscar señal en el celular",
+    "actuar como si nada", "esperar el colectivo bajo la lluvia",
+    "fingir que entendiste el chiste", "resistir la tentación",
+    "tener un presentimiento", "improvisar una excusa", "hacer equilibrio"
+  ]
+}

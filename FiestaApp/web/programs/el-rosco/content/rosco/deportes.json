@@ -1,0 +1,250 @@
+{
+  "theme": "Deportes",
+  "language": "es",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "letters": [
+    {
+      "letter": "A",
+      "clueType": "empieza",
+      "clue": "Deporte de pista donde se corre, se salta y se lanza",
+      "options": [
+        "Ajedrez",
+        "Atletismo",
+        "Automovilismo",
+        "Arquería"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "B",
+      "clueType": "empieza",
+      "clue": "Deporte de aros altos y pelota naranja",
+      "options": [
+        "Béisbol",
+        "Básquet",
+        "Bowling",
+        "Balonmano"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "C",
+      "clueType": "empieza",
+      "clue": "Deporte que se practica sobre una bicicleta",
+      "options": [
+        "Canotaje",
+        "Ciclismo",
+        "Cricket",
+        "Curling"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "D",
+      "clueType": "empieza",
+      "clue": "Prueba de atletismo que combina diez disciplinas",
+      "options": [
+        "Duatlón",
+        "Decatlón",
+        "Descenso",
+        "Dobles"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "E",
+      "clueType": "empieza",
+      "clue": "Deporte de nieve en el que se baja deslizándose con dos tablas",
+      "options": [
+        "Escalada",
+        "Esquí",
+        "Equitación",
+        "Esgrima"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "F",
+      "clueType": "empieza",
+      "clue": "Deporte más popular del mundo, once contra once",
+      "options": [
+        "Frontón",
+        "Fútbol",
+        "Fórmula 1",
+        "Futsal"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "G",
+      "clueType": "empieza",
+      "clue": "Deporte de hoyos, palos y una pelotita blanca",
+      "options": [
+        "Gimnasia",
+        "Golf",
+        "Goalball",
+        "Galope"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "H",
+      "clueType": "empieza",
+      "clue": "Deporte con stick que se juega sobre césped o hielo",
+      "options": [
+        "Halterofilia",
+        "Hockey",
+        "Hípica",
+        "Handball"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "I",
+      "clueType": "empieza",
+      "clue": "País cuya selección de fútbol es apodada la Azzurra",
+      "options": [
+        "Irlanda",
+        "Italia",
+        "Islandia",
+        "India"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "J",
+      "clueType": "empieza",
+      "clue": "Arte marcial japonés basado en proyecciones y llaves",
+      "options": [
+        "Jiu-jitsu",
+        "Judo",
+        "Jabalina",
+        "Kárate"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "L",
+      "clueType": "contiene",
+      "clue": "Deporte de red alta donde la pelota no puede tocar el piso",
+      "options": [
+        "Tenis",
+        "Vóley",
+        "Pádel",
+        "Squash"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "M",
+      "clueType": "empieza",
+      "clue": "Carrera de 42 kilómetros",
+      "options": [
+        "Motocross",
+        "Maratón",
+        "Marcha",
+        "Medley"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "N",
+      "clueType": "empieza",
+      "clue": "Deporte que se practica desplazándose en el agua",
+      "options": [
+        "Náutica",
+        "Natación",
+        "Navegación",
+        "Nado sincronizado"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "O",
+      "clueType": "empieza",
+      "clue": "Juegos deportivos mundiales que se celebran cada cuatro años",
+      "options": [
+        "Open",
+        "Olimpíadas",
+        "Odesur",
+        "Octagonal"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "P",
+      "clueType": "empieza",
+      "clue": "Deporte de paletas que se juega sobre una mesa con red",
+      "options": [
+        "Polo",
+        "Ping pong",
+        "Pelota paleta",
+        "Patinaje"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "R",
+      "clueType": "empieza",
+      "clue": "Deporte de pelota ovalada donde se anotan tries",
+      "options": [
+        "Remo",
+        "Rugby",
+        "Running",
+        "Rally"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "S",
+      "clueType": "contiene",
+      "clue": "Deporte de raqueta cuyo torneo más famoso es Wimbledon",
+      "options": [
+        "Bádminton",
+        "Tenis",
+        "Pádel",
+        "Frontón"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "T",
+      "clueType": "empieza",
+      "clue": "Competencia que combina natación, ciclismo y carrera",
+      "options": [
+        "Tiro",
+        "Triatlón",
+        "Trote",
+        "Trampolín"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "V",
+      "clueType": "empieza",
+      "clue": "Deporte de playa o cancha donde se golpea la pelota por encima de una red",
+      "options": [
+        "Vela",
+        "Vóley",
+        "Velocidad",
+        "Vallas"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "Z",
+      "clueType": "empieza",
+      "clue": "Apellido del futbolista francés campeón del mundo en 1998",
+      "options": [
+        "Zamorano",
+        "Zidane",
+        "Zoff",
+        "Zola"
+      ],
+      "correctIndex": 1
+    }
+  ]
+}

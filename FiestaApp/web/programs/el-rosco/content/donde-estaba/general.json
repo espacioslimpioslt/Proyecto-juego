@@ -1,0 +1,92 @@
+{
+  "theme": "¿Dónde Estaba? — general",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "panels": [
+    {
+      "topic": "Frutas",
+      "items": [
+        { "emoji": "🍎", "label": "Manzana" },
+        { "emoji": "🍌", "label": "Banana" },
+        { "emoji": "🍊", "label": "Naranja" },
+        { "emoji": "🍓", "label": "Frutilla" },
+        { "emoji": "🍉", "label": "Sandía" },
+        { "emoji": "🍇", "label": "Uva" },
+        { "emoji": "🍐", "label": "Pera" },
+        { "emoji": "🥝", "label": "Kiwi" },
+        { "emoji": "🍈", "label": "Melón" }
+      ]
+    },
+    {
+      "topic": "Animales",
+      "items": [
+        { "emoji": "🐶", "label": "Perro" },
+        { "emoji": "🐱", "label": "Gato" },
+        { "emoji": "🐴", "label": "Caballo" },
+        { "emoji": "🦁", "label": "León" },
+        { "emoji": "🐯", "label": "Tigre" },
+        { "emoji": "🐘", "label": "Elefante" },
+        { "emoji": "🦒", "label": "Jirafa" },
+        { "emoji": "🐵", "label": "Mono" },
+        { "emoji": "🦊", "label": "Zorro" }
+      ]
+    },
+    {
+      "topic": "Comida",
+      "items": [
+        { "emoji": "🍕", "label": "Pizza" },
+        { "emoji": "🍔", "label": "Hamburguesa" },
+        { "emoji": "🌮", "label": "Taco" },
+        { "emoji": "🍦", "label": "Helado" },
+        { "emoji": "🍩", "label": "Rosquilla" },
+        { "emoji": "🍰", "label": "Torta" },
+        { "emoji": "🍟", "label": "Papas fritas" },
+        { "emoji": "🥐", "label": "Medialuna" },
+        { "emoji": "🍫", "label": "Chocolate" }
+      ]
+    },
+    {
+      "topic": "Instrumentos",
+      "items": [
+        { "emoji": "🎸", "label": "Guitarra" },
+        { "emoji": "🎹", "label": "Piano" },
+        { "emoji": "🎻", "label": "Violín" },
+        { "emoji": "🥁", "label": "Batería" },
+        { "emoji": "🎺", "label": "Trompeta" },
+        { "emoji": "🪕", "label": "Banjo" },
+        { "emoji": "🎷", "label": "Saxofón" },
+        { "emoji": "📯", "label": "Corneta" },
+        { "emoji": "🪘", "label": "Tambor" }
+      ]
+    },
+    {
+      "topic": "Deportes",
+      "items": [
+        { "emoji": "⚽", "label": "Fútbol" },
+        { "emoji": "🏀", "label": "Básquet" },
+        { "emoji": "🎾", "label": "Tenis" },
+        { "emoji": "🏐", "label": "Vóley" },
+        { "emoji": "🏈", "label": "Rugby" },
+        { "emoji": "🏊", "label": "Natación" },
+        { "emoji": "⛳", "label": "Golf" },
+        { "emoji": "🥊", "label": "Boxeo" },
+        { "emoji": "🏒", "label": "Hockey" }
+      ]
+    },
+    {
+      "topic": "Transporte",
+      "items": [
+        { "emoji": "🚗", "label": "Auto" },
+        { "emoji": "🚌", "label": "Colectivo" },
+        { "emoji": "🚲", "label": "Bicicleta" },
+        { "emoji": "✈️", "label": "Avión" },
+        { "emoji": "🚢", "label": "Barco" },
+        { "emoji": "🚆", "label": "Tren" },
+        { "emoji": "🛵", "label": "Moto" },
+        { "emoji": "🚁", "label": "Helicóptero" },
+        { "emoji": "🚕", "label": "Taxi" }
+      ]
+    }
+  ]
+}

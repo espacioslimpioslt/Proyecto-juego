@@ -1,0 +1,29 @@
+{
+  "theme": "La Silla — difícil",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "difficulty": "dificil",
+  "chains": [
+    {
+      "letter": "M",
+      "questions": [
+        { "clue": "Instrumento óptico que amplía objetos diminutos para poder verlos", "options": ["Microscopio", "Telescopio", "Binoculares", "Lupa gigante"], "correctIndex": 0 },
+        { "clue": "Proceso biológico por el que una oruga se transforma en mariposa", "options": ["Mutación", "Metamorfosis", "Evolución", "Muda"], "correctIndex": 1 },
+        { "clue": "Capa de roca fundida que está debajo de la corteza terrestre", "options": ["Manto", "Magma", "Mineral", "Meteorito"], "correctIndex": 1 },
+        { "clue": "Fuerza invisible que atrae objetos de hierro", "options": ["Movimiento", "Masa", "Magnetismo", "Motor"], "correctIndex": 2 },
+        { "clue": "Instrumento de percusión con teclas de madera que se golpean con mazos", "options": ["Maracas", "Marimba", "Metrónomo", "Mandolina"], "correctIndex": 1 }
+      ]
+    },
+    {
+      "letter": "T",
+      "questions": [
+        { "clue": "Instrumento que sirve para medir la temperatura", "options": ["Tensiómetro", "Termómetro", "Timón", "Transformador"], "correctIndex": 1 },
+        { "clue": "Movimiento repentino y violento de la corteza terrestre", "options": ["Tsunami", "Terremoto", "Tornado", "Tormenta"], "correctIndex": 1 },
+        { "clue": "Aparato de grandes aspas que convierte la energía del viento o del agua en electricidad", "options": ["Transmisor", "Tractor", "Turbina", "Tanque"], "correctIndex": 2 },
+        { "clue": "Instrumento óptico usado para observar estrellas y planetas lejanos", "options": ["Telescopio", "Termómetro", "Transbordador", "Tarjeta"], "correctIndex": 0 },
+        { "clue": "Recipiente delgado de vidrio que se usa en los laboratorios para mezclar líquidos", "options": ["Tarro", "Tubo de ensayo", "Termo", "Tanque"], "correctIndex": 1 }
+      ]
+    }
+  ]
+}

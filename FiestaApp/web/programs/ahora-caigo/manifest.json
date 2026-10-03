@@ -1,0 +1,11 @@
+{
+  "id": "ahora-caigo",
+  "name": "Ahora Caigo",
+  "tagline": "Duelo a duelo, hasta la Escalera Final.",
+  "description": "Cada equipo manda a su jugador de turno a duelo: preguntas de opción múltiple, alternadas, y el primero que se equivoca cae. Las torres ganadas reparten segundos para la Escalera Final, donde hay que subir escalón a escalón sin caer... o plantarse a tiempo.",
+  "minPlayers": 2,
+  "maxPlayers": 10,
+  "supportsTeams": true,
+  "games": ["duelo-torres"],
+  "finalGame": "escalera-final"
+}

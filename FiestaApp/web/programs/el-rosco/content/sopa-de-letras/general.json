@@ -1,0 +1,14 @@
+{
+  "theme": "Sopa de Letras — general",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "panels": [
+    { "topic": "Animales de granja", "words": ["VACA", "PATO", "GALLO", "CERDO"] },
+    { "topic": "Colores", "words": ["ROJO", "VERDE", "AZUL", "NEGRO"] },
+    { "topic": "Frutas", "words": ["PERA", "UVA", "KIWI", "MELON"] },
+    { "topic": "En la cocina", "words": ["OLLA", "PLATO", "VASO", "SAL"] },
+    { "topic": "Deportes", "words": ["TENIS", "GOLF", "REMO", "JUDO"] },
+    { "topic": "El cielo", "words": ["SOL", "LUNA", "NUBE", "CIELO"] }
+  ]
+}

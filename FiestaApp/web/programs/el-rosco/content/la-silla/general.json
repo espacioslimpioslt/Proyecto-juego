@@ -1,0 +1,68 @@
+{
+  "theme": "La Silla — general",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "chains": [
+    {
+      "letter": "M",
+      "questions": [
+        { "clue": "Fruta roja o verde con la que se hace la sidra", "options": ["Mandarina", "Manzana", "Melón", "Mora"], "correctIndex": 1 },
+        { "clue": "Insecto que zumba y pica en verano", "options": ["Mariposa", "Mosquito", "Mosca", "Mantis"], "correctIndex": 1 },
+        { "clue": "Mueble sobre el que se apoya la comida", "options": ["Mueble", "Mesa", "Mostrador", "Mecedora"], "correctIndex": 1 },
+        { "clue": "Persona que enseña en la escuela", "options": ["Médico", "Maestro", "Mecánico", "Marinero"], "correctIndex": 1 },
+        { "clue": "Mes que viene después de abril", "options": ["Marzo", "Mayo", "Miércoles", "Menguante"], "correctIndex": 1 }
+      ]
+    },
+    {
+      "letter": "C",
+      "questions": [
+        { "clue": "Bebida caliente y oscura de la mañana", "options": ["Cacao", "Café", "Caldo", "Cerveza"], "correctIndex": 1 },
+        { "clue": "Vehículo grande que transporta carga por la ruta", "options": ["Colectivo", "Camión", "Carreta", "Cuatriciclo"], "correctIndex": 1 },
+        { "clue": "Cierre de metal con arco que se abre con llave", "options": ["Cerrojo", "Candado", "Cadena", "Cinta"], "correctIndex": 1 },
+        { "clue": "Prenda abrigada que se pone sobre la remera", "options": ["Camisa", "Campera", "Camiseta", "Corbata"], "correctIndex": 1 },
+        { "clue": "Animal con caparazón que camina muy lento", "options": ["Cangrejo", "Caracol", "Ciempiés", "Caballo"], "correctIndex": 1 }
+      ]
+    },
+    {
+      "letter": "P",
+      "questions": [
+        { "clue": "Animal doméstico que ladra", "options": ["Pato", "Perro", "Pavo", "Puma"], "correctIndex": 1 },
+        { "clue": "Instrumento musical de teclas blancas y negras", "options": ["Pandereta", "Piano", "Platillo", "Pícolo"], "correctIndex": 1 },
+        { "clue": "Comida redonda con queso y salsa de tomate", "options": ["Panqueque", "Pizza", "Pastel", "Pan"], "correctIndex": 1 },
+        { "clue": "Estación del año en la que florecen las plantas", "options": ["Prado", "Primavera", "Pleamar", "Pascua"], "correctIndex": 1 },
+        { "clue": "Llanura extensa y fértil del centro de Argentina", "options": ["Puna", "Pampa", "Patagonia", "Paraná"], "correctIndex": 1 }
+      ]
+    },
+    {
+      "letter": "S",
+      "questions": [
+        { "clue": "Astro que ilumina el día", "options": ["Satélite", "Sol", "Sombra", "Sirio"], "correctIndex": 1 },
+        { "clue": "Asiento con respaldo para una sola persona", "options": ["Sofá", "Silla", "Sillón", "Sitial"], "correctIndex": 1 },
+        { "clue": "Líquido que sale por la piel cuando hace calor", "options": ["Saliva", "Sudor", "Suero", "Sangre"], "correctIndex": 1 },
+        { "clue": "Día de la semana anterior al domingo", "options": ["Septiembre", "Sábado", "Semana", "Solsticio"], "correctIndex": 1 },
+        { "clue": "Condimento blanco que se le pone a la comida", "options": ["Salsa", "Sal", "Sésamo", "Salvia"], "correctIndex": 1 }
+      ]
+    },
+    {
+      "letter": "T",
+      "questions": [
+        { "clue": "Vehículo que circula sobre rieles", "options": ["Tranvía", "Tren", "Taxi", "Trineo"], "correctIndex": 1 },
+        { "clue": "Aparato del living donde se ven programas", "options": ["Tocadiscos", "Televisor", "Teléfono", "Tostadora"], "correctIndex": 1 },
+        { "clue": "Bebida caliente que se prepara con saquito", "options": ["Tónica", "Té", "Tereré", "Trago"], "correctIndex": 1 },
+        { "clue": "Felino rayado de gran tamaño", "options": ["Tejón", "Tigre", "Topo", "Tucán"], "correctIndex": 1 },
+        { "clue": "Pieza de metal con rosca que se ajusta con destornillador", "options": ["Taladro", "Tornillo", "Tenaza", "Tuerca"], "correctIndex": 1 }
+      ]
+    },
+    {
+      "letter": "B",
+      "questions": [
+        { "clue": "Persona que apaga incendios", "options": ["Buzo", "Bombero", "Barrendero", "Boticario"], "correctIndex": 1 },
+        { "clue": "Fruta amarilla y curva que pelan los monos", "options": ["Bergamota", "Banana", "Berenjena", "Bellota"], "correctIndex": 1 },
+        { "clue": "Instrumento de percusión que se toca con palillos", "options": ["Bombo", "Batería", "Bongó", "Bandoneón"], "correctIndex": 1 },
+        { "clue": "Embarcación pequeña que se mueve a remo", "options": ["Balsa", "Bote", "Barcaza", "Bergantín"], "correctIndex": 1 },
+        { "clue": "Prenda de vestir para el torso, de manga larga y botones", "options": ["Bufanda", "Blusa", "Boina", "Bermuda"], "correctIndex": 1 }
+      ]
+    }
+  ]
+}

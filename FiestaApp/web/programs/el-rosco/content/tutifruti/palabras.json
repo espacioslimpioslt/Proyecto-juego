@@ -1,0 +1,51 @@
+{
+  "theme": "Tutifruti — general",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "categorias": {
+    "Nombre": [
+      "Ana", "Andrea", "Bruno", "Beatriz", "Carla", "Carlos", "Diego", "Daniela",
+      "Elena", "Eduardo", "Fernando", "Florencia", "Gabriela", "Gonzalo", "Hugo",
+      "Ines", "Ignacio", "Javier", "Julieta", "Karina", "Lucia", "Leandro", "Laura",
+      "Marcos", "Maria", "Natalia", "Nicolas", "Oscar", "Olivia", "Pedro", "Paula",
+      "Ramiro", "Rosa", "Sofia", "Santiago", "Tomas", "Teresa", "Ursula", "Valentina",
+      "Victor", "Ximena", "Yolanda", "Zoe"
+    ],
+    "Animal": [
+      "Aguila", "Araña", "Ballena", "Burro", "Caballo", "Cabra", "Delfin", "Elefante",
+      "Foca", "Flamenco", "Gato", "Gallina", "Hormiga", "Hipopotamo", "Iguana",
+      "Jirafa", "Jaguar", "Koala", "Leon", "Lobo", "Mono", "Murcielago", "Ñandu",
+      "Oveja", "Oso", "Perro", "Pato", "Puma", "Rana", "Raton", "Serpiente", "Sapo",
+      "Tigre", "Tortuga", "Urraca", "Vaca", "Venado", "Yaguarete", "Zorro", "Zorrino"
+    ],
+    "Cosa": [
+      "Anillo", "Auto", "Balde", "Botella", "Cama", "Cuchara", "Diario", "Disco",
+      "Escoba", "Espejo", "Farol", "Frasco", "Guitarra", "Guante", "Hilo", "Hacha",
+      "Impresora", "Jarra", "Jabon", "Kimono", "Lampara", "Libro", "Mesa", "Martillo",
+      "Nevera", "Notebook", "Olla", "Overol", "Pelota", "Plancha", "Radio", "Reloj",
+      "Silla", "Sombrero", "Tijera", "Telefono", "Uniforme", "Vela", "Ventilador",
+      "Zapato"
+    ],
+    "Fruta o Verdura": [
+      "Ananá", "Acelga", "Banana", "Berenjena", "Cereza", "Cebolla", "Durazno",
+      "Damasco", "Espinaca", "Frutilla", "Frejol", "Granada", "Guayaba", "Higo",
+      "Jengibre", "Kiwi", "Limón", "Lechuga", "Mandarina", "Manzana", "Naranja",
+      "Nabo", "Oliva", "Papa", "Palta", "Pepino", "Pera", "Puerro", "Rabanito",
+      "Repollo", "Sandía", "Tomate", "Uva", "Zanahoria", "Zapallo"
+    ],
+    "Color": [
+      "Amarillo", "Azul", "Beige", "Blanco", "Bordo", "Celeste", "Coral", "Dorado",
+      "Fucsia", "Gris", "Granate", "Indigo", "Lila", "Magenta", "Marron", "Naranja",
+      "Negro", "Ocre", "Plateado", "Purpura", "Rojo", "Rosa", "Salmon", "Turquesa",
+      "Verde", "Violeta"
+    ],
+    "País": [
+      "Alemania", "Argentina", "Bolivia", "Brasil", "Canada", "Chile", "Colombia",
+      "Cuba", "Dinamarca", "Ecuador", "Egipto", "España", "Francia", "Grecia",
+      "Honduras", "India", "Inglaterra", "Italia", "Japon", "Kenia", "Libano",
+      "Mexico", "Marruecos", "Nicaragua", "Noruega", "Panama", "Paraguay", "Peru",
+      "Portugal", "Rusia", "Suecia", "Suiza", "Turquia", "Uruguay", "Venezuela"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "varios",
+  "name": "Varios",
+  "tagline": "Elegí los juegos que quieras jugar, uno o varios seguidos.",
+  "description": "Juegos de fiesta que no siguen la línea de ningún programa en particular. Vos elegís cuáles jugar y se suman los puntos de todos.",
+  "minPlayers": 2,
+  "maxPlayers": 10,
+  "supportsTeams": true,
+  "sequenceMode": "pick",
+  "games": [
+    "mimica",
+    "adivina-la-cancion",
+    "la-cadena",
+    "palabra-prohibida"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "theme": "Preguntas fáciles",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "difficulty": "facil",
+  "questions": [
+    { "clue": "¿De qué color es el cielo en un día despejado?", "options": ["Verde", "Celeste", "Gris", "Naranja"], "correctIndex": 1 },
+    { "clue": "¿Cuántos días tiene una semana?", "options": ["5", "6", "7", "8"], "correctIndex": 2 },
+    { "clue": "¿Qué animal dice 'muu'?", "options": ["El perro", "El gato", "La vaca", "El caballo"], "correctIndex": 2 },
+    { "clue": "¿Cuál es el primer mes del año?", "options": ["Febrero", "Enero", "Marzo", "Diciembre"], "correctIndex": 1 },
+    { "clue": "¿Con qué se escribe en un pizarrón blanco?", "options": ["Tiza", "Marcador", "Lápiz", "Birome"], "correctIndex": 1 },
+    { "clue": "¿Cuántas patas tiene una araña?", "options": ["6", "8", "10", "4"], "correctIndex": 1 },
+    { "clue": "¿Qué fruta es amarilla y curva?", "options": ["Manzana", "Banana", "Pera", "Uva"], "correctIndex": 1 },
+    { "clue": "¿Cuál es el planeta en el que vivimos?", "options": ["Marte", "Venus", "Tierra", "Saturno"], "correctIndex": 2 },
+    { "clue": "¿Qué se usa para ver de noche en una casa?", "options": ["La ventana", "La luz", "El espejo", "La puerta"], "correctIndex": 1 },
+    { "clue": "¿Cuántos meses tiene un año?", "options": ["10", "11", "12", "13"], "correctIndex": 2 },
+    { "clue": "¿Qué animal es conocido como 'el rey de la selva'?", "options": ["El tigre", "El león", "El elefante", "El oso"], "correctIndex": 1 },
+    { "clue": "¿De qué color es una manzana típica?", "options": ["Roja", "Azul", "Violeta", "Negra"], "correctIndex": 0 },
+    { "clue": "¿Cuántos dedos hay en una mano?", "options": ["4", "5", "6", "10"], "correctIndex": 1 },
+    { "clue": "¿Qué bebida se hace con granos de café tostados?", "options": ["Té", "Café", "Jugo", "Leche"], "correctIndex": 1 },
+    { "clue": "¿Dónde vive un pez?", "options": ["En el aire", "En el agua", "Bajo tierra", "En un árbol"], "correctIndex": 1 },
+    { "clue": "¿Qué se necesita para hacer una tortilla?", "options": ["Huevos", "Piedras", "Clavos", "Tela"], "correctIndex": 0 },
+    { "clue": "¿Cuál es el color que resulta de mezclar azul y amarillo?", "options": ["Rojo", "Verde", "Violeta", "Naranja"], "correctIndex": 1 },
+    { "clue": "¿Qué astro ilumina la Tierra de día?", "options": ["La Luna", "El Sol", "Una estrella lejana", "Un cometa"], "correctIndex": 1 },
+    { "clue": "¿Cuántas ruedas tiene una bicicleta?", "options": ["1", "2", "3", "4"], "correctIndex": 1 },
+    { "clue": "¿Qué estación del año es la más calurosa?", "options": ["Invierno", "Otoño", "Verano", "Primavera"], "correctIndex": 2 }
+  ]
+}

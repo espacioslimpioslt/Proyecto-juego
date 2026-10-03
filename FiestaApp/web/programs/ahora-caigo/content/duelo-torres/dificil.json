@@ -1,0 +1,29 @@
+{
+  "theme": "Preguntas difíciles",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "difficulty": "dificil",
+  "questions": [
+    { "clue": "¿Cuál es el hueso más pequeño del cuerpo humano?", "options": ["Estribo (oído)", "Falange", "Rótula", "Coxis"], "correctIndex": 0 },
+    { "clue": "¿Qué elemento químico tiene el símbolo 'Au'?", "options": ["Plata", "Aluminio", "Oro", "Argón"], "correctIndex": 2 },
+    { "clue": "¿En qué año llegó el ser humano a la Luna por primera vez?", "options": ["1965", "1969", "1972", "1958"], "correctIndex": 1 },
+    { "clue": "¿Quién pintó 'Las Meninas'?", "options": ["Goya", "El Greco", "Velázquez", "Murillo"], "correctIndex": 2 },
+    { "clue": "¿Cuál es la capital de Australia?", "options": ["Sídney", "Melbourne", "Canberra", "Perth"], "correctIndex": 2 },
+    { "clue": "¿Qué científico formuló la teoría de la relatividad?", "options": ["Newton", "Einstein", "Bohr", "Tesla"], "correctIndex": 1 },
+    { "clue": "¿Cuántos corazones tiene un pulpo?", "options": ["Uno", "Dos", "Tres", "Cuatro"], "correctIndex": 2 },
+    { "clue": "¿Cuál es el país más pequeño del mundo?", "options": ["Mónaco", "San Marino", "Ciudad del Vaticano", "Liechtenstein"], "correctIndex": 2 },
+    { "clue": "¿Qué dinastía gobernó China durante la construcción de la Ciudad Prohibida?", "options": ["Tang", "Ming", "Qing", "Han"], "correctIndex": 1 },
+    { "clue": "¿Cuál es el idioma oficial de Brasil?", "options": ["Español", "Portugués", "Francés", "Italiano"], "correctIndex": 1 },
+    { "clue": "¿Qué compositor quedó sordo y siguió componiendo?", "options": ["Mozart", "Bach", "Beethoven", "Chopin"], "correctIndex": 2 },
+    { "clue": "¿Cuál es la montaña más alta de África?", "options": ["Monte Kenia", "Kilimanjaro", "Atlas", "Ruwenzori"], "correctIndex": 1 },
+    { "clue": "¿En qué órgano se produce la insulina?", "options": ["Hígado", "Páncreas", "Bazo", "Riñón"], "correctIndex": 1 },
+    { "clue": "¿Cuál es el desierto más grande del mundo?", "options": ["Sahara", "Gobi", "Antártida", "Kalahari"], "correctIndex": 2 },
+    { "clue": "¿Qué filósofo griego fue maestro de Alejandro Magno?", "options": ["Sócrates", "Platón", "Aristóteles", "Pitágoras"], "correctIndex": 2 },
+    { "clue": "¿Cuál es el símbolo químico del sodio?", "options": ["So", "Sd", "Na", "S"], "correctIndex": 2 },
+    { "clue": "¿En qué guerra se usó por primera vez la palabra 'tanque' para el vehículo blindado?", "options": ["Guerra de los Bóers", "Primera Guerra Mundial", "Guerra Civil española", "Segunda Guerra Mundial"], "correctIndex": 1 },
+    { "clue": "¿Cuál es el metal más abundante en la corteza terrestre?", "options": ["Hierro", "Aluminio", "Cobre", "Calcio"], "correctIndex": 1 },
+    { "clue": "¿Qué escritor argentino escribió 'Rayuela'?", "options": ["Borges", "Cortázar", "Sabato", "Arlt"], "correctIndex": 1 },
+    { "clue": "¿Cuál es la velocidad aproximada de la luz en el vacío?", "options": ["300.000 km/s", "150.000 km/s", "1.000.000 km/s", "30.000 km/s"], "correctIndex": 0 }
+  ]
+}

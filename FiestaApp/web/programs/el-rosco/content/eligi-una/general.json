@@ -1,0 +1,28 @@
+{
+  "theme": "Preguntas variadas",
+  "language": "es",
+  "regions": ["global"],
+  "minAge": 0,
+  "questions": [
+    { "clue": "¿Cuántos lados tiene un hexágono?", "options": ["Cinco", "Seis", "Siete", "Ocho"], "correctIndex": 1 },
+    { "clue": "¿Qué planeta es conocido como el planeta rojo?", "options": ["Venus", "Marte", "Júpiter", "Saturno"], "correctIndex": 1 },
+    { "clue": "¿Cuál es el océano más grande del mundo?", "options": ["Atlántico", "Pacífico", "Índico", "Ártico"], "correctIndex": 1 },
+    { "clue": "¿Cuántos minutos tiene una hora y media?", "options": ["Sesenta", "Noventa", "Ciento veinte", "Setenta y cinco"], "correctIndex": 1 },
+    { "clue": "¿Qué animal es el más grande del planeta?", "options": ["Elefante", "Ballena azul", "Jirafa", "Tiburón blanco"], "correctIndex": 1 },
+    { "clue": "¿En qué continente está Egipto?", "options": ["Asia", "África", "Europa", "Oceanía"], "correctIndex": 1 },
+    { "clue": "¿Cuál es el metal líquido a temperatura ambiente?", "options": ["Plomo", "Mercurio", "Estaño", "Zinc"], "correctIndex": 1 },
+    { "clue": "¿Cuántos jugadores tiene un equipo de fútbol en cancha?", "options": ["Diez", "Once", "Doce", "Nueve"], "correctIndex": 1 },
+    { "clue": "¿Qué instrumento mide la temperatura?", "options": ["Barómetro", "Termómetro", "Higrómetro", "Odómetro"], "correctIndex": 1 },
+    { "clue": "¿Cuál es el resultado de siete por ocho?", "options": ["Cuarenta y nueve", "Cincuenta y seis", "Sesenta y tres", "Cuarenta y dos"], "correctIndex": 1 },
+    { "clue": "¿Qué gas necesitamos para respirar?", "options": ["Hidrógeno", "Oxígeno", "Nitrógeno", "Helio"], "correctIndex": 1 },
+    { "clue": "¿Cuántos colores tiene el arcoíris?", "options": ["Cinco", "Siete", "Seis", "Ocho"], "correctIndex": 1 },
+    { "clue": "¿Cuál es el hueso más largo del cuerpo humano?", "options": ["Húmero", "Fémur", "Tibia", "Radio"], "correctIndex": 1 },
+    { "clue": "¿Qué figura tiene todos sus lados iguales y cuatro ángulos rectos?", "options": ["Rombo", "Cuadrado", "Rectángulo", "Trapecio"], "correctIndex": 1 },
+    { "clue": "¿Cuántas patas tiene una araña?", "options": ["Seis", "Ocho", "Diez", "Doce"], "correctIndex": 1 },
+    { "clue": "¿Qué órgano bombea la sangre?", "options": ["Pulmón", "Corazón", "Hígado", "Riñón"], "correctIndex": 1 },
+    { "clue": "¿En qué estación del año empiezan las clases en el hemisferio sur?", "options": ["Verano", "Otoño", "Invierno", "Primavera"], "correctIndex": 1 },
+    { "clue": "¿Cuál es el idioma más hablado del mundo por número de hablantes nativos?", "options": ["Inglés", "Chino mandarín", "Español", "Hindi"], "correctIndex": 1 },
+    { "clue": "¿Cuántos días tiene febrero en un año bisiesto?", "options": ["Veintiocho", "Veintinueve", "Treinta", "Treinta y uno"], "correctIndex": 1 },
+    { "clue": "¿Qué animal produce la miel?", "options": ["Avispa", "Abeja", "Hormiga", "Mosca"], "correctIndex": 1 }
+  ]
+}
