@@ -18,9 +18,13 @@ Actions → New repository secret**, crear estos tres con los datos de
 
 | Secret | Valor |
 |---|---|
-| `FTP_SERVER` | el servidor, ej. `sitio95765.siteasp.net` |
-| `FTP_USERNAME` | el usuario, ej. `sitio95765` |
+| `FTP_SERVER` | el servidor, ej. `site95765.siteasp.net` |
+| `FTP_USERNAME` | el usuario, ej. `site95765` |
 | `FTP_PASSWORD` | la contraseña FTP |
+
+**Ojo con el traductor del navegador:** si el panel se ve traducido al
+español, el traductor cambia "site95765" por "sitio95765" y ese servidor no
+existe. Copiar los datos con la traducción desactivada.
 
 La contraseña queda guardada cifrada en GitHub: no aparece en el código ni
 en los registros.

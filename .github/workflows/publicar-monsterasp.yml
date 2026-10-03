@@ -4,8 +4,8 @@
 # Necesita tres "secrets" en el repo (Settings -> Secrets and variables ->
 # Actions -> New repository secret), con los datos de "Acceso FTP/SFTP" del
 # panel de MonsterASP:
-#   FTP_SERVER    ej. sitio95765.siteasp.net
-#   FTP_USERNAME  ej. sitio95765
+#   FTP_SERVER    ej. site95765.siteasp.net
+#   FTP_USERNAME  ej. site95765
 #   FTP_PASSWORD  la contraseña FTP del sitio
 name: Publicar en MonsterASP
 
@@ -49,6 +49,21 @@ jobs:
           # iisnode reinicia Node cuando cambia un .js de la raiz: dejar la
           # version en app.js hace que tome los cambios de server/ solo.
           echo "// version ${GITHUB_SHA}" >> app.js
+
+      # Revisa el secreto FTP_SERVER sin mostrarlo: errores comunes son
+      # dejar espacios, poner ftp:// o https:// adelante, una / al final, o
+      # copiar el nombre desde el panel traducido por el navegador (el
+      # traductor convierte "site95765" en "sitio95765").
+      - name: Revisar datos del servidor FTP
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+        run: |
+          echo "largo del secreto FTP_SERVER: ${#FTP_SERVER} caracteres"
+          case "$FTP_SERVER" in *"://"*) echo "::error::FTP_SERVER tiene un protocolo (ftp:// o https://): sacalo";; esac
+          case "$FTP_SERVER" in *" "*) echo "::error::FTP_SERVER tiene espacios";; esac
+          case "$FTP_SERVER" in */) echo "::error::FTP_SERVER termina en /";; esac
+          if getent hosts "$FTP_SERVER" > /dev/null; then echo "el servidor del secreto existe"; else echo "::error::el servidor del secreto no existe"; fi
+
 
       - name: Subir por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
