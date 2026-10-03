@@ -1,0 +1,22 @@
+# Visita el sitio publicado y muestra que responde (por http y https).
+# Se corre a mano desde Actions -> "Chequear sitio" -> Run workflow.
+name: Chequear sitio
+
+on:
+  workflow_dispatch:
+
+jobs:
+  chequear:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Visitar el sitio
+        run: |
+          for url in http://soyparticipante.runasp.net https://soyparticipante.runasp.net; do
+            for ruta in / /api/salud; do
+              echo "===== $url$ruta"
+              curl -sS -o /tmp/body -w "codigo HTTP: %{http_code} | tiempo: %{time_total}s | redirige a: %{redirect_url}\n" -m 30 "$url$ruta" || echo "(no se pudo conectar)"
+              head -c 600 /tmp/body 2>/dev/null; echo
+            done
+          done
+          echo "===== certificado https"
+          echo | openssl s_client -connect soyparticipante.runasp.net:443 -servername soyparticipante.runasp.net 2>/dev/null | openssl x509 -noout -subject -issuer -dates 2>&1 || echo "(sin certificado)"
