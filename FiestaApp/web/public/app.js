@@ -805,7 +805,7 @@ function renderBanks(round) {
     // En el rosco se muestra el reloj; en las pruebas, los segundos ganados.
     const main = esRosco
       ? formatTime(state.timeLeft)
-      : ['impostor', 'encuesta', 'caja-fuerte', 'verdadero-falso', 'torre'].includes(round.type) ? `${state.points || 0} pts`
+      : ['impostor', 'encuesta', 'caja-fuerte', 'verdadero-falso', 'torre', 'aguante'].includes(round.type) ? `${state.points || 0} pts`
         : `+${state.secondsWon || 0}s`;
 
     // La Silla muestra las vidas que le quedan al equipo.
@@ -1362,7 +1362,8 @@ const GAME_TYPE_ICONS = {
   encuesta: '📊',
   'caja-fuerte': '💼',
   'verdadero-falso': '⚡',
-  torre: '🧱'
+  torre: '🧱',
+  aguante: '🚦'
 };
 
 // ---------- Capa "show" común a todos los juegos ----------
@@ -1387,7 +1388,8 @@ const GAME_THEME = {
   encuesta: ['#3de6ff', '#ffb23f'],
   'caja-fuerte': ['#ffd23f', '#3ddc84'],
   'verdadero-falso': ['#3ddc84', '#ff4d5e'],
-  torre: ['#3de6ff', '#8b5cff']
+  torre: ['#3de6ff', '#8b5cff'],
+  aguante: ['#ff4d5e', '#ffb23f']
 };
 const GAME_HOWTO = {
   'rosco-por-turnos': 'Una palabra por letra. Acertás y seguís; errás o pasás y le toca al otro. El reloj corre solo en tu turno.',
@@ -1407,7 +1409,8 @@ const GAME_HOWTO = {
   encuesta: 'Adivinen las respuestas más populares. Con 3 errores, el otro equipo puede robar el pozo.',
   'caja-fuerte': 'Elijan su caja y abran las demás. La Banca ofrece: ¿trato o no trato?',
   'verdadero-falso': 'Todos contestan a la vez. Acertar suma 2; el primero en acertar, 1 más.',
-  torre: 'Tocá para soltar el bloque. Lo que sobra se corta: ¡apilen la torre más alta!'
+  torre: 'Tocá para soltar el bloque. Lo que sobra se corta: ¡apilen la torre más alta!',
+  aguante: 'Semáforo de largada: tocá apenas se apaguen las luces. Puntos como en la F1, suman para tu equipo.'
 };
 function gameTheme(type) { return GAME_THEME[type] || ['#ffb23f', '#ff3d7f']; }
 
@@ -2912,6 +2915,154 @@ function renderVerdaderoFalso(round, container, roundKey) {
   actualizarReloj();
 }
 
+// ---------- Aguante (semáforo de largada F1) ----------
+// Las luces se animan en cada celu con el plan que manda el servidor; el
+// tiempo de reacción se mide contra la propia pantalla (justo para todos).
+let aguanteBuiltFor = null;
+let aguanteTimers = [];
+let aguanteApagadoEn = null;
+let aguanteYaToque = false;
+let aguanteSonidoRes = null;
+
+function limpiarAguante() {
+  aguanteTimers.forEach(clearTimeout);
+  aguanteTimers = [];
+}
+
+function renderAguante(round, container, roundKey) {
+  const buildKey = [roundKey, round.serie, round.fase].join('|');
+  const nombre = (id) => {
+    const p = room.players.find((x) => x.id === id);
+    return p ? p.name : '?';
+  };
+  const actualizarTocaron = () => {
+    const el = $('ag-tocaron');
+    if (el) el.innerHTML = (round.tocaron || []).map((id) => `<span class="ag-chip">✔ ${esc(nombre(id))}</span>`).join('');
+    if (round.fase === 'resultado') $('playing-turn-msg').textContent = `Sigue solo en ${round.segundosResultado} s.`;
+  };
+  if (buildKey === aguanteBuiltFor) { actualizarTocaron(); return; }
+  aguanteBuiltFor = buildKey;
+  limpiarAguante();
+  container.innerHTML = '';
+
+  const box = document.createElement('div');
+  box.className = 'board ag-board';
+  const pods = Array.from({ length: 5 }, (_, i) => `<div class="ag-pod" data-i="${i}"><i></i><i></i></div>`).join('');
+  box.innerHTML = `
+    <p class="board-topic">Largada ${round.number} de ${round.total}</p>
+    <div class="ag-semaforo" id="ag-semaforo">${pods}</div>`;
+  container.appendChild(box);
+
+  if (round.fase === 'luces' && round.plan) {
+    const plan = round.plan;
+    aguanteApagadoEn = null;
+    aguanteYaToque = false;
+    const yaToque = (round.tocaron || []).includes(myId) && !(room.testMode && myId === room.hostId);
+    const zona = document.createElement('button');
+    zona.className = 'ag-zona';
+    zona.id = 'ag-zona';
+    zona.innerHTML = '<b id="ag-texto">Esperá a que se apaguen...</b><small id="ag-sub">Tocá apenas se apaguen las luces</small>';
+    container.appendChild(zona);
+    const tocaron = document.createElement('div');
+    tocaron.className = 'ag-tocaron';
+    tocaron.id = 'ag-tocaron';
+    container.appendChild(tocaron);
+
+    const semaforo = $('ag-semaforo');
+    const prender = (i) => {
+      const pod = semaforo.querySelector(`.ag-pod[data-i="${i}"]`);
+      if (pod) pod.classList.add('on');
+      if (window.Sfx) Sfx.play('pop');
+    };
+    for (let i = 0; i < plan.luces; i++) aguanteTimers.push(setTimeout(() => prender(i), (i + 1) * plan.msPorLuz));
+    if (plan.trampaEnMs !== null && plan.trampaEnMs !== undefined) {
+      aguanteTimers.push(setTimeout(() => {
+        semaforo.classList.add('trampa');
+        aguanteTimers.push(setTimeout(() => semaforo.classList.remove('trampa'), 260));
+      }, plan.trampaEnMs));
+    }
+    aguanteTimers.push(setTimeout(() => {
+      aguanteApagadoEn = performance.now();
+      semaforo.classList.add('apagado');
+      semaforo.querySelectorAll('.ag-pod').forEach((p) => p.classList.remove('on'));
+      if (!aguanteYaToque) {
+        zona.classList.add('ya');
+        $('ag-texto').textContent = '¡YA!';
+        $('ag-sub').textContent = '¡Tocá!';
+      }
+      if (window.Sfx) Sfx.play('whoosh');
+    }, plan.apagaEnMs));
+
+    if (yaToque) {
+      aguanteYaToque = true;
+      zona.disabled = true;
+      $('ag-texto').textContent = 'Ya tocaste';
+      $('ag-sub').textContent = 'Esperando a los demás...';
+    }
+    zona.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      if (aguanteYaToque) return;
+      aguanteYaToque = true;
+      zona.disabled = true;
+      zona.classList.remove('ya');
+      if (aguanteApagadoEn === null) {
+        zona.classList.add('falsa');
+        $('ag-texto').textContent = '🚫 ¡Largada en falso!';
+        $('ag-sub').textContent = 'Tocaste antes de que se apaguen';
+        if (window.Sfx) Sfx.play('error');
+        socket.emit('submit-answer', { falsa: true, serie: plan.serie });
+      } else {
+        const ms = Math.round(performance.now() - aguanteApagadoEn);
+        zona.classList.add('hecho');
+        $('ag-texto').textContent = `⏱ ${(ms / 1000).toFixed(3)} s`;
+        $('ag-sub').textContent = ms < 250 ? '¡Reflejos de piloto!' : ms < 400 ? '¡Bien!' : 'Uh, un poco lento';
+        socket.emit('submit-answer', { ms, serie: plan.serie });
+      }
+    });
+    const enJuego = Object.values(room.round.entrants || {}).length;
+    $('playing-turn-msg').textContent = room.testMode && myId === room.hostId
+      ? 'Modo prueba — tocás por el próximo jugador que falte.'
+      : enJuego ? 'Todos juegan a la vez. Los puntos de cada uno suman para su equipo.' : '';
+  } else if (round.fase === 'resultado') {
+    $('ag-semaforo').classList.add('apagado');
+    const porEquipo = {};
+    (round.tabla || []).forEach((f) => { porEquipo[f.entrant] = (porEquipo[f.entrant] || 0) + f.puntos; });
+    const tabla = document.createElement('div');
+    tabla.className = 'ag-tabla';
+    tabla.innerHTML = (round.tabla || []).map((f) => {
+      const color = teamColor(f.entrant) || 'var(--accent)';
+      const tiempo = f.ms !== null ? `${(f.ms / 1000).toFixed(3)} s` : f.falsa ? '🚫 en falso' : '— no tocó';
+      const medalla = f.puesto && f.puesto <= 3 ? MEDALS[f.puesto - 1] : (f.puesto ? `${f.puesto}°` : '');
+      return `<div class="ag-fila${f.id === myId ? ' yo' : ''}" style="--team-color:${color}">
+        <span class="ag-pos">${medalla}</span><span class="ag-nom">${esc(f.name)}${room.teamsEnabled ? ` <small>${esc(entrantLabel(f.entrant))}</small>` : ''}</span>
+        <span class="ag-ms">${tiempo}</span><b class="ag-pts">${f.puntos ? `+${f.puntos}` : ''}</b></div>`;
+    }).join('');
+    container.appendChild(tabla);
+    if (room.teamsEnabled) {
+      const eq = document.createElement('p');
+      eq.className = 'ag-equipos';
+      eq.innerHTML = Object.entries(porEquipo).sort((a, b) => b[1] - a[1])
+        .map(([id, pts]) => `<span style="color:${teamColor(id) || 'var(--accent)'}">${esc(entrantLabel(id))} +${pts}</span>`).join(' · ');
+      container.appendChild(eq);
+    }
+    if (myId === room.hostId) {
+      const sig = document.createElement('button');
+      sig.className = 'btn btn-solid ag-siguiente';
+      sig.textContent = round.number >= round.total ? 'Terminar ▶' : 'Próxima largada ▶';
+      sig.addEventListener('click', () => socket.emit('judge-word', { siguiente: true }));
+      container.appendChild(sig);
+    }
+    const clave = `${roundKey}-${round.serie}`;
+    if (aguanteSonidoRes !== clave) {
+      aguanteSonidoRes = clave;
+      const mio = (round.tabla || []).find((f) => f.id === myId);
+      if (window.Sfx) Sfx.play(mio && mio.puesto === 1 ? 'fanfarria' : 'redoble');
+      if (mio && mio.puesto === 1) confetti(1.4);
+    }
+  }
+  actualizarTocaron();
+}
+
 // ---------- La Torre (3D) ----------
 // La escena 3D vive en public/fx/torre3d.js y se carga solo cuando se juega.
 // El tablero se arma una vez por juego; en cada actualización solo cambian
@@ -3280,10 +3431,11 @@ function renderPlaying() {
   }
 
   // Verdadero o Falso (todos a la vez) y La Torre (escena 3D): flujos propios.
-  if (round.type === 'verdadero-falso' || round.type === 'torre') {
+  if (round.type === 'verdadero-falso' || round.type === 'torre' || round.type === 'aguante') {
     $('btn-pasapalabra').classList.add('hidden');
     $('playing-options').innerHTML = '';
     if (round.type === 'verdadero-falso') renderVerdaderoFalso(round, container, roundKey);
+    else if (round.type === 'aguante') renderAguante(round, container, roundKey);
     else renderTorre(round, container, roundKey);
     applyGameIdentity(round);
     return;
@@ -3475,6 +3627,8 @@ $('btn-back-home').addEventListener('click', () => {
   encuestaBuiltFor = null;
   cajaBuiltFor = null;
   vfBuiltFor = null;
+  aguanteBuiltFor = null;
+  limpiarAguante();
   cerrarTorre();
   sopaBuiltFor = null;
   cruzadasBuiltFor = null;
@@ -3497,6 +3651,7 @@ function render() {
   if (!room) return;
   // La escena 3D de La Torre se apaga apenas se deja de jugar ese juego.
   if (torreBuiltFor && (room.phase !== 'playing' || !room.round || room.round.type !== 'torre')) cerrarTorre();
+  if (aguanteBuiltFor && (room.phase !== 'playing' || !room.round || room.round.type !== 'aguante')) { limpiarAguante(); aguanteBuiltFor = null; }
 
   $('room-code-badge').textContent = room.code;
   $('room-code-badge').classList.remove('hidden');
