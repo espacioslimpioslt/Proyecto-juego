@@ -159,7 +159,6 @@ const UPCOMING = [
   { icon: '🔡', name: 'La Ruleta de Letras', tagline: 'Adiviná la frase oculta, letra por letra.', categories: ['familia', 'pareja'] },
   { icon: '⛓️', name: 'La Cadena', tagline: 'Trivia en equipo con un banco que se vota entre todos.', categories: ['amigos'] },
   { icon: '🎤', name: 'A Toda Voz', tagline: 'Karaoke con puntaje por afinación o jurado en vivo.', categories: ['amigos', 'pareja'] },
-  { icon: '🕵️', name: 'El Cazador', tagline: 'Escondida en una casa virtual en 3D — el más ambicioso.', categories: ['amigos', 'ninos'] },
   { icon: '🎵', name: 'Adiviná la Canción', tagline: 'En pausa: hay que resolver el tema de derechos musicales primero.', categories: ['amigos', 'pareja'], paused: true }
 ];
 
@@ -171,9 +170,10 @@ const REAL_CATEGORIES = {
   'ahora-caigo': ['cartelera', 'familia', 'amigos'],
   varios: ['cartelera', 'amigos', 'pareja'],
   'gran-premio': ['cartelera', 'amigos', 'familia', 'ninos'],
-  casino: ['cartelera', 'casino', 'amigos', 'pareja']
+  casino: ['cartelera', 'casino', 'amigos', 'pareja'],
+  'el-cazador': ['cartelera', 'amigos', 'ninos']
 };
-const REAL_ICONS = { 'el-rosco': '🎡', 'ahora-caigo': '🗼', varios: '🕵️', 'gran-premio': '🏎️', casino: '🎰' };
+const REAL_ICONS = { 'el-rosco': '🎡', 'ahora-caigo': '🗼', varios: '🕵️', 'gran-premio': '🏎️', casino: '🎰', 'el-cazador': '🔦' };
 
 // Color propio de cada Programa (portada, escenario y botones).
 const PROGRAM_THEME = {
@@ -181,7 +181,8 @@ const PROGRAM_THEME = {
   'ahora-caigo': ['#3de6ff', '#5b8dd6'],
   varios: ['#ff3d7f', '#8b5cff'],
   'gran-premio': ['#ff4d5e', '#3de6ff'],
-  casino: ['#ffd23f', '#1f7a46']
+  casino: ['#ffd23f', '#1f7a46'],
+  'el-cazador': ['#c0202a', '#2a2a5c']
 };
 function themeFor(id) { return PROGRAM_THEME[id] || ['#8b5cff', '#3de6ff']; }
 
@@ -825,7 +826,7 @@ function renderBanks(round) {
     // En el rosco se muestra el reloj; en las pruebas, los segundos ganados.
     const main = esRosco
       ? formatTime(state.timeLeft)
-      : ['impostor', 'encuesta', 'caja-fuerte', 'verdadero-falso', 'torre', 'aguante', 'casita-robada', 'chocadores', 'ruleta'].includes(round.type) ? `${state.points || 0} pts`
+      : ['impostor', 'encuesta', 'caja-fuerte', 'verdadero-falso', 'torre', 'aguante', 'casita-robada', 'chocadores', 'ruleta', 'cazador'].includes(round.type) ? `${state.points || 0} pts`
         : `+${state.secondsWon || 0}s`;
 
     // La Silla muestra las vidas que le quedan al equipo.
@@ -1386,7 +1387,8 @@ const GAME_TYPE_ICONS = {
   aguante: '🚦',
   'casita-robada': '🃏',
   chocadores: '🏎️',
-  ruleta: '🎰'
+  ruleta: '🎰',
+  cazador: '🔦'
 };
 
 // ---------- Capa "show" común a todos los juegos ----------
@@ -1415,7 +1417,8 @@ const GAME_THEME = {
   aguante: ['#ff4d5e', '#ffb23f'],
   'casita-robada': ['#ffd23f', '#ff3d7f'],
   chocadores: ['#ff4d5e', '#3de6ff'],
-  ruleta: ['#ffd23f', '#1f7a46']
+  ruleta: ['#ffd23f', '#1f7a46'],
+  cazador: ['#c0202a', '#2a2a5c']
 };
 const GAME_HOWTO = {
   'rosco-por-turnos': 'Una palabra por letra. Acertás y seguís; errás o pasás y le toca al otro. El reloj corre solo en tu turno.',
@@ -1439,7 +1442,8 @@ const GAME_HOWTO = {
   aguante: 'Semáforo de largada: tocá apenas se apaguen las luces. Puntos como en la F1, suman para tu equipo.',
   'casita-robada': 'Tirá una carta: si hay iguales en la mesa, las levantás; si coincide con la casita rival, ¡se la robás!',
   chocadores: 'Tu celu es el volante: levantá la parte de arriba para acelerar, la de abajo para retroceder, y ladealo para doblar. ¡Chocá a los rivales y sumá vueltas para tu equipo!',
-  ruleta: 'Todos arrancan con 1.000 fichas. Apostá en el paño, mirá girar la ruleta y cobrá. Gana el que más fichas junta.'
+  ruleta: 'Todos arrancan con 1.000 fichas. Apostá en el paño, mirá girar la ruleta y cobrá. Gana el que más fichas junta.',
+  cazador: 'Uno caza con linterna, los demás se esconden. Revisá muebles (¡pastelazo!) o tirá pintura. El que encuentra a todos más rápido gana.'
 };
 function gameTheme(type) { return GAME_THEME[type] || ['#ffb23f', '#ff3d7f']; }
 
@@ -3736,6 +3740,206 @@ function renderRuleta(round, container, roundKey) {
   $('playing-turn-msg').textContent = msg;
 }
 
+// ---------- El Cazador ----------
+// Pantalla completa (va directo en <body>, como el casino): la escena 3D
+// (fx/cazador3d.js), los botones de acción, la cuenta del cazador, la vista
+// desde el escondite, el pastelazo / la pintura y el resumen de cada turno.
+let cz = null; // { roundKey, escena, mod, mapas, timer, eventosVistos }
+let czMapas = null;
+
+function cerrarCaza() {
+  const ov = $('cz-overlay');
+  if (ov) ov.remove();
+  if (!cz) return;
+  if (cz.escena) cz.escena.destruir();
+  clearInterval(cz.timer);
+  if (window.Voz) Voz.setCercania({});
+  cz = null;
+}
+
+function czAviso(texto, clase = '') {
+  const el = $('cz-aviso');
+  if (!el) return;
+  el.innerHTML = texto;
+  el.className = `cz-aviso mostrar ${clase}`;
+  clearTimeout(czAviso.t);
+  czAviso.t = setTimeout(() => { el.className = 'cz-aviso'; }, 2200);
+}
+
+// Pastel en la cara o pintura por todos lados, en la pantalla del atrapado.
+function czEfectoAtrapado(como) {
+  const el = $('cz-efecto');
+  if (!el) return;
+  el.className = `cz-efecto ${como === 'pintura' ? 'pintura' : 'pastel'}`;
+  el.innerHTML = como === 'pintura'
+    ? '<div class="cz-pint"></div><b>¡Te pintaron!</b>'
+    : '<span class="cz-pastel-vuela">🥧</span><div class="cz-crema"><span>🍒</span></div><b>¡PASTELAZO!</b>';
+  if (navigator.vibrate) try { navigator.vibrate([200, 80, 300]); } catch (e) { /* sin vibración */ }
+  if (window.Sfx) Sfx.play('error');
+  setTimeout(() => { if ($('cz-efecto')) $('cz-efecto').className = 'cz-efecto'; }, 4200);
+}
+
+socket.on('caza', (v) => {
+  if (!cz || !cz.escena) return;
+  cz.escena.recibir(v);
+  $('cz-balas').textContent = v.balas !== undefined && room && room.round && room.round.cazadorId === myId ? `🎨 ${v.balas}` : '';
+  // Audio por cercanía: el cazador oye fuerte a los que tiene cerca (aunque
+  // estén escondidos: si hablan, se delatan) y viceversa.
+  if (window.Voz && v.cerca && room && room.round) {
+    const soyCaz = room.round.cazadorId === myId;
+    const vol = {};
+    Object.entries(v.cerca).forEach(([id, d]) => {
+      if (soyCaz) vol[id] = Math.max(0.08, Math.min(1, 1 - d / 14));
+      else if (id === room.round.cazadorId) vol[id] = Math.max(0.15, Math.min(1, 1 - d / 16));
+    });
+    Voz.setCercania(vol);
+  }
+  (v.eventos || []).forEach((ev) => {
+    const k = `${ev.tipo}-${ev.t}-${ev.id || ev.mueble || ev.x}`;
+    if (cz.eventosVistos.has(k)) return;
+    cz.eventosVistos.add(k);
+    if (ev.tipo === 'atrapado') {
+      if (ev.id === myId) czEfectoAtrapado(ev.como);
+      else czAviso(`${ev.como === 'pintura' ? '🎨' : ev.como === 'pastel' ? '🥧' : '🫵'} ¡Atraparon a ${esc(ev.nombre)}!`, 'bien');
+      if (window.Sfx && ev.id !== myId) Sfx.play('acierto');
+    } else if (ev.tipo === 'revisar' && !ev.hay && room.round.cazadorId === myId) {
+      czAviso('Nadie acá... 🤔');
+    } else if (ev.tipo === 'disparo') {
+      if (window.Sfx) Sfx.play('whoosh');
+      if (room.round.cazadorId === myId && !ev.acerto) czAviso('🎨 ¡Splash! No había nadie');
+    }
+  });
+});
+
+function renderCazador(round, container, roundKey) {
+  const privado = round.privado || {};
+  const soyCaz = round.cazadorId === myId;
+  const yoJ = (round.jugadores || []).find((j) => j.id === myId);
+  if (!cz || cz.roundKey !== roundKey || !$('cz-overlay')) {
+    cerrarCaza();
+    cz = { roundKey, eventosVistos: new Set() };
+    container.innerHTML = '<div class="rl-lugar"></div>';
+    const cont = document.createElement('div');
+    document.body.appendChild(cont);
+    cont.outerHTML = `
+      <div class="cz-overlay" id="cz-overlay">
+        <div class="cz-escena" id="cz-escena"></div>
+        <header class="cz-head">
+          <span class="cz-rol" id="cz-rol"></span>
+          <span class="cz-tiempo" id="cz-tiempo"></span>
+          <span class="cz-balas" id="cz-balas"></span>
+        </header>
+        <div class="cz-mira hidden" id="cz-mira">+</div>
+        <div class="cz-escondido hidden" id="cz-escondido"><span id="cz-escondido-txt"></span></div>
+        <div class="cz-cuenta hidden" id="cz-cuenta"><b id="cz-cuenta-n"></b><p>Tapate los ojos... los demás se están escondiendo</p></div>
+        <div class="cz-aviso" id="cz-aviso"></div>
+        <div class="cz-efecto" id="cz-efecto"></div>
+        <div class="cz-acciones" id="cz-acciones">
+          <button class="cz-btn" id="cz-accion"></button>
+          <button class="cz-btn disparo hidden" id="cz-disparar">🎨 Disparar</button>
+        </div>
+        <div class="cz-ayuda" id="cz-ayuda">👈 Izquierda: caminar · Derecha: mirar 👉</div>
+        <div class="cz-fin hidden" id="cz-fin"></div>
+      </div>`;
+    const cargar = czMapas ? Promise.resolve(czMapas) : fetch(`fx/cazador-mapas.json?v=${window.__V || ''}`).then((r) => r.json()).then((d) => { czMapas = d.mapas; return czMapas; });
+    Promise.all([cargar, import(`./fx/cazador3d.js?v=${window.__V || ''}`)]).then(([mapas, mod]) => {
+      if (!cz || cz.roundKey !== roundKey) return;
+      cz.mod = mod;
+      cz.mapas = mapas;
+      renderCazador(room.round, container, roundKey);
+    }).catch(() => { $('cz-rol').textContent = 'No se pudo cargar el escenario.'; });
+    $('cz-accion').addEventListener('click', () => {
+      const a = cz && cz.accion;
+      if (!a) return;
+      socket.emit('submit-answer', a.payload);
+      if (window.Sfx) Sfx.play('pop');
+    });
+    $('cz-disparar').addEventListener('click', () => {
+      if (!cz || !cz.escena) return;
+      socket.emit('submit-answer', { disparar: +cz.escena.angulo().toFixed(3) });
+      const m = $('cz-mira'); m.classList.remove('tiro'); void m.offsetWidth; m.classList.add('tiro');
+    });
+    // El botón de acción cambia según el mueble que tenés cerca.
+    cz.timer = setInterval(() => {
+      if (!cz || !cz.escena || !room || !room.round || room.round.type !== 'cazador') return;
+      const r = room.round;
+      const soy = r.cazadorId === myId;
+      const yo2 = (r.jugadores || []).find((j) => j.id === myId);
+      const btn = $('cz-accion');
+      let a = null;
+      if (yo2 && !yo2.atrapado && (r.fase === 'esconder' || r.fase === 'cazar')) {
+        if (!soy && cz.escena.escondite) a = { txt: '🚪 Salir del escondite', payload: { salir: true } };
+        else {
+          const m = cz.escena.muebleCerca();
+          if (m && !soy) a = { txt: `🙈 Esconderme ${cz.mod.LUGAR[m.tipo] || ''}`, payload: { esconder: m.id } };
+          if (m && soy && r.fase === 'cazar') a = { txt: `🔍 Revisar ${(cz.mod.LUGAR[m.tipo] || '').replace(/^(debajo de|adentro del|detrás de|detrás del|en|entre) /, '')}`, payload: { revisar: m.id } };
+        }
+      }
+      cz.accion = a;
+      btn.classList.toggle('hidden', !a);
+      if (a) btn.textContent = a.txt;
+    }, 200);
+  }
+
+  if (!cz.mod) return;
+  const mapa = cz.mapas.find((m) => m.id === round.mapa);
+  if (!cz.escena || cz.mapaActual !== round.mapa) {
+    if (cz.escena) cz.escena.destruir();
+    cz.mapaActual = round.mapa;
+    const colores = {};
+    (round.jugadores || []).forEach((j) => { colores[j.id] = teamColor(j.entrant) || '#3de6ff'; });
+    cz.escena = cz.mod.crearCaza($('cz-escena'), {
+      mapa,
+      miId: myId,
+      colorDe: (id) => colores[id] || '#3de6ff',
+      nombreDe: (id) => ((room.round.jugadores || []).find((j) => j.id === id) || {}).name || 'Jugador',
+      enviar: (d) => socket.volatile.emit('caza-pos', d)
+    });
+  }
+  cz.escena.setEstado(round, privado);
+
+  // Cabecera
+  const mm = Math.floor(round.segundos / 60); const ss = String(round.segundos % 60).padStart(2, '0');
+  $('cz-tiempo').textContent = round.fase === 'fin' ? '🏁' : `⏱ ${mm}:${ss}`;
+  $('cz-tiempo').classList.toggle('poco', round.fase === 'cazar' && round.segundos <= 10);
+  $('cz-rol').innerHTML = yoJ && yoJ.atrapado ? '👻 Te atraparon: mirás' : soyCaz ? '🔦 Sos el cazador' : `🙈 Escondete de <b>${esc(round.cazadorNombre)}</b>`;
+  $('cz-overlay').dataset.fase = round.fase;
+  $('cz-overlay').classList.toggle('soy-cazador', soyCaz);
+
+  // Cuenta del cazador mientras los demás se esconden
+  $('cz-cuenta').classList.toggle('hidden', !(soyCaz && round.fase === 'esconder'));
+  $('cz-cuenta-n').textContent = round.segundos;
+  $('cz-mira').classList.toggle('hidden', !(soyCaz && round.fase === 'cazar'));
+  $('cz-disparar').classList.toggle('hidden', !(soyCaz && round.fase === 'cazar'));
+  // Vista desde el escondite
+  const escMueble = privado.escondite && mapa ? mapa.muebles.find((m) => m.id === privado.escondite) : null;
+  $('cz-escondido').classList.toggle('hidden', !escMueble);
+  $('cz-escondido').className = `cz-escondido${escMueble ? ` t-${escMueble.tipo}` : ' hidden'}`;
+  if (escMueble) $('cz-escondido-txt').textContent = `Estás ${cz.mod.LUGAR[escMueble.tipo] || 'escondido'}. ¡Quieto y en silencio! 🤫`;
+
+  // Fin del turno: dónde estaba cada uno y los puntos
+  const fin = $('cz-fin');
+  if (round.fase === 'fin' && round.resumen) {
+    if (fin.dataset.serie !== String(round.serie)) {
+      fin.dataset.serie = String(round.serie);
+      const r = round.resumen;
+      const nombreM = (id) => { const m = mapa && mapa.muebles.find((x) => x.id === id); return m ? cz.mod.LUGAR[m.tipo] : 'a la vista'; };
+      const filas = r.detalle.map((d) => `<div class="cz-res"><span>${d.atrapado ? { pastel: '🥧', pintura: '🎨', toque: '🫵' }[d.atrapado] : '😎'} ${esc(d.name)}</span><small>${d.atrapado ? `atrapado a los ${d.seg}s` : 'no lo encontró'} · ${esc(nombreM(d.escondite))}</small><b>+${d.pts}</b></div>`).join('');
+      fin.innerHTML = `<h3>${r.todos ? `🔦 ${esc(round.cazadorNombre)} encontró a todos en ${r.segundos}s` : `⏱ Se le acabó el tiempo a ${esc(round.cazadorNombre)}`}</h3>
+        <div class="cz-res caz"><span>🔦 ${esc(round.cazadorNombre)} (cazador)</span><small>${r.detalle.filter((d) => d.atrapado).length} de ${r.detalle.length} atrapados</small><b>+${r.pts}</b></div>${filas}
+        ${myId === room.hostId ? `<button class="btn btn-solid" id="cz-siguiente">${round.number >= round.total ? 'Ver resultados ▶' : 'Próximo cazador ▶'}</button>` : ''}`;
+      const sig = $('cz-siguiente');
+      if (sig) sig.addEventListener('click', () => socket.emit('judge-word', { siguiente: true }));
+      if (window.Sfx) Sfx.play(r.todos ? 'fanfarria' : 'redoble');
+    }
+    fin.classList.remove('hidden');
+  } else {
+    fin.classList.add('hidden');
+  }
+  $('cz-ayuda').classList.toggle('hidden', round.fase === 'fin' || (soyCaz && round.fase === 'esconder') || !!escMueble || !!(yoJ && yoJ.atrapado));
+  $('playing-turn-msg').textContent = '';
+}
+
 // ---------- La Torre (3D) ----------
 // La escena 3D vive en public/fx/torre3d.js y se carga solo cuando se juega.
 // El tablero se arma una vez por juego; en cada actualización solo cambian
@@ -4111,11 +4315,12 @@ function renderPlaying() {
   }
 
   // Verdadero o Falso (todos a la vez) y La Torre (escena 3D): flujos propios.
-  if (['verdadero-falso', 'torre', 'aguante', 'casita-robada', 'chocadores', 'ruleta'].includes(round.type)) {
+  if (['verdadero-falso', 'torre', 'aguante', 'casita-robada', 'chocadores', 'ruleta', 'cazador'].includes(round.type)) {
     $('btn-pasapalabra').classList.add('hidden');
     $('playing-options').innerHTML = '';
     if (round.type === 'chocadores') { renderChocadores(round, container, roundKey); applyGameIdentity(round); return; }
     if (round.type === 'ruleta') { renderRuleta(round, container, roundKey); applyGameIdentity(round); return; }
+    if (round.type === 'cazador') { renderCazador(round, container, roundKey); applyGameIdentity(round); return; }
     if (round.type === 'verdadero-falso') renderVerdaderoFalso(round, container, roundKey);
     else if (round.type === 'casita-robada') renderCasitaRobada(round, container, roundKey);
     else if (round.type === 'aguante') renderAguante(round, container, roundKey);
@@ -4316,6 +4521,7 @@ $('btn-back-home').addEventListener('click', () => {
   casitaBuiltFor = null;
   cerrarCarrera();
   cerrarRuleta();
+  cerrarCaza();
   limpiarAguante();
   cerrarTorre();
   sopaBuiltFor = null;
@@ -4342,7 +4548,8 @@ const GAME_MUSICA = {
   'adivina-la-cancion': null, // ahí suena la música de los que juegan
   mimica: 'juegos', 'palabra-prohibida': 'juegos', 'duelo-torres': 'show', 'escalera-final': 'suspenso',
   impostor: 'suspenso', encuesta: 'show', 'caja-fuerte': 'casino', 'verdadero-falso': 'show',
-  torre: 'carrera', aguante: 'carrera', 'casita-robada': 'juegos', chocadores: 'carrera', ruleta: 'casino'
+  torre: 'carrera', aguante: 'carrera', 'casita-robada': 'juegos', chocadores: 'carrera', ruleta: 'casino',
+  cazador: 'suspenso'
 };
 function ambienteMusical() {
   if (!room) return null;
@@ -4377,6 +4584,7 @@ function render() {
   if (torreBuiltFor && (room.phase !== 'playing' || !room.round || room.round.type !== 'torre')) cerrarTorre();
   if (gp && (room.phase !== 'playing' || !room.round || room.round.type !== 'chocadores')) cerrarCarrera();
   if (rl && (room.phase !== 'playing' || !room.round || room.round.type !== 'ruleta')) cerrarRuleta();
+  if (cz && (room.phase !== 'playing' || !room.round || room.round.type !== 'cazador')) cerrarCaza();
   if (aguanteBuiltFor && (room.phase !== 'playing' || !room.round || room.round.type !== 'aguante')) { limpiarAguante(); aguanteBuiltFor = null; }
 
   $('room-code-badge').textContent = room.code;

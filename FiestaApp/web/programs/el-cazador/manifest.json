@@ -1,0 +1,12 @@
+{
+  "id": "el-cazador",
+  "name": "El Cazador",
+  "tagline": "La escondida en 3D, con linterna, pintura y pastelazos.",
+  "description": "En cada turno uno es el cazador y los demás se esconden en una casa o una mansión embrujada: debajo de la cama, en el armario, detrás de la cortina, en la bañera... El cazador camina a oscuras con una linterna, escucha los pasos de quien se mueve, revisa los muebles (si encuentra a alguien: ¡pastel en la cara!) y tiene unos pocos disparos de pintura. Todos son cazadores una vez: el que encuentra a todos más rápido gana.",
+  "minPlayers": 2,
+  "maxPlayers": 8,
+  "supportsTeams": true,
+  "games": ["cazador"],
+  "rondasSegunCantidad": { "3": 1, "6": 1, "9": 1 },
+  "nombreRonda": ["partida", "partidas"]
+}

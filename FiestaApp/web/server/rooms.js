@@ -29,7 +29,8 @@ const roundTypes = {
   aguante: require('./roundTypes/aguante'),
   'casita-robada': require('./roundTypes/casitaRobada'),
   chocadores: require('./roundTypes/chocadores'),
-  ruleta: require('./roundTypes/ruleta')
+  ruleta: require('./roundTypes/ruleta'),
+  cazador: require('./roundTypes/cazador')
 };
 
 // Catalogo de Programas: se arma solo escaneando `programs/*/manifest.json`.
@@ -110,7 +111,8 @@ const ICONS = {
   aguante: '🚦',
   'casita-robada': '🃏',
   chocadores: '🏎️',
-  ruleta: '🎰'
+  ruleta: '🎰',
+  cazador: '🔦'
 };
 
 // El catalogo se muestra ANTES de crear una sala (pantalla de portada), asi que
@@ -906,7 +908,32 @@ function autoPosiciones(room) {
   return st ? roundTypes.chocadores.posiciones(st) : null;
 }
 
+// ---------- El Cazador: canal rápido de posiciones ----------
+function cazaDe(room) {
+  if (!room || room.phase !== 'playing' || !room.roundState || room.roundState.gameType !== 'cazador') return null;
+  return room.roundState;
+}
+function cazaPosicion(room, playerId, datos) {
+  const st = cazaDe(room);
+  if (!st) return false;
+  const antes = Object.keys(st.atrapados || {}).length + st.fase;
+  roundTypes.cazador.posicion(st, playerId, datos);
+  // Si con ese movimiento el cazador tocó a alguien, cambia el estado de la sala.
+  if (Object.keys(st.atrapados || {}).length + st.fase !== antes) {
+    if (st.finished) finishRound(room);
+    return true;
+  }
+  return false;
+}
+function cazaVista(room, viewerId) {
+  const st = cazaDe(room);
+  return st ? roundTypes.cazador.vistaRapida(st, viewerId) : null;
+}
+
 module.exports = {
+  _mapasCazador: require('./roundTypes/cazador')._geo.MAPAS,
+  cazaPosicion,
+  cazaVista,
   autoEstado,
   autoGolpe,
   autoPosiciones,

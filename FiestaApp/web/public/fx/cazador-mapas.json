@@ -1,0 +1,690 @@
+{
+ "mapas": [
+  {
+   "id": "casa",
+   "nombre": "La casa",
+   "ancho": 24,
+   "largo": 16,
+   "ambientes": [
+    {
+     "nombre": "Living",
+     "x": 0,
+     "z": 0,
+     "w": 12,
+     "d": 9,
+     "color": "#6b4f3a"
+    },
+    {
+     "nombre": "Cocina",
+     "x": 12,
+     "z": 0,
+     "w": 12,
+     "d": 7,
+     "color": "#8a8a7a"
+    },
+    {
+     "nombre": "Pasillo",
+     "x": 12,
+     "z": 7,
+     "w": 12,
+     "d": 2,
+     "color": "#5a4a3a"
+    },
+    {
+     "nombre": "Dormitorio",
+     "x": 0,
+     "z": 9,
+     "w": 9,
+     "d": 7,
+     "color": "#4f5a7a"
+    },
+    {
+     "nombre": "Baño",
+     "x": 9,
+     "z": 9,
+     "w": 5,
+     "d": 7,
+     "color": "#7aa0a8"
+    },
+    {
+     "nombre": "Cuarto de los chicos",
+     "x": 14,
+     "z": 9,
+     "w": 10,
+     "d": 7,
+     "color": "#7a5a7a"
+    }
+   ],
+   "paredes": [
+    [
+     0,
+     0,
+     24,
+     0
+    ],
+    [
+     24,
+     0,
+     24,
+     16
+    ],
+    [
+     24,
+     16,
+     0,
+     16
+    ],
+    [
+     0,
+     16,
+     0,
+     0
+    ],
+    [
+     12,
+     0,
+     12,
+     3
+    ],
+    [
+     12,
+     4.6,
+     12,
+     7
+    ],
+    [
+     12,
+     7,
+     17,
+     7
+    ],
+    [
+     18.6,
+     7,
+     24,
+     7
+    ],
+    [
+     0,
+     9,
+     4,
+     9
+    ],
+    [
+     5.4,
+     9,
+     10.8,
+     9
+    ],
+    [
+     12.2,
+     9,
+     18,
+     9
+    ],
+    [
+     19.4,
+     9,
+     24,
+     9
+    ],
+    [
+     9,
+     9,
+     9,
+     16
+    ],
+    [
+     14,
+     9,
+     14,
+     16
+    ]
+   ],
+   "muebles": [
+    {
+     "id": "sillon-living",
+     "tipo": "sillon",
+     "x": 3,
+     "z": 2.2,
+     "w": 3,
+     "d": 1,
+     "cupo": 1
+    },
+    {
+     "id": "mesa-living",
+     "tipo": "mesa",
+     "x": 7,
+     "z": 5.5,
+     "w": 2.2,
+     "d": 1.3,
+     "cupo": 2
+    },
+    {
+     "id": "cortina-living",
+     "tipo": "cortina",
+     "x": 0.25,
+     "z": 6,
+     "w": 0.2,
+     "d": 2.2,
+     "cupo": 1
+    },
+    {
+     "id": "despensa",
+     "tipo": "armario",
+     "x": 13,
+     "z": 0.6,
+     "w": 1.6,
+     "d": 0.8,
+     "cupo": 1
+    },
+    {
+     "id": "mesa-cocina",
+     "tipo": "mesa",
+     "x": 17.5,
+     "z": 3.5,
+     "w": 2.2,
+     "d": 1.2,
+     "cupo": 2
+    },
+    {
+     "id": "heladera",
+     "tipo": "heladera",
+     "x": 23.3,
+     "z": 1,
+     "w": 1,
+     "d": 1,
+     "cupo": 0
+    },
+    {
+     "id": "cajas-pasillo",
+     "tipo": "cajas",
+     "x": 22.6,
+     "z": 8,
+     "w": 1.2,
+     "d": 1,
+     "cupo": 1
+    },
+    {
+     "id": "cama-dorm",
+     "tipo": "cama",
+     "x": 3,
+     "z": 13.4,
+     "w": 2.2,
+     "d": 3,
+     "cupo": 2
+    },
+    {
+     "id": "armario-dorm",
+     "tipo": "armario",
+     "x": 8.4,
+     "z": 11.4,
+     "w": 0.9,
+     "d": 2,
+     "cupo": 1
+    },
+    {
+     "id": "cortina-dorm",
+     "tipo": "cortina",
+     "x": 0.25,
+     "z": 11,
+     "w": 0.2,
+     "d": 1.8,
+     "cupo": 1
+    },
+    {
+     "id": "banera",
+     "tipo": "banera",
+     "x": 11.5,
+     "z": 14.9,
+     "w": 3.2,
+     "d": 1.5,
+     "cupo": 1
+    },
+    {
+     "id": "cama-chicos",
+     "tipo": "cama",
+     "x": 21,
+     "z": 13,
+     "w": 1.6,
+     "d": 2.6,
+     "cupo": 2
+    },
+    {
+     "id": "armario-chicos",
+     "tipo": "armario",
+     "x": 23.5,
+     "z": 10.6,
+     "w": 0.9,
+     "d": 2,
+     "cupo": 1
+    },
+    {
+     "id": "juguetes",
+     "tipo": "cajas",
+     "x": 15.6,
+     "z": 15,
+     "w": 1.4,
+     "d": 1,
+     "cupo": 1
+    },
+    {
+     "id": "cortina-chicos",
+     "tipo": "cortina",
+     "x": 19.5,
+     "z": 15.75,
+     "w": 2.2,
+     "d": 0.2,
+     "cupo": 1
+    }
+   ],
+   "cazador": [
+    6,
+    4
+   ],
+   "escondidos": [
+    [
+     5,
+     7
+    ],
+    [
+     7,
+     7.5
+    ],
+    [
+     4,
+     6.5
+    ],
+    [
+     8,
+     6.8
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     3.5,
+     7.6
+    ],
+    [
+     9,
+     7
+    ],
+    [
+     2.5,
+     6.8
+    ]
+   ],
+   "inicioCaza": [
+    12.9,
+    8
+   ]
+  },
+  {
+   "id": "mansion",
+   "nombre": "La mansión embrujada",
+   "ancho": 30,
+   "largo": 20,
+   "ambientes": [
+    {
+     "nombre": "Biblioteca",
+     "x": 0,
+     "z": 0,
+     "w": 10,
+     "d": 10,
+     "color": "#4a3a2a"
+    },
+    {
+     "nombre": "Hall",
+     "x": 10,
+     "z": 0,
+     "w": 10,
+     "d": 10,
+     "color": "#5a2a2a"
+    },
+    {
+     "nombre": "Comedor",
+     "x": 20,
+     "z": 0,
+     "w": 10,
+     "d": 10,
+     "color": "#3a4a3a"
+    },
+    {
+     "nombre": "Pasillo",
+     "x": 0,
+     "z": 10,
+     "w": 30,
+     "d": 2,
+     "color": "#3a3030"
+    },
+    {
+     "nombre": "Dormitorio de huéspedes",
+     "x": 0,
+     "z": 12,
+     "w": 10,
+     "d": 8,
+     "color": "#3a3a5a"
+    },
+    {
+     "nombre": "Sala de música",
+     "x": 10,
+     "z": 12,
+     "w": 10,
+     "d": 8,
+     "color": "#5a3a5a"
+    },
+    {
+     "nombre": "Dormitorio principal",
+     "x": 20,
+     "z": 12,
+     "w": 10,
+     "d": 8,
+     "color": "#2a3a4a"
+    }
+   ],
+   "paredes": [
+    [
+     0,
+     0,
+     30,
+     0
+    ],
+    [
+     30,
+     0,
+     30,
+     20
+    ],
+    [
+     30,
+     20,
+     0,
+     20
+    ],
+    [
+     0,
+     20,
+     0,
+     0
+    ],
+    [
+     10,
+     0,
+     10,
+     6
+    ],
+    [
+     10,
+     7.4,
+     10,
+     10
+    ],
+    [
+     20,
+     0,
+     20,
+     6
+    ],
+    [
+     20,
+     7.4,
+     20,
+     10
+    ],
+    [
+     0,
+     10,
+     4,
+     10
+    ],
+    [
+     5.4,
+     10,
+     10,
+     10
+    ],
+    [
+     10,
+     10,
+     13,
+     10
+    ],
+    [
+     17,
+     10,
+     20,
+     10
+    ],
+    [
+     20,
+     10,
+     24,
+     10
+    ],
+    [
+     25.4,
+     10,
+     30,
+     10
+    ],
+    [
+     0,
+     12,
+     4,
+     12
+    ],
+    [
+     5.4,
+     12,
+     14,
+     12
+    ],
+    [
+     15.4,
+     12,
+     24,
+     12
+    ],
+    [
+     25.4,
+     12,
+     30,
+     12
+    ],
+    [
+     10,
+     12,
+     10,
+     20
+    ],
+    [
+     20,
+     12,
+     20,
+     20
+    ]
+   ],
+   "muebles": [
+    {
+     "id": "sillon-biblio",
+     "tipo": "sillon",
+     "x": 3,
+     "z": 3,
+     "w": 2.6,
+     "d": 1,
+     "cupo": 1
+    },
+    {
+     "id": "escritorio",
+     "tipo": "mesa",
+     "x": 7,
+     "z": 7.4,
+     "w": 2,
+     "d": 1.2,
+     "cupo": 1
+    },
+    {
+     "id": "cortina-biblio",
+     "tipo": "cortina",
+     "x": 0.25,
+     "z": 5,
+     "w": 0.2,
+     "d": 2.2,
+     "cupo": 1
+    },
+    {
+     "id": "cajas-hall",
+     "tipo": "cajas",
+     "x": 11.2,
+     "z": 1.2,
+     "w": 1.4,
+     "d": 1.2,
+     "cupo": 1
+    },
+    {
+     "id": "cortina-hall",
+     "tipo": "cortina",
+     "x": 15,
+     "z": 0.25,
+     "w": 2.4,
+     "d": 0.2,
+     "cupo": 1
+    },
+    {
+     "id": "mesa-comedor",
+     "tipo": "mesa",
+     "x": 25,
+     "z": 5,
+     "w": 4,
+     "d": 1.6,
+     "cupo": 2
+    },
+    {
+     "id": "aparador",
+     "tipo": "armario",
+     "x": 29.4,
+     "z": 2,
+     "w": 0.9,
+     "d": 2,
+     "cupo": 1
+    },
+    {
+     "id": "cortina-pasillo",
+     "tipo": "cortina",
+     "x": 29.75,
+     "z": 11,
+     "w": 0.2,
+     "d": 1.6,
+     "cupo": 1
+    },
+    {
+     "id": "cama-huespedes",
+     "tipo": "cama",
+     "x": 3,
+     "z": 17,
+     "w": 2.2,
+     "d": 3,
+     "cupo": 2
+    },
+    {
+     "id": "armario-huespedes",
+     "tipo": "armario",
+     "x": 9.4,
+     "z": 14,
+     "w": 0.9,
+     "d": 2,
+     "cupo": 1
+    },
+    {
+     "id": "sillon-musica",
+     "tipo": "sillon",
+     "x": 15,
+     "z": 18.4,
+     "w": 2.6,
+     "d": 1,
+     "cupo": 1
+    },
+    {
+     "id": "cajas-musica",
+     "tipo": "cajas",
+     "x": 11.4,
+     "z": 13.5,
+     "w": 1.3,
+     "d": 1.1,
+     "cupo": 1
+    },
+    {
+     "id": "cama-principal",
+     "tipo": "cama",
+     "x": 25,
+     "z": 16.6,
+     "w": 2.6,
+     "d": 3,
+     "cupo": 2
+    },
+    {
+     "id": "armario-principal",
+     "tipo": "armario",
+     "x": 29.4,
+     "z": 14,
+     "w": 0.9,
+     "d": 2,
+     "cupo": 1
+    },
+    {
+     "id": "cortina-principal",
+     "tipo": "cortina",
+     "x": 25,
+     "z": 19.75,
+     "w": 2.4,
+     "d": 0.2,
+     "cupo": 1
+    }
+   ],
+   "cazador": [
+    15,
+    4
+   ],
+   "escondidos": [
+    [
+     14,
+     7
+    ],
+    [
+     16,
+     7.5
+    ],
+    [
+     13,
+     6.5
+    ],
+    [
+     17,
+     6.8
+    ],
+    [
+     15,
+     8.5
+    ],
+    [
+     12.5,
+     8
+    ],
+    [
+     18,
+     8
+    ],
+    [
+     14,
+     8.8
+    ]
+   ],
+   "inicioCaza": [
+    15,
+    11
+   ]
+  }
+ ]
+}
