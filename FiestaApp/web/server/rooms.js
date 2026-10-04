@@ -26,7 +26,8 @@ const roundTypes = {
   'caja-fuerte': require('./roundTypes/cajaFuerte'),
   'verdadero-falso': require('./roundTypes/verdaderoFalso'),
   torre: require('./roundTypes/torre'),
-  aguante: require('./roundTypes/aguante')
+  aguante: require('./roundTypes/aguante'),
+  'casita-robada': require('./roundTypes/casitaRobada')
 };
 
 // Catalogo de Programas: se arma solo escaneando `programs/*/manifest.json`.
@@ -104,7 +105,8 @@ const ICONS = {
   'caja-fuerte': '💼',
   'verdadero-falso': '⚡',
   torre: '🧱',
-  aguante: '🚦'
+  aguante: '🚦',
+  'casita-robada': '🃏'
 };
 
 // El catalogo se muestra ANTES de crear una sala (pantalla de portada), asi que

@@ -805,7 +805,7 @@ function renderBanks(round) {
     // En el rosco se muestra el reloj; en las pruebas, los segundos ganados.
     const main = esRosco
       ? formatTime(state.timeLeft)
-      : ['impostor', 'encuesta', 'caja-fuerte', 'verdadero-falso', 'torre', 'aguante'].includes(round.type) ? `${state.points || 0} pts`
+      : ['impostor', 'encuesta', 'caja-fuerte', 'verdadero-falso', 'torre', 'aguante', 'casita-robada'].includes(round.type) ? `${state.points || 0} pts`
         : `+${state.secondsWon || 0}s`;
 
     // La Silla muestra las vidas que le quedan al equipo.
@@ -1363,7 +1363,8 @@ const GAME_TYPE_ICONS = {
   'caja-fuerte': '💼',
   'verdadero-falso': '⚡',
   torre: '🧱',
-  aguante: '🚦'
+  aguante: '🚦',
+  'casita-robada': '🃏'
 };
 
 // ---------- Capa "show" común a todos los juegos ----------
@@ -1389,7 +1390,8 @@ const GAME_THEME = {
   'caja-fuerte': ['#ffd23f', '#3ddc84'],
   'verdadero-falso': ['#3ddc84', '#ff4d5e'],
   torre: ['#3de6ff', '#8b5cff'],
-  aguante: ['#ff4d5e', '#ffb23f']
+  aguante: ['#ff4d5e', '#ffb23f'],
+  'casita-robada': ['#ffd23f', '#ff3d7f']
 };
 const GAME_HOWTO = {
   'rosco-por-turnos': 'Una palabra por letra. Acertás y seguís; errás o pasás y le toca al otro. El reloj corre solo en tu turno.',
@@ -1410,7 +1412,8 @@ const GAME_HOWTO = {
   'caja-fuerte': 'Elijan su caja y abran las demás. La Banca ofrece: ¿trato o no trato?',
   'verdadero-falso': 'Todos contestan a la vez. Acertar suma 2; el primero en acertar, 1 más.',
   torre: 'Tocá para soltar el bloque. Lo que sobra se corta: ¡apilen la torre más alta!',
-  aguante: 'Semáforo de largada: tocá apenas se apaguen las luces. Puntos como en la F1, suman para tu equipo.'
+  aguante: 'Semáforo de largada: tocá apenas se apaguen las luces. Puntos como en la F1, suman para tu equipo.',
+  'casita-robada': 'Tirá una carta: si hay iguales en la mesa, las levantás; si coincide con la casita rival, ¡se la robás!'
 };
 function gameTheme(type) { return GAME_THEME[type] || ['#ffb23f', '#ff3d7f']; }
 
@@ -3063,6 +3066,142 @@ function renderAguante(round, container, roundKey) {
   actualizarTocaron();
 }
 
+// ---------- Cartas españolas (las usa Casita Robada; sirven para otros) ----------
+const PALO_ICONO = { oros: '🪙', copas: '🏆', espadas: '⚔️', bastos: '🪵' };
+const FIGURA = { 10: 'Sota', 11: 'Caballo', 12: 'Rey' };
+function cartaHtml(c, { extra = '', attrs = '' } = {}) {
+  if (!c) return '<div class="carta vacia"></div>';
+  return `<div class="carta palo-${c.palo} ${extra}" ${attrs} data-id="${c.id}">
+    <span class="cn">${c.n}</span><span class="cp">${PALO_ICONO[c.palo] || ''}</span>
+    ${FIGURA[c.n] ? `<small class="cf">${FIGURA[c.n]}</small>` : ''}<span class="cn abajo">${c.n}</span></div>`;
+}
+
+// ---------- Casita Robada ----------
+let casitaBuiltFor = null;
+let casitaSel = null; // id de la carta elegida en mi mano
+let casitaVistas = new Set(); // cartas ya dibujadas (para animar solo las nuevas)
+let casitaUltimaJugada = null;
+let casitaEraMiTurno = false;
+
+function renderCasitaRobada(round, container, roundKey) {
+  const privado = round.privado || {};
+  const mano = privado.mano || [];
+  const iAmTestHost = room.testMode && myId === room.hostId;
+  const miTurno = round.turnoDe && (round.turnoDe === myId || iAmTestHost);
+  if (casitaSel && !mano.some((c) => c.id === casitaSel)) casitaSel = null;
+  const buildKey = [roundKey, round.jugada, round.turnoDe, mano.map((c) => c.id).join(','), casitaSel].join('|');
+  if (buildKey === casitaBuiltFor) return;
+  casitaBuiltFor = buildKey;
+  if (!String(casitaVistas.roundKey || '').startsWith(roundKey)) { casitaVistas = new Set(); casitaVistas.roundKey = roundKey; }
+
+  const nuevaJugada = casitaUltimaJugada !== `${roundKey}-${round.jugada}`;
+  casitaUltimaJugada = `${roundKey}-${round.jugada}`;
+  const anim = (c) => (casitaVistas.has(c.id) ? '' : 'entra');
+  const sel = mano.find((c) => c.id === casitaSel) || null;
+  const jugador = (round.jugadores || []).find((j) => j.id === round.turnoDe);
+  const yo = (round.jugadores || []).find((j) => j.id === (iAmTestHost ? round.turnoDe : myId));
+  const miEquipo = yo ? yo.entrant : myEntrantId();
+
+  container.innerHTML = '';
+  const box = document.createElement('div');
+  box.className = 'board cr-board';
+
+  // Casitas de cada equipo (pila con la carta de arriba a la vista)
+  const casitas = Object.entries(round.casitas || {}).map(([id, k]) => {
+    const color = teamColor(id) || 'var(--accent)';
+    const robable = sel && id !== miEquipo && k.arriba && k.arriba.n === sel.n;
+    const capas = Math.min(k.cantidad, 6);
+    return `<button class="cr-casita${robable ? ' robable' : ''}${id === miEquipo ? ' mia' : ''}" data-casita="${esc(id)}" style="--team-color:${color};--capas:${capas}" ${robable ? '' : 'disabled'}>
+      <span class="cr-pila">${k.arriba ? cartaHtml(k.arriba, { extra: anim(k.arriba) }) : '<div class="carta vacia">🏠</div>'}</span>
+      <span class="cr-dueno">${esc(entrantLabel(id))}</span>
+      <b class="cr-cant">${k.cantidad}</b>
+      ${robable ? '<span class="cr-robar">¡Robala!</span>' : ''}
+    </button>`;
+  }).join('');
+
+  const mesa = (round.mesa || []).map((c) => cartaHtml(c, { extra: `${anim(c)}${sel && c.n === sel.n ? ' brilla' : ''}` })).join('');
+  box.innerHTML = `
+    <p class="board-topic">Mano ${round.number} de ${round.total} · 🂠 quedan ${round.mazo} en el mazo</p>
+    <div class="cr-casitas">${casitas}</div>
+    <p class="cr-titulo">Mesa</p>
+    <div class="cr-mesa">${mesa || '<span class="muted">La mesa está vacía</span>'}</div>`;
+  container.appendChild(box);
+
+  // Lo último que pasó
+  const u = round.ultimo;
+  if (u && u.tipo) {
+    const p = document.createElement('p');
+    p.className = `cr-ultimo ${u.tipo}${nuevaJugada ? ' nuevo' : ''}`;
+    p.innerHTML = u.tipo === 'robo'
+      ? `🏠💥 <b>${esc(u.nombre)}</b> le robó la casita a <b>${esc(entrantLabel(u.a))}</b> con un ${u.carta.n}`
+      : u.tipo === 'levanta' ? `✋ <b>${esc(u.nombre)}</b> levantó ${u.cantidad} cartas con un ${u.carta.n}`
+        : `🃏 <b>${esc(u.nombre)}</b> tiró un ${u.carta.n} a la mesa`;
+    if (u.reparto) p.innerHTML += ' · <span class="cr-reparto">¡Se repartió de nuevo!</span>';
+    container.appendChild(p);
+  }
+
+  // Turnos
+  const turnos = document.createElement('div');
+  turnos.className = 'cr-turnos';
+  turnos.innerHTML = (round.jugadores || []).map((j) => `<span class="cr-jug${j.id === round.turnoDe ? ' activo' : ''}" style="--team-color:${teamColor(j.entrant) || 'var(--accent)'}">${esc(j.name)} <small>${'🂠'.repeat(Math.min(j.cartas, 4))}</small></span>`).join('');
+  container.appendChild(turnos);
+
+  // Mi mano
+  const zonaMano = document.createElement('div');
+  zonaMano.className = 'cr-mano' + (miTurno ? ' mi-turno' : '');
+  zonaMano.innerHTML = mano.map((c, i) => cartaHtml(c, {
+    extra: `${anim(c)}${c.id === casitaSel ? ' elegida' : ''}`,
+    attrs: `style="--i:${i};--n:${mano.length}" role="button" tabindex="0"`
+  })).join('') || '<span class="muted">Sin cartas — esperá el próximo reparto</span>';
+  container.appendChild(zonaMano);
+  if (miTurno) {
+    zonaMano.querySelectorAll('.carta').forEach((el) => el.addEventListener('click', () => {
+      casitaSel = casitaSel === el.dataset.id ? null : el.dataset.id;
+      if (window.Sfx) Sfx.play('pop');
+      renderCasitaRobada(room.round, container, roundKey);
+    }));
+  }
+
+  // Acciones con la carta elegida
+  let msg;
+  if (miTurno && sel) {
+    const acciones = document.createElement('div');
+    acciones.className = 'cr-acciones';
+    const iguales = (round.mesa || []).filter((c) => c.n === sel.n).length;
+    const robables = Object.entries(round.casitas || {}).filter(([id, k]) => id !== miEquipo && k.arriba && k.arriba.n === sel.n);
+    let html = robables.map(([id, k]) => `<button class="btn cr-btn-robar" data-a="${esc(id)}">🏠💥 Robar casita de ${esc(entrantLabel(id))} (${k.cantidad})</button>`).join('');
+    if (iguales) html += `<button class="btn btn-solid cr-btn-mesa">✋ Levantar ${iguales} de la mesa</button>`;
+    html += `<button class="btn btn-ghost cr-btn-tirar">🃏 Tirar a la mesa</button>`;
+    acciones.innerHTML = html;
+    const jugar = (payload) => { socket.emit('submit-answer', { carta: sel.id, ...payload }); casitaSel = null; };
+    acciones.querySelectorAll('.cr-btn-robar').forEach((b) => b.addEventListener('click', () => jugar({ accion: 'robar', a: b.dataset.a })));
+    const bm = acciones.querySelector('.cr-btn-mesa');
+    if (bm) bm.addEventListener('click', () => jugar({ accion: 'mesa' }));
+    acciones.querySelector('.cr-btn-tirar').addEventListener('click', () => jugar({ accion: 'tirar' }));
+    container.appendChild(acciones);
+    // Que se vean la mano y los botones juntos, sin tener que bajar a buscarlos.
+    requestAnimationFrame(() => acciones.scrollIntoView({ block: 'nearest', behavior: 'smooth' }));
+    // También se puede robar tocando la casita que brilla.
+    box.querySelectorAll('.cr-casita.robable').forEach((b) => b.addEventListener('click', () => jugar({ accion: 'robar', a: b.dataset.casita })));
+    msg = robables.length ? '¡Podés robar una casita!' : iguales ? 'Levantá de la mesa o tirala.' : 'No hay iguales: tirala a la mesa.';
+  } else if (miTurno) {
+    msg = iAmTestHost ? `Modo prueba — jugás por ${jugador ? jugador.name : ''}. Elegí una carta.` : '¡Te toca! Elegí una carta de tu mano.';
+  } else {
+    msg = jugador ? `Juega ${jugador.name} (${entrantLabel(jugador.entrant)})...` : '';
+  }
+  $('playing-turn-msg').textContent = msg;
+
+  // Sonidos y efectos, una vez por jugada
+  if (nuevaJugada && u && u.tipo && window.Sfx) {
+    if (u.tipo === 'robo') { Sfx.play('whoosh'); Sfx.play('acierto'); confetti(1.2); } else if (u.tipo === 'levanta') Sfx.play('acierto'); else Sfx.play('pop');
+  }
+  if (miTurno && !casitaEraMiTurno && window.Sfx && !iAmTestHost) Sfx.play('turno');
+  casitaEraMiTurno = !!miTurno;
+
+  [...(round.mesa || []), ...mano, ...Object.values(round.casitas || {}).map((k) => k.arriba).filter(Boolean)]
+    .forEach((c) => casitaVistas.add(c.id));
+}
+
 // ---------- La Torre (3D) ----------
 // La escena 3D vive en public/fx/torre3d.js y se carga solo cuando se juega.
 // El tablero se arma una vez por juego; en cada actualización solo cambian
@@ -3431,10 +3570,11 @@ function renderPlaying() {
   }
 
   // Verdadero o Falso (todos a la vez) y La Torre (escena 3D): flujos propios.
-  if (round.type === 'verdadero-falso' || round.type === 'torre' || round.type === 'aguante') {
+  if (['verdadero-falso', 'torre', 'aguante', 'casita-robada'].includes(round.type)) {
     $('btn-pasapalabra').classList.add('hidden');
     $('playing-options').innerHTML = '';
     if (round.type === 'verdadero-falso') renderVerdaderoFalso(round, container, roundKey);
+    else if (round.type === 'casita-robada') renderCasitaRobada(round, container, roundKey);
     else if (round.type === 'aguante') renderAguante(round, container, roundKey);
     else renderTorre(round, container, roundKey);
     applyGameIdentity(round);
@@ -3628,6 +3768,7 @@ $('btn-back-home').addEventListener('click', () => {
   cajaBuiltFor = null;
   vfBuiltFor = null;
   aguanteBuiltFor = null;
+  casitaBuiltFor = null;
   limpiarAguante();
   cerrarTorre();
   sopaBuiltFor = null;

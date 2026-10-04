@@ -1552,3 +1552,52 @@ h1 { letter-spacing: -0.01em; }
 .ag-pts { color: var(--ok); text-align: right; }
 .ag-equipos { text-align: center; font-weight: 800; margin: 0.7rem 0 0; }
 .ag-siguiente { display: block; margin: 0.8rem auto 0; }
+
+/* ---------- Cartas españolas ---------- */
+.carta { --w: 3.6rem; position: relative; flex: none; width: var(--w); aspect-ratio: 5 / 7.6; border-radius: 9px; background: linear-gradient(160deg, #fffdf6, #f1e8d2); color: var(--palo, #333); box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.7), inset 0 0 0 2px rgba(255, 255, 255, 0.6), inset 0 0 0 3px var(--palo, #999); display: grid; place-items: center; font-family: var(--font-display); user-select: none; -webkit-user-select: none; }
+.carta .cn { position: absolute; top: 0.18rem; left: 0.3rem; font-weight: 900; font-size: calc(var(--w) * 0.26); line-height: 1; }
+.carta .cn.abajo { top: auto; left: auto; bottom: 0.18rem; right: 0.3rem; transform: rotate(180deg); }
+.carta .cp { font-size: calc(var(--w) * 0.44); filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25)); }
+.carta .cf { position: absolute; bottom: calc(var(--w) * 0.3); left: 0; right: 0; text-align: center; font-family: var(--font-body); font-size: calc(var(--w) * 0.14); font-weight: 700; opacity: 0.75; }
+.carta.palo-oros { --palo: #b8860b; }
+.carta.palo-copas { --palo: #c0283a; }
+.carta.palo-espadas { --palo: #2b5fb4; }
+.carta.palo-bastos { --palo: #2f8a45; }
+.carta.vacia { background: rgba(255, 255, 255, 0.04); box-shadow: inset 0 0 0 2px var(--line); color: var(--text-dim); font-size: 1.4rem; }
+.carta.entra { animation: carta-entra 0.55s var(--ease-out) both; }
+/* Propiedades sueltas (translate/rotate/scale) para no pisar el abanico de la mano. */
+@keyframes carta-entra { 0% { translate: 0 -40px; rotate: y 180deg; scale: 0.6; opacity: 0; } 60% { opacity: 1; } 100% { translate: 0 0; rotate: y 0deg; scale: 1; } }
+.carta.brilla { box-shadow: 0 0 0 3px var(--accent), 0 0 22px rgba(255, 178, 63, 0.8); animation: carta-brilla 1s ease-in-out infinite; }
+@keyframes carta-brilla { 50% { translate: 0 -4px; } }
+
+/* ---------- Casita Robada ---------- */
+.cr-casitas { display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.6rem; }
+.cr-casita { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.5rem 0.7rem 0.4rem; border-radius: 16px; border: 2px solid color-mix(in srgb, var(--team-color) 60%, transparent); background: color-mix(in srgb, var(--team-color) 14%, var(--panel)); color: var(--text); font: inherit; cursor: default; }
+.cr-casita.mia { box-shadow: 0 0 0 1px var(--team-color); }
+.cr-casita.robable { cursor: pointer; border-color: var(--accent); animation: carta-brilla 0.9s ease-in-out infinite; box-shadow: 0 0 24px rgba(255, 178, 63, 0.6); }
+.cr-pila { position: relative; display: block; }
+.cr-pila .carta { --w: 3.4rem; box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.7), inset 0 0 0 2px rgba(255, 255, 255, 0.6), inset 0 0 0 3px var(--palo, #999), calc(var(--capas) * 1px) calc(var(--capas) * 1px) 0 -1px #d8cdb2, calc(var(--capas) * 2px) calc(var(--capas) * 2px) 0 -2px #bfb397; }
+.cr-dueno { font-size: 0.78rem; font-weight: 700; color: var(--team-color); }
+.cr-cant { position: absolute; top: -0.5rem; right: -0.5rem; min-width: 1.7rem; height: 1.7rem; padding: 0 0.3rem; border-radius: 999px; display: grid; place-items: center; background: var(--team-color); color: #fff; font-family: var(--font-display); font-size: 0.85rem; }
+.cr-robar { font-size: 0.75rem; font-weight: 800; color: var(--accent); }
+.cr-titulo { margin: 0.9rem 0 0.3rem; text-align: center; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.68rem; }
+.cr-mesa { perspective: 600px; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.45rem; min-height: 5.6rem; padding: 0.6rem; border-radius: 16px; background: radial-gradient(120% 120% at 50% 0%, #1d6b45, #0f3d28); box-shadow: inset 0 0 0 3px #3b2a16, inset 0 8px 24px rgba(0, 0, 0, 0.45); }
+.cr-mesa .carta { --w: 3.2rem; }
+.cr-mesa .muted { align-self: center; color: #b9e2c9; }
+.cr-ultimo { text-align: center; margin: 0.7rem 0 0; padding: 0.45rem 0.7rem; border-radius: 12px; background: var(--glass); border: 1px solid var(--line); font-size: 0.9rem; }
+.cr-ultimo.robo { border-color: var(--accent); }
+.cr-ultimo.nuevo { animation: ri-pop 0.45s cubic-bezier(.34, 1.56, .64, 1); }
+.cr-reparto { color: var(--cyan); font-weight: 700; }
+.cr-turnos { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem; margin: 0.7rem 0; }
+.cr-jug { padding: 0.25rem 0.6rem; border-radius: 999px; font-size: 0.8rem; background: var(--panel); border-left: 4px solid var(--team-color); opacity: 0.7; }
+.cr-jug.activo { opacity: 1; background: var(--panel-2); outline: 1px solid var(--team-color); font-weight: 700; }
+.cr-jug small { letter-spacing: -0.2em; }
+.cr-mano { display: flex; justify-content: center; align-items: flex-end; min-height: 8.6rem; padding: 1.6rem 0 0.2rem; perspective: 600px; }
+.cr-mano .carta { --w: 4.6rem; margin: 0 -0.35rem; transform: rotate(calc((var(--i) - (var(--n) - 1) / 2) * 7deg)) translateY(calc(max(var(--i) - (var(--n) - 1) / 2, (var(--n) - 1) / 2 - var(--i)) * 6px)); transform-origin: 50% 120%; transition: transform 0.18s var(--ease-out), box-shadow 0.18s; }
+.cr-mano.mi-turno .carta { cursor: pointer; }
+.cr-mano .carta.elegida { transform: translateY(-1.4rem) scale(1.08); box-shadow: 0 0 0 3px var(--accent), 0 16px 30px -8px rgba(255, 178, 63, 0.7); z-index: 2; }
+.cr-mano:not(.mi-turno) .carta { filter: saturate(0.6) brightness(0.85); }
+.cr-acciones { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 0.5rem; margin: 0.7rem 0 0.4rem; }
+.cr-acciones .btn { padding: 0.7rem 0.6rem; font-size: 0.92rem; }
+.cr-btn-robar { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; border: none; font-weight: 800; animation: ri-pop 0.4s cubic-bezier(.34, 1.56, .64, 1); }
+@media (prefers-reduced-motion: reduce) { .carta.entra, .carta.brilla, .cr-casita.robable { animation: none; } }
