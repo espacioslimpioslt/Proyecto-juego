@@ -66,6 +66,17 @@
     </div>`;
   }
 
+  // El Cazador: una linterna barre la oscuridad y descubre a alguien
+  // asomado detrás de la cortina.
+  function reelCazador() {
+    return `<div class="reel reel-cazador">
+      <span class="ec-cortina"></span><span class="ec-cama"></span>
+      <span class="ec-ojos">👀</span>
+      <span class="ec-haz"></span>
+      <span class="ec-pastel">🥧</span>
+    </div>`;
+  }
+
   // Programas que todavía no existen: el ícono flotando con un brillo que
   // pasa, para que la galería no se vea muerta.
   function reelProximo(icon) {
@@ -81,7 +92,8 @@
     'ahora-caigo': reelAhoraCaigo,
     varios: reelImpostor,
     'gran-premio': reelGranPremio,
-    casino: reelCasino
+    casino: reelCasino,
+    'el-cazador': reelCazador
   };
 
   function reelHtml(program) {

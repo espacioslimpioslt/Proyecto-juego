@@ -313,6 +313,34 @@ function armarCasino() {
   return grupo;
 }
 
+// El Cazador: una habitación a oscuras, una linterna que barre y una cortina
+// que se mueve (hay alguien atrás).
+function armarCazador() {
+  const grupo = new THREE.Group();
+  const piso = new THREE.Mesh(new THREE.BoxGeometry(5, 0.1, 3), new THREE.MeshStandardMaterial({ color: 0x3a2a1a }));
+  piso.position.y = -1.4;
+  const cortina = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 2.2, 16, 1), new THREE.MeshStandardMaterial({ color: 0x7a1426, side: THREE.DoubleSide }));
+  const p = cortina.geometry.attributes.position;
+  const base = [];
+  for (let i = 0; i < p.count; i++) base.push(p.getX(i));
+  cortina.position.set(-1.2, -0.25, -0.6);
+  const cama = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.5, 1.1), new THREE.MeshStandardMaterial({ color: 0x2b4f8a }));
+  cama.position.set(1.2, -1.1, -0.2);
+  const luz = new THREE.SpotLight(0xfff2c0, 30, 9, 0.35, 0.5, 1);
+  luz.position.set(0, 1.5, 3);
+  const haz = new THREE.Mesh(new THREE.ConeGeometry(0.9, 4, 24, 1, true), new THREE.MeshBasicMaterial({ color: 0xfff2b0, transparent: true, opacity: 0.1, side: THREE.DoubleSide, depthWrite: false }));
+  grupo.add(piso, cortina, cama, luz, luz.target, haz, halo(COLORES.rojo, 4));
+  grupo.userData.update = (t) => {
+    const ang = Math.sin(t * 0.7) * 1.3;
+    luz.target.position.set(ang, -1, -0.6);
+    haz.position.set(ang * 0.5, 0, 1.2);
+    haz.rotation.set(-Math.PI / 2 + 0.35, 0, -ang * 0.35);
+    for (let i = 0; i < p.count; i++) p.setZ(i, Math.sin(base[i] * 8 + t * 2.5) * 0.06 + (Math.sin(t * 0.7) < -0.6 ? Math.sin(t * 9) * 0.04 : 0));
+    p.needsUpdate = true;
+  };
+  return grupo;
+}
+
 function armarGenerico() {
   const grupo = new THREE.Group();
   const signo = new THREE.Mesh(
@@ -329,7 +357,8 @@ const PIEZAS = {
   'ahora-caigo': armarAhoraCaigo,
   varios: armarImpostor,
   'gran-premio': armarGranPremio,
-  casino: armarCasino
+  casino: armarCasino,
+  'el-cazador': armarCazador
 };
 
 // ---------- El estudio ----------

@@ -71,6 +71,15 @@ function candidates(room, sockets) {
         break;
       case 'verdadero-falso':
         sub(s, { verdadero: Math.random() < 0.5 }); break;
+      case 'cazador': {
+        const mapa = rooms._mapasCazador.find((m) => m.id === st.mapa);
+        const m = pick(mapa.muebles);
+        const q = st.pos[s];
+        if (q) out.push(['caza', s, [Math.max(0, Math.min(mapa.ancho, q.x + (Math.random() - 0.5) * 2)), Math.max(0, Math.min(mapa.largo, q.z + (Math.random() - 0.5) * 2)), Math.random() * 6]]);
+        if (Math.random() < 0.3 && q) out.push(['caza', s, [m.x + (Math.random() - 0.5), m.z + (Math.random() - 0.5), 0]]);
+        sub(s, pick([{ esconder: m.id }, { salir: true }, { revisar: m.id }, { disparar: Math.random() * 6.3 }, { esconder: 'nada' }]));
+        break;
+      }
       case 'ruleta': {
         if (st.fase === 'apuestas') {
           const tipos = [{ tipo: 'pleno', nums: [R(37)] }, { tipo: pick(['rojo', 'negro', 'par', 'impar', 'falta', 'pasa']) }, { tipo: 'docena', valor: 1 + R(4) }, { tipo: 'columna', valor: 1 + R(3) }, { tipo: 'caballo', nums: [R(37), R(37)] }, { tipo: 'cuadro', valor: R(34) }, { tipo: 'calle', valor: R(14) }];
@@ -132,6 +141,7 @@ function candidates(room, sockets) {
   if (t === 'encuesta' && Math.random() < 0.05) jud(st.fase === 'resultado' ? { siguiente: true } : { revelar: R(6) });
   if (t === 'caja-fuerte' && Math.random() < 0.05) jud({ siguiente: true });
   if ((t === 'verdadero-falso' || t === 'torre' || t === 'aguante') && Math.random() < 0.05) jud({ siguiente: true });
+  if (t === 'cazador' && Math.random() < 0.03) jud({ siguiente: true });
   if (t === 'ruleta' && Math.random() < 0.03) jud(pick([{ cerrar: true }, { siguiente: true }]));
   if (t === 'chocadores' && Math.random() < 0.02) jud(pick([{ largar: true }, { siguiente: true }]));
   if (t === 'impostor' && Math.random() < 0.05) jud(pick([{ saltarTurno: true }, { cerrarVotacion: true }, { siguienteCaso: true }]));
@@ -204,6 +214,7 @@ function play({ programId, difficulty, players = 4, disconnectAt = null, label }
       const [kind, s, v] = pick(cands);
       if (kind === 'auto') { rooms.autoEstado(room, s, v); rooms.autoPosiciones(room); continue; }
       if (kind === 'golpe') { rooms.autoGolpe(room, s, v); continue; }
+      if (kind === 'caza') { rooms.cazaPosicion(room, s, v); for (const id of sockets) rooms.cazaVista(room, id); continue; }
       const res = kind === 'submit' ? rooms.submitAnswer(room, s, v)
         : kind === 'pasa' ? rooms.pasapalabra(room, s) : rooms.judgeWord(room, s, v);
       if (res.error) errors.set(res.error.replace(/Le toca a .*?\./, 'Le toca a X.'), (errors.get(res.error) || 0) + 1);
@@ -229,7 +240,7 @@ function play({ programId, difficulty, players = 4, disconnectAt = null, label }
 
 const results = [];
 const N = Number(process.argv[2] || 15);
-for (const programId of ['el-rosco', 'ahora-caigo', 'varios', 'gran-premio', 'casino']) {
+for (const programId of ['el-rosco', 'ahora-caigo', 'varios', 'gran-premio', 'casino', 'el-cazador']) {
   for (const difficulty of ['facil', 'normal', 'dificil']) {
     for (let i = 0; i < N; i++) {
       // Varios incluye El Impostor, que necesita al menos 3 personas.

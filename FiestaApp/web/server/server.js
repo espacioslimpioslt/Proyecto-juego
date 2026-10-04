@@ -303,6 +303,16 @@ io.on('connection', (socket) => {
     if (++autosEnSegundo > 25) return;
     rooms.autoEstado(currentRoom(), playerId, datos);
   });
+  // El Cazador: posición propia (~10 por segundo).
+  let cazaEnSegundo = 0;
+  let segundoCaza = 0;
+  socket.on('caza-pos', (datos) => {
+    const ahora = Math.floor(Date.now() / 1000);
+    if (ahora !== segundoCaza) { segundoCaza = ahora; cazaEnSegundo = 0; }
+    if (++cazaEnSegundo > 25) return;
+    const room = currentRoom();
+    if (rooms.cazaPosicion(room, playerId, datos)) broadcast(room);
+  });
   socket.on('auto-golpe', (atacanteId) => {
     if (!limiter.allow()) return;
     rooms.autoGolpe(currentRoom(), playerId, String(atacanteId || ''));
@@ -427,6 +437,14 @@ setInterval(() => {
   for (const room of rooms.allRooms()) {
     const pos = rooms.autoPosiciones(room);
     if (pos) io.to(room.code).volatile.emit('autos', pos);
+    // El Cazador: a cada uno, solo lo que le toca ver.
+    if (room.phase === 'playing' && room.roundState && room.roundState.gameType === 'cazador') {
+      room.players.forEach((p) => {
+        if (String(p.id).startsWith('test:')) return;
+        const v = rooms.cazaVista(room, p.id);
+        if (v) io.to(`p:${p.id}`).volatile.emit('caza', v);
+      });
+    }
   }
 }, 100);
 

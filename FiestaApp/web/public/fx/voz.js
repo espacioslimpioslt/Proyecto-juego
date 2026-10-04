@@ -29,6 +29,7 @@
   let nombres = {}; // id -> nombre
   let silenciados = new Set(); // los que yo no quiero escuchar
   let mudosPorJuego = new Set(); // los que nadie escucha por regla del juego
+  let cercania = {}; // id -> volumen 0..1 (audio por cercanía, ej. El Cazador)
   let todoSilenciado = false;
   let esAnfitrion = false;
   let salaApagada = false;
@@ -165,7 +166,8 @@
   function aplicarVolumenes() {
     peers.forEach((p, id) => {
       const oir = !todoSilenciado && !silenciados.has(id) && !mudosPorJuego.has(id);
-      if (p.gain) p.gain.gain.value = oir ? 1 : 0;
+      const vol = cercania[id] === undefined ? 1 : cercania[id];
+      if (p.gain) p.gain.gain.setTargetAtTime(oir ? vol : 0, p.gain.context.currentTime, 0.15);
       else if (p.audio) p.audio.muted = !oir;
     });
   }
@@ -374,6 +376,8 @@
       aplicarVolumenes();
     },
     alHablar(f) { alHablar.push(f); },
+    // Audio por cercanía: { id: volumen 0..1 }. Vacío = todos al 100%.
+    setCercania(mapa) { cercania = mapa || {}; aplicarVolumenes(); },
     get unido() { return unido; },
     hablando: (id) => (id === myId ? hablandoYo : !!(peers.get(id) || {}).hablando)
   };
