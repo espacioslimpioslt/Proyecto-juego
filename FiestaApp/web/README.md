@@ -411,3 +411,9 @@ en el manifest:
 ### Ganador de cada juego
 
 Además del ganador del programa (la suma de todos los juegos), al terminar cada juego se muestra quién lo ganó, y en la pantalla final hay una tabla de "Ganadores por juego". Así un programa de Varios sirve igual para jugar un solo juego suelto o una noche de varios.
+
+### Audio en vivo y música de fondo
+
+- **Audio entre participantes** (`public/fx/voz.js`): como una llamada grupal, directo de celu a celu con WebRTC (el servidor solo "presenta" a los celus por el canal `voz-senal`; el audio no pasa por el servidor ni se graba). Botón flotante 🎤: prender el audio (pide el micrófono; si no se da permiso, solo se escucha), micrófono abierto/silenciado o "mantener apretado para hablar". En el panel ⋯ cada uno puede silenciar a cualquier otro (solo para sí), silenciar a todos, y el anfitrión puede apagar el audio de toda la sala. Se ilumina quién está hablando. Cancelación de eco y de ruido activadas. Anda bien hasta ~8 personas (malla).
+- **Reglas por juego**: en Mímica, el que actúa queda con el micrófono apagado y nadie lo escucha.
+- **Música de fondo** (`public/fx/musica.js`): compuesta en el momento con Web Audio, sin archivos. Ambientes: sala, show, suspenso, casino, carrera y juegos; cambia según el juego y el momento (suspenso en la oferta de Caja Fuerte y mientras gira la ruleta, silencio durante el semáforo de Aguante, nada en Adivina la Canción). Baja sola cuando alguien habla. Se apaga con el botón de sonido o desde el panel de audio.
