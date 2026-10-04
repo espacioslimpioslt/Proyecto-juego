@@ -165,16 +165,18 @@ const REAL_CATEGORIES = {
   'el-rosco': ['cartelera', 'familia', 'amigos'],
   'ahora-caigo': ['cartelera', 'familia', 'amigos'],
   varios: ['cartelera', 'amigos', 'pareja'],
-  'gran-premio': ['cartelera', 'amigos', 'familia', 'ninos']
+  'gran-premio': ['cartelera', 'amigos', 'familia', 'ninos'],
+  casino: ['cartelera', 'casino', 'amigos', 'pareja']
 };
-const REAL_ICONS = { 'el-rosco': '🎡', 'ahora-caigo': '🗼', varios: '🕵️', 'gran-premio': '🏎️' };
+const REAL_ICONS = { 'el-rosco': '🎡', 'ahora-caigo': '🗼', varios: '🕵️', 'gran-premio': '🏎️', casino: '🎰' };
 
 // Color propio de cada Programa (portada, escenario y botones).
 const PROGRAM_THEME = {
   'el-rosco': ['#ffb23f', '#ff6b3d'],
   'ahora-caigo': ['#3de6ff', '#5b8dd6'],
   varios: ['#ff3d7f', '#8b5cff'],
-  'gran-premio': ['#ff4d5e', '#3de6ff']
+  'gran-premio': ['#ff4d5e', '#3de6ff'],
+  casino: ['#ffd23f', '#1f7a46']
 };
 function themeFor(id) { return PROGRAM_THEME[id] || ['#8b5cff', '#3de6ff']; }
 
@@ -399,6 +401,7 @@ function renderRows() {
   // pero sin inventar un dato de popularidad que no existe.
   renderRow(container, 'row-ranking', '🔥 Recomendados para arrancar', ALL_PROGRAMS.slice(0, 5), true);
   renderRow(container, 'row-cartelera', '🎬 En cartelera', ALL_PROGRAMS.filter((p) => p.categories.includes('cartelera')));
+  renderRow(container, 'row-casino', '🎰 Noche de casino', ALL_PROGRAMS.filter((p) => p.categories.includes('casino')));
   renderRow(container, 'row-familia', '👨‍👩‍👧 Para jugar en familia', ALL_PROGRAMS.filter((p) => p.categories.includes('familia')));
   renderRow(container, 'row-amigos', '🎉 Para la previa con amigos', ALL_PROGRAMS.filter((p) => p.categories.includes('amigos')));
   renderRow(container, 'row-pareja', '💑 Para jugar en pareja', ALL_PROGRAMS.filter((p) => p.categories.includes('pareja')));
@@ -720,11 +723,13 @@ function renderLobby() {
     o.textContent = `${n} ${n === 1 ? uno : varios}`;
   });
   $('config-rounds-label').firstChild.textContent = `Cantidad de ${varios} `;
+  // Si la cantidad no cambia nada (ej. Noche de Casino: siempre una mesa), no se muestra.
+  const unaSola = mapaRondas && new Set(Object.values(mapaRondas)).size === 1;
 
   // Programas "pick" (Varios): se tildan los juegos a mano, no se sortea una
   // cantidad, y no hay rosco final que gaste el tiempo base.
   const esPick = room.sequenceMode === 'pick';
-  $('config-rounds-label').classList.toggle('hidden', esPick);
+  $('config-rounds-label').classList.toggle('hidden', esPick || unaSola);
   $('config-game-picker').classList.toggle('hidden', !esPick);
   $('config-time-label').classList.toggle('hidden', !room.hasFinalGame);
   $('config-time-desc').classList.toggle('hidden', !room.hasFinalGame);
@@ -814,7 +819,7 @@ function renderBanks(round) {
     // En el rosco se muestra el reloj; en las pruebas, los segundos ganados.
     const main = esRosco
       ? formatTime(state.timeLeft)
-      : ['impostor', 'encuesta', 'caja-fuerte', 'verdadero-falso', 'torre', 'aguante', 'casita-robada', 'chocadores'].includes(round.type) ? `${state.points || 0} pts`
+      : ['impostor', 'encuesta', 'caja-fuerte', 'verdadero-falso', 'torre', 'aguante', 'casita-robada', 'chocadores', 'ruleta'].includes(round.type) ? `${state.points || 0} pts`
         : `+${state.secondsWon || 0}s`;
 
     // La Silla muestra las vidas que le quedan al equipo.
@@ -1374,7 +1379,8 @@ const GAME_TYPE_ICONS = {
   torre: '🧱',
   aguante: '🚦',
   'casita-robada': '🃏',
-  chocadores: '🏎️'
+  chocadores: '🏎️',
+  ruleta: '🎰'
 };
 
 // ---------- Capa "show" común a todos los juegos ----------
@@ -1402,7 +1408,8 @@ const GAME_THEME = {
   torre: ['#3de6ff', '#8b5cff'],
   aguante: ['#ff4d5e', '#ffb23f'],
   'casita-robada': ['#ffd23f', '#ff3d7f'],
-  chocadores: ['#ff4d5e', '#3de6ff']
+  chocadores: ['#ff4d5e', '#3de6ff'],
+  ruleta: ['#ffd23f', '#1f7a46']
 };
 const GAME_HOWTO = {
   'rosco-por-turnos': 'Una palabra por letra. Acertás y seguís; errás o pasás y le toca al otro. El reloj corre solo en tu turno.',
@@ -1425,7 +1432,8 @@ const GAME_HOWTO = {
   torre: 'Tocá para soltar el bloque. Lo que sobra se corta: ¡apilen la torre más alta!',
   aguante: 'Semáforo de largada: tocá apenas se apaguen las luces. Puntos como en la F1, suman para tu equipo.',
   'casita-robada': 'Tirá una carta: si hay iguales en la mesa, las levantás; si coincide con la casita rival, ¡se la robás!',
-  chocadores: 'Tu celu es el volante: levantalo para acelerar, ladealo para doblar. ¡Chocá a los rivales y sumá vueltas para tu equipo!'
+  chocadores: 'Tu celu es el volante: levantá la parte de arriba para acelerar, la de abajo para retroceder, y ladealo para doblar. ¡Chocá a los rivales y sumá vueltas para tu equipo!',
+  ruleta: 'Todos arrancan con 1.000 fichas. Apostá en el paño, mirá girar la ruleta y cobrá. Gana el que más fichas junta.'
 };
 function gameTheme(type) { return GAME_THEME[type] || ['#ffb23f', '#ff3d7f']; }
 
@@ -3308,11 +3316,13 @@ function renderChocadores(round, container, roundKey) {
           aviso: (t) => gpAviso(t),
           hud: (h) => {
             const vel = $('gp-vel'); const dir = $('gp-dir');
-            if (vel) vel.style.height = `${Math.round(h.acel * 100)}%`;
+            if (vel) { vel.style.height = `${Math.round(Math.abs(h.acel) * 100)}%`; vel.classList.toggle('reversa', h.acel < 0); }
             if (dir) dir.style.left = `${50 + h.giro * 45}%`;
             const v = $('gp-vueltas');
             if (v && yoPiloto) v.textContent = `🏁 ${h.vueltas} ${h.vueltas === 1 ? 'vuelta' : 'vueltas'}${h.trompo ? ' · 😵' : h.turbo ? ' · 🚀' : h.aceite ? ' · 🛢️' : ''}`;
-            const med = $('gp-medidor-acel'); if (med) med.style.width = `${Math.round(h.acel * 100)}%`;
+            const med = $('gp-medidor-acel');
+            if (med) { med.style.width = `${Math.round(Math.abs(h.acel) * 100)}%`; med.classList.toggle('reversa', h.acel < 0); }
+            const etq = $('gp-medidor-etq'); if (etq) etq.textContent = h.acel < -0.05 ? '◀ Marcha atrás' : 'Acelerador';
             const g = $('gp-medidor-giro'); if (g) g.style.left = `${50 + h.giro * 45}%`;
           }
         });
@@ -3324,7 +3334,7 @@ function renderChocadores(round, container, roundKey) {
     }).catch(() => { $('gp-panel').innerHTML = '<p>No se pudo cargar la pista.</p>'; });
   }
 
-  if (gp.carrera) gp.carrera.setFase(round.fase);
+  if (gp.carrera) { gp.carrera.actualizarPilotos(round.pilotos); gp.carrera.setFase(round.fase); }
   const reloj = $('gp-reloj');
   const mm = Math.floor(round.segundos / 60); const ss = String(round.segundos % 60).padStart(2, '0');
   reloj.textContent = round.fase === 'carrera' ? `${mm}:${ss}` : round.fase === 'calibrar' ? '🎮' : round.fase === 'largada' ? '🚦' : '🏁';
@@ -3365,14 +3375,15 @@ function renderChocadores(round, container, roundKey) {
         <h3>🎮 Tu celu es el volante</h3>
         <ol class="gp-instr">
           <li>Sostenelo <b>en vertical</b>, con las dos manos.</li>
-          <li><b>Levantalo hasta 45°</b> para acelerar a fondo. <b>Bajalo hasta quedar plano</b> para frenar.</li>
+          <li><b>Levantá la parte de arriba</b> (hasta 45°) para acelerar a fondo. <b>Plano</b> frena.</li>
+          <li><b>Levantá la parte de abajo</b> para ir marcha atrás.</li>
           <li><b>Ladealo</b> a la izquierda o a la derecha para doblar.</li>
         </ol>
         <div class="gp-medidores">
-          <div class="gp-medidor"><small>Acelerador</small><span><i id="gp-medidor-acel"></i></span></div>
+          <div class="gp-medidor"><small id="gp-medidor-etq">Acelerador</small><span><i id="gp-medidor-acel"></i></span></div>
           <div class="gp-medidor giro"><small>Volante</small><span><i id="gp-medidor-giro"></i></span></div>
         </div>
-        <p class="gp-nota" id="gp-nota">${gp.control && gp.control.hayGiro ? '✅ Volante activo: probalo y mirá cómo se mueven las barras.' : 'Tocá "Activar volante" para usar el giroscopio. En una compu: flechas o WASD.'}</p>
+        <p class="gp-nota" id="gp-nota">${gp.control && gp.control.hayGiro ? '✅ Volante activo: probalo y mirá cómo se mueven las barras.' : 'Tocá "Activar volante" para usar el giroscopio. En una compu: flechas o WASD (abajo/S = marcha atrás).'}</p>
         <div class="gp-botones">
           ${gp.control && gp.control.hayGiro ? '' : '<button class="btn btn-ghost" id="gp-activar">🎮 Activar volante</button>'}
           ${yoPiloto || iAmTestHost ? `<button class="btn btn-solid" id="gp-listo" ${yaListo && !iAmTestHost ? 'disabled' : ''}>${yaListo && !iAmTestHost ? '✔ ¡Listo! Esperando...' : '✅ ¡Estoy listo!'}</button>` : '<p class="muted">Entraste con la carrera armada: mirás esta y corrés la próxima.</p>'}
@@ -3429,6 +3440,293 @@ function renderChocadores(round, container, roundKey) {
   if (round.fase === 'calibrar') msg = 'Calibren el volante y toquen "Listo". Arranca cuando estén todos.';
   else if (round.fase === 'largada') msg = 'Atentos al semáforo...';
   else if (round.fase === 'carrera') msg = yoPiloto ? 'Chocá a los rivales, esquivá conos y aceite. ¡Tu equipo suma por vueltas y golpes!' : 'Mirando la carrera...';
+  $('playing-turn-msg').textContent = msg;
+}
+
+// ---------- Ruleta (Noche de Casino) ----------
+// Tres momentos, todos a pantalla completa:
+//   1) apuestas: el paño entero (0 a 36, docenas, columnas y sencillas);
+//   2) giro: la ruleta 3D (public/fx/ruleta3d.js) y la bola que cae;
+//   3) pago: la cámara "baja" al paño (zoom sobre el número), se pagan las
+//      ganadoras y la banca se lleva las perdedoras.
+const RL_ROJOS = new Set([1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]);
+const RL_COLORES_JUG = ['#ffd23f', '#3de6ff', '#ff3d7f', '#3ddc84', '#8b5cff', '#ff9f1c', '#e0637a', '#5b8dd6', '#ffffff', '#b5e48c'];
+let rl = null; // { roundKey, ficha, modo, pendiente, ruleta, serieGiro, serieVista, mesaKey }
+
+function rlColorJugador(id) {
+  const i = ((room.round && room.round.jugadores) || []).findIndex((j) => j.id === id);
+  return RL_COLORES_JUG[Math.max(i, 0) % RL_COLORES_JUG.length];
+}
+const rlFmt = (n) => (n >= 10000 ? `${Math.round(n / 1000)}k` : n >= 1000 ? `${(n / 1000).toFixed(n % 1000 ? 1 : 0)}k` : String(n));
+
+function cerrarRuleta() {
+  const ov = $('rl-overlay');
+  if (ov) ov.remove();
+  if (!rl) return;
+  if (rl.ruleta) rl.ruleta.destruir();
+  clearTimeout(rl.tPago);
+  rl = null;
+}
+
+function rlArmarPano() {
+  // Grilla vertical (para celu): 0 arriba, 12 filas de 3, "2 a 1" abajo;
+  // docenas a la izquierda y apuestas sencillas a la derecha.
+  let html = '<div class="rl-cel rl-cero" data-tipo="pleno" data-n="0" style="grid-column:2/5;grid-row:1"><b>0</b></div>';
+  for (let n = 1; n <= 36; n++) {
+    const fila = Math.ceil(n / 3) + 1; const col = ((n - 1) % 3) + 2;
+    html += `<div class="rl-cel rl-num ${RL_ROJOS.has(n) ? 'rojo' : 'negro'}" data-tipo="pleno" data-n="${n}" style="grid-column:${col};grid-row:${fila}"><b>${n}</b></div>`;
+  }
+  [1, 2, 3].forEach((d) => { html += `<div class="rl-cel rl-afuera rl-docena" data-tipo="docena" data-valor="${d}" style="grid-column:1;grid-row:${(d - 1) * 4 + 2}/span 4"><span>${d}ª 12</span></div>`; });
+  [1, 2, 3].forEach((c) => { html += `<div class="rl-cel rl-afuera rl-columna" data-tipo="columna" data-valor="${c}" style="grid-column:${c + 1};grid-row:14"><span>2 a 1</span></div>`; });
+  const simples = [['falta', '1-18'], ['par', 'PAR'], ['rojo', '<i class="rl-rombo rojo"></i>'], ['negro', '<i class="rl-rombo negro"></i>'], ['impar', 'IMPAR'], ['pasa', '19-36']];
+  simples.forEach(([t, txt], i) => { html += `<div class="rl-cel rl-afuera rl-simple" data-tipo="${t}" style="grid-column:5;grid-row:${i * 2 + 2}/span 2"><span>${txt}</span></div>`; });
+  return html;
+}
+
+// Dónde se dibuja la ficha de cada apuesta (centro del lugar en el paño).
+function rlLugar(grilla, ap) {
+  const base = grilla.getBoundingClientRect();
+  const celda = (sel) => { const el = grilla.querySelector(sel); return el ? el.getBoundingClientRect() : null; };
+  const centro = (r) => ({ x: r.left + r.width / 2 - base.left, y: r.top + r.height / 2 - base.top });
+  const num = (n) => celda(`.rl-cel[data-n="${n}"]`);
+  if (ap.tipo === 'pleno') { const r = num(ap.nums[0]); return r && centro(r); }
+  if (['docena', 'columna'].includes(ap.tipo)) { const r = celda(`.rl-cel[data-tipo="${ap.tipo}"][data-valor="${ap.clave.split(':')[1]}"]`); return r && centro(r); }
+  if (['rojo', 'negro', 'par', 'impar', 'falta', 'pasa'].includes(ap.tipo)) { const r = celda(`.rl-cel[data-tipo="${ap.tipo}"]`); return r && centro(r); }
+  // Caballo, calle y cuadro: entre los números que cubre.
+  const rects = ap.nums.map(num).filter(Boolean);
+  if (!rects.length) return null;
+  const cs = rects.map(centro);
+  const p = { x: cs.reduce((a, c) => a + c.x, 0) / cs.length, y: cs.reduce((a, c) => a + c.y, 0) / cs.length };
+  if (ap.tipo === 'calle') p.x = rects[0].left - base.left; // sobre la línea del costado
+  return p;
+}
+
+function rlDibujarFichas(round, capa, grilla, { pago = null } = {}) {
+  capa.innerHTML = '';
+  (round.mesa || []).forEach((ap) => {
+    const p = rlLugar(grilla, ap);
+    if (!p) return;
+    const mio = ap.de[myId] || 0;
+    const otros = Object.keys(ap.de).filter((id) => id !== myId);
+    const el = document.createElement('div');
+    const gana = pago !== null && ap.nums.includes(pago);
+    el.className = `rl-ficha${mio ? ' mia' : ''}${pago !== null ? (gana ? ' gana' : ' pierde') : ''}`;
+    el.style.left = `${p.x}px`;
+    el.style.top = `${p.y}px`;
+    el.style.setProperty('--c', mio ? '#ffd23f' : rlColorJugador(otros[0]));
+    el.innerHTML = `<b>${rlFmt(mio || ap.total)}</b>${otros.length && mio ? `<i>+${otros.length}</i>` : ''}`;
+    el.title = Object.entries(ap.de).map(([id, m]) => `${(round.jugadores.find((j) => j.id === id) || {}).name}: ${m}`).join(' · ');
+    capa.appendChild(el);
+  });
+}
+
+function rlApuestaDesdeToque(cel) {
+  const tipo = cel.dataset.tipo;
+  if (tipo !== 'pleno') return { tipo, valor: Number(cel.dataset.valor) };
+  const n = Number(cel.dataset.n);
+  if (rl.modo === 'pleno' || n === 0) {
+    if (n === 0 && rl.modo === 'caballo' && rl.pendiente) return null;
+    return { tipo: 'pleno', nums: [n] };
+  }
+  if (rl.modo === 'calle') return { tipo: 'calle', valor: Math.ceil(n / 3) };
+  if (rl.modo === 'cuadro') {
+    let v = ((n - 1) % 3) + 1 === 3 ? n - 1 : n;
+    if (Math.ceil(v / 3) === 12) v -= 3;
+    return { tipo: 'cuadro', valor: v };
+  }
+  return null; // caballo: se arma con dos toques
+}
+
+function renderRuleta(round, container, roundKey) {
+  const iAmHost = myId === room.hostId;
+  const yo = (round.jugadores || []).find((j) => j.id === myId);
+  if (!rl || rl.roundKey !== roundKey || !$('rl-overlay')) {
+    cerrarRuleta();
+    rl = { roundKey, ficha: (round.fichas || [25])[2] || 25, modo: 'pleno', pendiente: null };
+    // El paño va directo en <body>: dentro del juego, las animaciones de la
+    // pantalla hacen que "position: fixed" no cubra toda la pantalla.
+    container.innerHTML = '<div class="rl-lugar"></div>';
+    const cont = document.createElement('div');
+    document.body.appendChild(cont);
+    cont.outerHTML = `
+      <div class="rl-overlay" id="rl-overlay">
+        <header class="rl-head">
+          <div class="rl-saldo"><small>Tus fichas</small><b id="rl-saldo">—</b></div>
+          <div class="rl-centro"><span id="rl-tirada"></span><div class="rl-hist" id="rl-hist"></div></div>
+          <div class="rl-tiempo"><b id="rl-seg"></b><small id="rl-estado"></small></div>
+          <div class="rl-barra"><i id="rl-barra"></i></div>
+        </header>
+        <div class="rl-cuerpo" id="rl-cuerpo">
+          <div class="rl-zoom" id="rl-zoom"><div class="rl-pano" id="rl-pano">${rlArmarPano()}</div><div class="rl-capa" id="rl-capa"></div></div>
+          <div class="rl-rueda hidden" id="rl-rueda"><div class="rl-numero" id="rl-numero"></div></div>
+          <div class="rl-resultados hidden" id="rl-resultados"></div>
+        </div>
+        <footer class="rl-pie" id="rl-pie">
+          <div class="rl-modos" id="rl-modos">
+            ${[['pleno', 'Pleno'], ['caballo', 'Caballo'], ['calle', 'Calle'], ['cuadro', 'Cuadro']].map(([m, t]) => `<button data-modo="${m}" class="${m === 'pleno' ? 'on' : ''}">${t}</button>`).join('')}
+          </div>
+          <div class="rl-fichas" id="rl-fichas">
+            ${(round.fichas || []).map((f) => `<button class="rl-fichabtn v${f}${f === rl.ficha ? ' on' : ''}" data-f="${f}">${rlFmt(f)}</button>`).join('')}
+          </div>
+          <div class="rl-acciones">
+            <button id="rl-deshacer" title="Deshacer">↩</button>
+            <button id="rl-limpiar" title="Sacar todo">🗑</button>
+            <button id="rl-repetir" title="Repetir la anterior">🔁</button>
+            <button id="rl-listo" class="rl-listo">✅ Listo</button>
+            ${iAmHost ? '<button id="rl-novamas" class="rl-novamas">¡No va más!</button>' : ''}
+          </div>
+        </footer>
+      </div>`;
+    // Toques en el paño
+    $('rl-pano').addEventListener('click', (e) => {
+      const cel = e.target.closest('.rl-cel');
+      if (!cel || !room.round || room.round.fase !== 'apuestas') return;
+      const ap = rlApuestaDesdeToque(cel);
+      if (ap) {
+        socket.emit('submit-answer', { apostar: ap, monto: rl.ficha });
+        if (window.Sfx) Sfx.play('pop');
+        rl.pendiente = null;
+        $('rl-pano').querySelectorAll('.pendiente').forEach((x) => x.classList.remove('pendiente'));
+        return;
+      }
+      // Caballo: primer toque marca, segundo (vecino) apuesta.
+      const n = Number(cel.dataset.n);
+      if (rl.pendiente === null || rl.pendiente === n) {
+        rl.pendiente = rl.pendiente === n ? null : n;
+        cel.classList.toggle('pendiente', rl.pendiente === n);
+        return;
+      }
+      const par = [rl.pendiente, n].sort((a, b) => a - b);
+      $('rl-pano').querySelectorAll('.pendiente').forEach((x) => x.classList.remove('pendiente'));
+      rl.pendiente = null;
+      socket.emit('submit-answer', { apostar: { tipo: 'caballo', nums: par }, monto: rl.ficha });
+    });
+    $('rl-modos').addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      rl.modo = b.dataset.modo; rl.pendiente = null;
+      $('rl-modos').querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b));
+      $('rl-pano').querySelectorAll('.pendiente').forEach((x) => x.classList.remove('pendiente'));
+      $('rl-pano').dataset.modo = rl.modo;
+    });
+    $('rl-fichas').addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      rl.ficha = Number(b.dataset.f);
+      $('rl-fichas').querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b));
+    });
+    $('rl-deshacer').addEventListener('click', () => socket.emit('submit-answer', { quitar: true }));
+    $('rl-limpiar').addEventListener('click', () => socket.emit('submit-answer', { limpiar: true }));
+    $('rl-repetir').addEventListener('click', () => socket.emit('submit-answer', { repetir: true }));
+    $('rl-listo').addEventListener('click', () => socket.emit('submit-answer', { listo: true }));
+    const nvm = $('rl-novamas');
+    if (nvm) nvm.addEventListener('click', () => socket.emit('judge-word', { cerrar: true }));
+    window.addEventListener('resize', () => { if (rl && room && room.round && room.round.type === 'ruleta') { rl.mesaKey = null; renderRuleta(room.round, container, roundKey); } });
+  }
+
+  // Cabecera: saldo, tirada, historial, tiempo
+  $('rl-saldo').textContent = yo ? yo.saldo.toLocaleString('es-AR') : '—';
+  $('rl-tirada').textContent = `Tirada ${round.number} de ${round.total}`;
+  $('rl-hist').innerHTML = (round.historial || []).slice(0, 8).map((n) => `<span class="${n === 0 ? 'verde' : RL_ROJOS.has(n) ? 'rojo' : 'negro'}">${n}</span>`).join('');
+  $('rl-seg').textContent = round.fase === 'apuestas' ? round.segundos : '';
+  $('rl-estado').textContent = round.fase === 'apuestas' ? `apostado ${yo ? yo.apostado : 0}` : round.fase === 'giro' ? '¡No va más!' : 'pagando';
+  $('rl-barra').style.width = round.fase === 'apuestas' ? `${(round.segundos / round.segundosApuestas) * 100}%` : '0%';
+  $('rl-barra').classList.toggle('poco', round.fase === 'apuestas' && round.segundos <= 5);
+  const ov = $('rl-overlay');
+  ov.dataset.fase = round.fase;
+
+  const pano = $('rl-pano'); const capa = $('rl-capa'); const zoom = $('rl-zoom');
+  const rueda = $('rl-rueda'); const res = $('rl-resultados');
+
+  if (round.fase === 'apuestas') {
+    rueda.classList.add('hidden');
+    res.classList.add('hidden');
+    zoom.classList.remove('hidden', 'acercar');
+    zoom.style.transformOrigin = '';
+    pano.querySelectorAll('.ganador').forEach((x) => x.classList.remove('ganador'));
+    const mesaKey = `${round.serie}|${JSON.stringify(round.mesa)}`;
+    if (rl.mesaKey !== mesaKey) { rl.mesaKey = mesaKey; requestAnimationFrame(() => rlDibujarFichas(round, capa, pano)); }
+    $('rl-pie').classList.toggle('hidden', !yo);
+    $('rl-listo').textContent = yo && yo.listo ? '✔ Listo' : '✅ Listo';
+    $('rl-listo').disabled = !!(yo && yo.listo);
+    $('rl-repetir').disabled = !(yo && yo.puedeRepetir);
+    if (rl.serieVista !== round.serie) {
+      rl.serieVista = round.serie;
+      if (window.Sfx) Sfx.play('turno');
+    }
+  } else if (round.fase === 'giro') {
+    $('rl-pie').classList.add('hidden');
+    zoom.classList.add('hidden');
+    res.classList.add('hidden');
+    rueda.classList.remove('hidden');
+    const num = $('rl-numero');
+    if (rl.serieGiro !== round.serie) {
+      rl.serieGiro = round.serie;
+      num.className = 'rl-numero';
+      num.textContent = '';
+      if (window.Sfx) Sfx.play('redoble');
+      import('./fx/ruleta3d.js').then((mod) => {
+        if (!rl || rl.roundKey !== roundKey) return;
+        if (!rl.ruleta) rl.ruleta = mod.crearRuleta(rueda);
+        const n = round.numero;
+        const tarde = round.segundos < 4; // entró tarde: se muestra sin animación
+        const anunciar = () => {
+          num.textContent = `${n} ${n === 0 ? 'VERDE' : RL_ROJOS.has(n) ? 'ROJO' : 'NEGRO'}`;
+          num.className = `rl-numero mostrar ${n === 0 ? 'verde' : RL_ROJOS.has(n) ? 'rojo' : 'negro'}`;
+          if (window.Sfx) Sfx.play('acierto');
+        };
+        if (tarde) { rl.ruleta.mostrar(n); anunciar(); } else rl.ruleta.girar(n, 7000, anunciar);
+      }).catch(() => { num.textContent = String(round.numero); num.className = 'rl-numero mostrar'; });
+    }
+  } else if (round.fase === 'pago') {
+    rueda.classList.add('hidden');
+    $('rl-pie').classList.add('hidden');
+    zoom.classList.remove('hidden');
+    const n = round.numero;
+    const clave = `pago-${round.serie}`;
+    if (rl.pagoVisto !== clave) {
+      rl.pagoVisto = clave;
+      res.classList.add('hidden');
+      // Acercamiento al paño: zoom sobre el número ganador.
+      pano.querySelectorAll('.ganador').forEach((x) => x.classList.remove('ganador'));
+      const celGan = pano.querySelector(`.rl-cel[data-n="${n}"]`);
+      if (celGan) celGan.classList.add('ganador');
+      requestAnimationFrame(() => {
+        rlDibujarFichas(round, capa, pano, { pago: n });
+        if (celGan) {
+          const z = zoom.getBoundingClientRect(); const c = celGan.getBoundingClientRect();
+          zoom.style.transformOrigin = `${c.left + c.width / 2 - z.left}px ${c.top + c.height / 2 - z.top}px`;
+        }
+        zoom.classList.remove('acercar');
+        void zoom.offsetWidth;
+        zoom.classList.add('acercar');
+      });
+      // Después del zoom: la banca levanta lo perdido y paga lo ganado.
+      clearTimeout(rl.tPago);
+      rl.tPago = setTimeout(() => {
+        if (!rl) return;
+        capa.querySelectorAll('.rl-ficha.pierde').forEach((f) => f.classList.add('retirar'));
+        capa.querySelectorAll('.rl-ficha.gana').forEach((f) => f.classList.add('cobrar'));
+        const mio = yo && yo.resultado;
+        if (window.Sfx) Sfx.play(mio && mio.neto > 0 ? 'fanfarria' : 'whoosh');
+        if (mio && mio.ganado > 0) confetti(1.5);
+        rl.tPago = setTimeout(() => {
+          if (!rl || !room.round || room.round.fase !== 'pago') return;
+          const filas = [...room.round.jugadores].sort((a, b) => ((b.resultado || {}).neto || 0) - ((a.resultado || {}).neto || 0)).map((j) => {
+            const r = j.resultado || { neto: 0, apostado: 0 };
+            return `<div class="rl-res${j.id === myId ? ' yo' : ''}" style="--c:${rlColorJugador(j.id)}"><span>${esc(j.name)}</span><span class="${r.neto > 0 ? 'mas' : r.neto < 0 ? 'menos' : ''}">${r.neto > 0 ? '+' : ''}${r.neto.toLocaleString('es-AR')}</span><b>${j.saldo.toLocaleString('es-AR')}</b></div>`;
+          }).join('');
+          res.innerHTML = `<h3><span class="rl-bola ${n === 0 ? 'verde' : RL_ROJOS.has(n) ? 'rojo' : 'negro'}">${n}</span> Resultado de la tirada</h3>
+            <div class="rl-res cab"><span>Jugador</span><span>Esta tirada</span><b>Fichas</b></div>${filas}
+            ${myId === room.hostId ? `<button class="btn btn-solid" id="rl-siguiente">${round.number >= round.total ? 'Ver ganador ▶' : 'Próxima tirada ▶'}</button>` : ''}`;
+          res.classList.remove('hidden');
+          const sig = $('rl-siguiente');
+          if (sig) sig.addEventListener('click', () => socket.emit('judge-word', { siguiente: true }));
+        }, 1500);
+      }, 2200);
+    }
+  }
+
+  let msg = '';
+  if (round.fase === 'apuestas') msg = yo ? (rl.modo === 'caballo' ? 'Caballo: tocá dos números vecinos.' : 'Elegí una ficha y tocá el paño para apostar.') : 'Mirás la mesa (entraste con el juego empezado).';
   $('playing-turn-msg').textContent = msg;
 }
 
@@ -3800,10 +4098,11 @@ function renderPlaying() {
   }
 
   // Verdadero o Falso (todos a la vez) y La Torre (escena 3D): flujos propios.
-  if (['verdadero-falso', 'torre', 'aguante', 'casita-robada', 'chocadores'].includes(round.type)) {
+  if (['verdadero-falso', 'torre', 'aguante', 'casita-robada', 'chocadores', 'ruleta'].includes(round.type)) {
     $('btn-pasapalabra').classList.add('hidden');
     $('playing-options').innerHTML = '';
     if (round.type === 'chocadores') { renderChocadores(round, container, roundKey); applyGameIdentity(round); return; }
+    if (round.type === 'ruleta') { renderRuleta(round, container, roundKey); applyGameIdentity(round); return; }
     if (round.type === 'verdadero-falso') renderVerdaderoFalso(round, container, roundKey);
     else if (round.type === 'casita-robada') renderCasitaRobada(round, container, roundKey);
     else if (round.type === 'aguante') renderAguante(round, container, roundKey);
@@ -4001,6 +4300,7 @@ $('btn-back-home').addEventListener('click', () => {
   aguanteBuiltFor = null;
   casitaBuiltFor = null;
   cerrarCarrera();
+  cerrarRuleta();
   limpiarAguante();
   cerrarTorre();
   sopaBuiltFor = null;
@@ -4025,6 +4325,7 @@ function render() {
   // La escena 3D de La Torre se apaga apenas se deja de jugar ese juego.
   if (torreBuiltFor && (room.phase !== 'playing' || !room.round || room.round.type !== 'torre')) cerrarTorre();
   if (gp && (room.phase !== 'playing' || !room.round || room.round.type !== 'chocadores')) cerrarCarrera();
+  if (rl && (room.phase !== 'playing' || !room.round || room.round.type !== 'ruleta')) cerrarRuleta();
   if (aguanteBuiltFor && (room.phase !== 'playing' || !room.round || room.round.type !== 'aguante')) { limpiarAguante(); aguanteBuiltFor = null; }
 
   $('room-code-badge').textContent = room.code;

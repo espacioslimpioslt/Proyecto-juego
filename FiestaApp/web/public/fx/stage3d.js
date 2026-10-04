@@ -274,6 +274,45 @@ function armarGranPremio() {
   return grupo;
 }
 
+// Noche de Casino: una ruleta girando con la bola dando vueltas al revés.
+function armarCasino() {
+  const grupo = new THREE.Group();
+  const c = document.createElement('canvas');
+  c.width = c.height = 512;
+  const g = c.getContext('2d');
+  const orden = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+  const paso = (Math.PI * 2) / 37;
+  orden.forEach((n, i) => {
+    g.beginPath(); g.moveTo(256, 256); g.arc(256, 256, 250, i * paso - paso / 2, i * paso + paso / 2); g.closePath();
+    g.fillStyle = n === 0 ? '#0f8a3c' : i % 2 ? '#c2182b' : '#141414'; g.fill();
+    g.strokeStyle = '#d9b45a'; g.lineWidth = 2; g.stroke();
+  });
+  g.beginPath(); g.arc(256, 256, 150, 0, Math.PI * 2); g.fillStyle = '#6b3417'; g.fill();
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const plato = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 0.12, 64), [
+    new THREE.MeshStandardMaterial({ color: 0x5a2a12 }), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.4 }), new THREE.MeshStandardMaterial({ color: 0x5a2a12 })
+  ]);
+  const aro = new THREE.Mesh(new THREE.TorusGeometry(1.75, 0.18, 12, 64), new THREE.MeshStandardMaterial({ color: 0x5a2a12, roughness: 0.4 }));
+  aro.rotation.x = Math.PI / 2;
+  const torreta = new THREE.Mesh(new THREE.ConeGeometry(0.25, 0.5, 24), new THREE.MeshStandardMaterial({ color: 0xd9b45a, metalness: 0.9, roughness: 0.2 }));
+  torreta.position.y = 0.3;
+  const bola = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 12), new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x666666 }));
+  const rueda = new THREE.Group();
+  rueda.add(plato, torreta);
+  grupo.add(rueda, aro, bola, halo(COLORES.ambar, 4.5));
+  grupo.rotation.x = 0.75;
+  grupo.position.y = -0.3;
+  grupo.userData.update = (t) => {
+    rueda.rotation.y = t * 0.8;
+    const ciclo = (t % 6) / 6;
+    const r = ciclo < 0.7 ? 1.55 : 1.55 - (ciclo - 0.7) * 1.2;
+    const ang = -t * 3.2;
+    bola.position.set(Math.cos(ang) * r, 0.12, Math.sin(ang) * r);
+  };
+  return grupo;
+}
+
 function armarGenerico() {
   const grupo = new THREE.Group();
   const signo = new THREE.Mesh(
@@ -289,7 +328,8 @@ const PIEZAS = {
   'el-rosco': armarRosco,
   'ahora-caigo': armarAhoraCaigo,
   varios: armarImpostor,
-  'gran-premio': armarGranPremio
+  'gran-premio': armarGranPremio,
+  casino: armarCasino
 };
 
 // ---------- El estudio ----------

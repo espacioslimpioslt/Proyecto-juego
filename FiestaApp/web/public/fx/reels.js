@@ -58,6 +58,14 @@
     </div>`;
   }
 
+  // Noche de Casino: la ruleta girando, la bola cayendo y fichas en el paño.
+  function reelCasino() {
+    return `<div class="reel reel-casino">
+      <div class="rc-rueda"><span class="rc-bola"></span></div>
+      <div class="rc-fichas"><i></i><i></i><i></i></div>
+    </div>`;
+  }
+
   // Programas que todavía no existen: el ícono flotando con un brillo que
   // pasa, para que la galería no se vea muerta.
   function reelProximo(icon) {
@@ -72,7 +80,8 @@
     'el-rosco': reelRosco,
     'ahora-caigo': reelAhoraCaigo,
     varios: reelImpostor,
-    'gran-premio': reelGranPremio
+    'gran-premio': reelGranPremio,
+    casino: reelCasino
   };
 
   function reelHtml(program) {
