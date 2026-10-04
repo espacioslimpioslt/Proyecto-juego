@@ -1,0 +1,12 @@
+{
+  "id": "casino",
+  "name": "Noche de Casino",
+  "tagline": "Ruleta en 3D con fichas para todos: gana el que más junta.",
+  "description": "Todos arrancan con 1.000 fichas (de juego, no hay plata de verdad). En cada tirada hay un tiempo para apostar en el paño: plenos, caballos, calles, cuadros, docenas, columnas, rojo o negro... Después gira la ruleta en 3D, la cámara baja al paño y la banca paga a los ganadores y se lleva lo de los perdedores. Al final de todas las tiradas gana el que más fichas tiene (con equipos, la suma del equipo).",
+  "minPlayers": 2,
+  "maxPlayers": 10,
+  "supportsTeams": true,
+  "games": ["ruleta"],
+  "rondasSegunCantidad": { "3": 1, "6": 1, "9": 1 },
+  "nombreRonda": ["mesa", "mesas"]
+}

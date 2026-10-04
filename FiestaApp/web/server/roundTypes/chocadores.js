@@ -104,7 +104,7 @@ function createRound({ entrantIds, rosters = {}, difficulty, opciones: elegidas 
   const listas = entrantIds.map((id) => (rosters[id] || []).map((p) => ({ id: p.id, name: p.name, entrant: id })));
   const max = Math.max(0, ...listas.map((l) => l.length));
   const pilotos = [];
-  for (let i = 0; i < max; i++) listas.forEach((l) => { if (l[i]) pilotos.push(l[i]); });
+  for (let i = 0; i < max; i++) listas.forEach((l) => { if (l[i]) pilotos.push({ ...l[i], name: l[i].name || 'Jugador' }); });
   pilotos.forEach((p, i) => { p.grilla = i; });
   return {
     gameType: type,
@@ -258,6 +258,15 @@ function posiciones(state) {
 }
 
 function onRosterChange(state, rosters) {
+  // Si alguien vuelve (se le cortó justo al armar la carrera) o se suma a un
+  // equipo, entra a correr con el próximo lugar de la grilla.
+  Object.entries(rosters).forEach(([entrant, lista]) => {
+    if (!state.entrants[entrant]) return;
+    lista.forEach((p) => {
+      if (state.pilotos.some((x) => x.id === p.id)) return;
+      state.pilotos.push({ id: p.id, name: p.name || 'Jugador', entrant, grilla: state.pilotos.length });
+    });
+  });
   // Si alguien se va, su auto deja de estar en la pista.
   const siguen = new Set(Object.values(rosters).flat().map((p) => p.id));
   Object.keys(state.autos).forEach((id) => { if (!siguen.has(id)) delete state.autos[id]; });

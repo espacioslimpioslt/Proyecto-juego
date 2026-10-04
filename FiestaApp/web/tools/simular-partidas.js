@@ -71,6 +71,14 @@ function candidates(room, sockets) {
         break;
       case 'verdadero-falso':
         sub(s, { verdadero: Math.random() < 0.5 }); break;
+      case 'ruleta': {
+        if (st.fase === 'apuestas') {
+          const tipos = [{ tipo: 'pleno', nums: [R(37)] }, { tipo: pick(['rojo', 'negro', 'par', 'impar', 'falta', 'pasa']) }, { tipo: 'docena', valor: 1 + R(4) }, { tipo: 'columna', valor: 1 + R(3) }, { tipo: 'caballo', nums: [R(37), R(37)] }, { tipo: 'cuadro', valor: R(34) }, { tipo: 'calle', valor: R(14) }];
+          sub(s, { apostar: pick(tipos), monto: pick([5, 10, 25, 100, 500, 7]) });
+          if (Math.random() < 0.2) sub(s, pick([{ quitar: true }, { limpiar: true }, { repetir: true }, { listo: true }]));
+        }
+        break;
+      }
       case 'chocadores': {
         if (st.fase === 'calibrar') sub(s, { listo: true });
         if (st.fase === 'largada' || st.fase === 'carrera') {
@@ -124,6 +132,7 @@ function candidates(room, sockets) {
   if (t === 'encuesta' && Math.random() < 0.05) jud(st.fase === 'resultado' ? { siguiente: true } : { revelar: R(6) });
   if (t === 'caja-fuerte' && Math.random() < 0.05) jud({ siguiente: true });
   if ((t === 'verdadero-falso' || t === 'torre' || t === 'aguante') && Math.random() < 0.05) jud({ siguiente: true });
+  if (t === 'ruleta' && Math.random() < 0.03) jud(pick([{ cerrar: true }, { siguiente: true }]));
   if (t === 'chocadores' && Math.random() < 0.02) jud(pick([{ largar: true }, { siguiente: true }]));
   if (t === 'impostor' && Math.random() < 0.05) jud(pick([{ saltarTurno: true }, { cerrarVotacion: true }, { siguienteCaso: true }]));
   if (t === 'adivina-la-cancion') { jud({ ok: Math.random() < 0.5 }); if (Math.random() < 0.1) jud({ skip: true }); }
@@ -220,7 +229,7 @@ function play({ programId, difficulty, players = 4, disconnectAt = null, label }
 
 const results = [];
 const N = Number(process.argv[2] || 15);
-for (const programId of ['el-rosco', 'ahora-caigo', 'varios', 'gran-premio']) {
+for (const programId of ['el-rosco', 'ahora-caigo', 'varios', 'gran-premio', 'casino']) {
   for (const difficulty of ['facil', 'normal', 'dificil']) {
     for (let i = 0; i < N; i++) {
       // Varios incluye El Impostor, que necesita al menos 3 personas.

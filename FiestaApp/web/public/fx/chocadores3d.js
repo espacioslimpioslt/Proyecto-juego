@@ -65,9 +65,11 @@ export function crearControl() {
     const ang = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
     c.apaisado = Math.abs(ang) === 90;
     c.beta = e.beta; c.gamma = e.gamma || 0;
-    // Celu en vertical: beta = inclinación hacia atrás (0 = plano), gamma = ladeo.
-    const pitch = Math.max(0, Math.min(90, e.beta));
-    const a = Math.max(0, Math.min(1, (pitch - 5) / 40));
+    // Celu en vertical: beta = inclinación (0 = plano), gamma = ladeo.
+    // Levantar la parte de arriba (beta positivo) acelera: a 45° es a fondo.
+    // Levantar la parte de abajo (beta negativo) es marcha atrás.
+    const pitch = Math.max(-60, Math.min(90, e.beta));
+    const a = pitch >= 0 ? Math.max(0, Math.min(1, (pitch - 5) / 40)) : -Math.max(0, Math.min(1, (-pitch - 5) / 30));
     let g = Math.max(-40, Math.min(40, c.gamma));
     g = Math.abs(g) < 4 ? 0 : (g - Math.sign(g) * 4) / 28;
     suaveA += (a - suaveA) * 0.35;
@@ -82,7 +84,7 @@ export function crearControl() {
   c.leer = () => {
     const t = c.teclas;
     if (t.size) {
-      const acel = t.has('arrowup') || t.has('w') ? 1 : 0;
+      const acel = t.has('arrowup') || t.has('w') ? 1 : t.has('arrowdown') || t.has('s') ? -1 : 0;
       const giro = (t.has('arrowright') || t.has('d') ? 1 : 0) - (t.has('arrowleft') || t.has('a') ? 1 : 0);
       return { acel, giro };
     }
@@ -256,12 +258,14 @@ export function crearCarrera(contenedor, opts) {
 
   // Autos
   const autos = new Map(); // id -> { grupo, red: {...}, vis: {x,z,a} }
-  pilotos.forEach((p) => {
-    const g = armarAuto(colorDe(p.entrant), p.name);
+  function sumarAuto(p) {
+    if (autos.has(p.id)) return;
+    const g = armarAuto(colorDe(p.entrant), p.name || 'Jugador');
     scene.add(g);
     autos.set(p.id, { piloto: p, grupo: g, red: null, vis: null });
-  });
-  const yo = pilotos.find((p) => p.id === miId) || null;
+  }
+  pilotos.forEach(sumarAuto);
+  let yo = pilotos.find((p) => p.id === miId) || null;
 
   // Mi auto (física local)
   const mio = { x: 0, z: 0, a: 0, vx: 0, vz: 0, giro: 0, aceite: 0, turbo: 0, acum: 0, sPrev: 0, vueltas: 0 };
@@ -313,7 +317,8 @@ export function crearCarrera(contenedor, opts) {
       mio.vx *= 1 - Math.min(1, 1.6 * dt);
       mio.vz *= 1 - Math.min(1, 1.6 * dt);
     } else {
-      const objetivo = limite * acel;
+      // Para adelante, hasta la velocidad máxima; marcha atrás, más despacio.
+      const objetivo = acel >= 0 ? limite * acel : velMax * 0.45 * acel;
       if (vF < objetivo) vF = Math.min(objetivo, vF + (mio.turbo > 0 ? 40 : 16) * dt);
       else vF = Math.max(objetivo, vF - 26 * dt);
       const agarre = mio.aceite > 0 ? 0.6 : 7;
@@ -476,6 +481,15 @@ export function crearCarrera(contenedor, opts) {
     // Estado del auto propio (lo usan las pruebas automáticas).
     propio: () => ({ ...mio }),
     geo,
+    // Pilotos que se suman o vuelven después de armada la carrera (se cortó
+    // la conexión justo al largar, por ejemplo): su auto aparece sin
+    // reiniciar a los demás.
+    actualizarPilotos(lista) {
+      (lista || []).forEach((p) => {
+        sumarAuto(p);
+        if (p.id === miId && !yo) { yo = p; aLaGrilla(); }
+      });
+    },
     setFase(nueva) {
       if (nueva === fase) return;
       if (nueva === 'largada' || (nueva === 'calibrar')) aLaGrilla();
