@@ -71,6 +71,15 @@ function candidates(room, sockets) {
         break;
       case 'verdadero-falso':
         sub(s, { verdadero: Math.random() < 0.5 }); break;
+      case 'casita-robada': {
+        const mano = st.manos[st.turnoDe] || [];
+        const c = pick(mano.length ? mano : [{ id: 'x' }]);
+        const rival = Object.entries(st.casitas).find(([id, k]) => k.length && k[k.length - 1].n === c.n);
+        if (rival && Math.random() < 0.8) sub(s, { carta: c.id, accion: 'robar', a: rival[0] });
+        else if (st.mesa.some((m) => m.n === c.n)) sub(s, { carta: c.id, accion: 'mesa' });
+        else sub(s, { carta: c.id, accion: pick(['tirar', 'mesa', 'robar']), a: pick(Object.keys(st.casitas)) });
+        break;
+      }
       case 'aguante':
         if (st.fase === 'luces') sub(s, Math.random() < 0.15 ? { falsa: true } : { ms: 150 + Math.floor(Math.random() * 400), serie: st.serie });
         break;
@@ -115,7 +124,7 @@ function play({ programId, difficulty, players = 4, disconnectAt = null, label }
   const room = rooms.createRoom(ids[0], 'Host', programId, { difficulty });
   ids.slice(1).forEach((id, i) => rooms.joinRoom(room.code, id, 'P' + (i + 1)));
   const cfg = { programId, roundCount: pick([3, 6, 9]), teamsEnabled: true, difficulty, baseTimeSeconds: 90 };
-  if (programId === 'varios') cfg.selectedGames = ['impostor', 'encuesta', 'caja-fuerte', 'verdadero-falso', 'torre', 'aguante', 'mimica', 'adivina-la-cancion', 'la-cadena', 'palabra-prohibida'];
+  if (programId === 'varios') cfg.selectedGames = ['impostor', 'encuesta', 'caja-fuerte', 'verdadero-falso', 'torre', 'aguante', 'casita-robada', 'mimica', 'adivina-la-cancion', 'la-cadena', 'palabra-prohibida'];
   // Formato de un toque, o personalizada con ajustes y reloj al azar.
   if (Math.random() < 0.3) {
     cfg.formato = pick(['rapida', 'clasica', 'maraton', 'familia', 'desafio']);
