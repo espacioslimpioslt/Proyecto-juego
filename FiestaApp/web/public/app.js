@@ -151,7 +151,6 @@ function narrate(key, text) {
 // al tocarlos, solo muestran que la galería sigue creciendo.
 const UPCOMING = [
   { icon: '💰', name: 'Comodines', tagline: 'Trivia con ayudas para arriesgar todo o guardar lo ganado.', categories: ['familia', 'amigos'] },
-  { icon: '🔒', name: 'La Caja Fuerte', tagline: 'Puro riesgo: elegís cajas y el juego te ofrece un trato.', categories: ['familia', 'ninos'] },
   { icon: '🔡', name: 'La Ruleta de Letras', tagline: 'Adiviná la frase oculta, letra por letra.', categories: ['familia', 'pareja'] },
   { icon: '⛓️', name: 'La Cadena', tagline: 'Trivia en equipo con un banco que se vota entre todos.', categories: ['amigos'] },
   { icon: '🎤', name: 'A Toda Voz', tagline: 'Karaoke con puntaje por afinación o jurado en vivo.', categories: ['amigos', 'pareja'] },
@@ -165,15 +164,17 @@ const UPCOMING = [
 const REAL_CATEGORIES = {
   'el-rosco': ['cartelera', 'familia', 'amigos'],
   'ahora-caigo': ['cartelera', 'familia', 'amigos'],
-  varios: ['cartelera', 'amigos', 'pareja']
+  varios: ['cartelera', 'amigos', 'pareja'],
+  'gran-premio': ['cartelera', 'amigos', 'familia', 'ninos']
 };
-const REAL_ICONS = { 'el-rosco': '🎡', 'ahora-caigo': '🗼', varios: '🕵️' };
+const REAL_ICONS = { 'el-rosco': '🎡', 'ahora-caigo': '🗼', varios: '🕵️', 'gran-premio': '🏎️' };
 
 // Color propio de cada Programa (portada, escenario y botones).
 const PROGRAM_THEME = {
   'el-rosco': ['#ffb23f', '#ff6b3d'],
   'ahora-caigo': ['#3de6ff', '#5b8dd6'],
-  varios: ['#ff3d7f', '#8b5cff']
+  varios: ['#ff3d7f', '#8b5cff'],
+  'gran-premio': ['#ff4d5e', '#3de6ff']
 };
 function themeFor(id) { return PROGRAM_THEME[id] || ['#8b5cff', '#3de6ff']; }
 
@@ -711,6 +712,14 @@ function renderLobby() {
   }
   if (room.programId) select.value = room.programId;
   if (room.roundCount) $('config-rounds').value = String(room.roundCount);
+  // Programas con otra unidad (ej. Gran Premio: 1, 2 o 3 carreras).
+  const mapaRondas = room.rondasSegunCantidad;
+  const [uno, varios] = room.nombreRonda || ['prueba', 'pruebas'];
+  [...$('config-rounds').options].forEach((o) => {
+    const n = mapaRondas ? mapaRondas[o.value] : Number(o.value);
+    o.textContent = `${n} ${n === 1 ? uno : varios}`;
+  });
+  $('config-rounds-label').firstChild.textContent = `Cantidad de ${varios} `;
 
   // Programas "pick" (Varios): se tildan los juegos a mano, no se sortea una
   // cantidad, y no hay rosco final que gaste el tiempo base.
@@ -805,7 +814,7 @@ function renderBanks(round) {
     // En el rosco se muestra el reloj; en las pruebas, los segundos ganados.
     const main = esRosco
       ? formatTime(state.timeLeft)
-      : ['impostor', 'encuesta', 'caja-fuerte', 'verdadero-falso', 'torre', 'aguante', 'casita-robada'].includes(round.type) ? `${state.points || 0} pts`
+      : ['impostor', 'encuesta', 'caja-fuerte', 'verdadero-falso', 'torre', 'aguante', 'casita-robada', 'chocadores'].includes(round.type) ? `${state.points || 0} pts`
         : `+${state.secondsWon || 0}s`;
 
     // La Silla muestra las vidas que le quedan al equipo.
@@ -1364,7 +1373,8 @@ const GAME_TYPE_ICONS = {
   'verdadero-falso': '⚡',
   torre: '🧱',
   aguante: '🚦',
-  'casita-robada': '🃏'
+  'casita-robada': '🃏',
+  chocadores: '🏎️'
 };
 
 // ---------- Capa "show" común a todos los juegos ----------
@@ -1391,7 +1401,8 @@ const GAME_THEME = {
   'verdadero-falso': ['#3ddc84', '#ff4d5e'],
   torre: ['#3de6ff', '#8b5cff'],
   aguante: ['#ff4d5e', '#ffb23f'],
-  'casita-robada': ['#ffd23f', '#ff3d7f']
+  'casita-robada': ['#ffd23f', '#ff3d7f'],
+  chocadores: ['#ff4d5e', '#3de6ff']
 };
 const GAME_HOWTO = {
   'rosco-por-turnos': 'Una palabra por letra. Acertás y seguís; errás o pasás y le toca al otro. El reloj corre solo en tu turno.',
@@ -1413,7 +1424,8 @@ const GAME_HOWTO = {
   'verdadero-falso': 'Todos contestan a la vez. Acertar suma 2; el primero en acertar, 1 más.',
   torre: 'Tocá para soltar el bloque. Lo que sobra se corta: ¡apilen la torre más alta!',
   aguante: 'Semáforo de largada: tocá apenas se apaguen las luces. Puntos como en la F1, suman para tu equipo.',
-  'casita-robada': 'Tirá una carta: si hay iguales en la mesa, las levantás; si coincide con la casita rival, ¡se la robás!'
+  'casita-robada': 'Tirá una carta: si hay iguales en la mesa, las levantás; si coincide con la casita rival, ¡se la robás!',
+  chocadores: 'Tu celu es el volante: levantalo para acelerar, ladealo para doblar. ¡Chocá a los rivales y sumá vueltas para tu equipo!'
 };
 function gameTheme(type) { return GAME_THEME[type] || ['#ffb23f', '#ff3d7f']; }
 
@@ -3202,6 +3214,224 @@ function renderCasitaRobada(round, container, roundKey) {
     .forEach((c) => casitaVistas.add(c.id));
 }
 
+// ---------- Autos Chocadores (Gran Premio) ----------
+// La escena y la física viven en public/fx/chocadores3d.js. Acá: la
+// calibración del "volante" (giroscopio), el semáforo, el marcador en vivo,
+// el podio, y el canal rápido de posiciones ('autos').
+let gp = null; // { carrera, control, roundKey, wakeLock }
+let gpCargando = null;
+let gpPuntos = {};
+let gpVistos = new Set();
+
+function cerrarCarrera() {
+  if (!gp) return;
+  if (gp.carrera) gp.carrera.destruir();
+  if (gp.control) gp.control.destruir();
+  if (gp.wakeLock) gp.wakeLock.release().catch(() => {});
+  if (gp.timer) clearInterval(gp.timer);
+  gp = null;
+  $('screen-playing').classList.remove('modo-carrera');
+}
+
+function gpAviso(texto, clase = '') {
+  const el = $('gp-aviso');
+  if (!el) return;
+  el.textContent = texto;
+  el.className = `gp-aviso mostrar ${clase}`;
+  clearTimeout(gpAviso.t);
+  gpAviso.t = setTimeout(() => { el.className = 'gp-aviso'; }, 1400);
+}
+
+socket.on('autos', (pos) => {
+  if (!gp || !gp.carrera) return;
+  gp.carrera.recibir(pos);
+  gpPuntos = pos.puntos || {};
+  const marcador = $('gp-marcador');
+  if (marcador) {
+    marcador.innerHTML = Object.entries(gpPuntos).sort((a, b) => b[1] - a[1])
+      .map(([id, pts]) => `<span style="--team-color:${teamColor(id) || 'var(--accent)'}"><b>${pts}</b> ${esc(entrantLabel(id))}</span>`).join('');
+  }
+  (pos.eventos || []).forEach((ev) => {
+    const clave = `${ev.tipo}-${ev.id}-${ev.t}`;
+    if (gpVistos.has(clave)) return;
+    gpVistos.add(clave);
+    if (ev.tipo === 'golpe' && ev.id === myId) { gpAviso('💥 ¡Golpe! +3', 'bien'); if (window.Sfx) Sfx.play('acierto'); }
+    else if (ev.tipo === 'golpe' && ev.a === myId) { gpAviso('😵 ¡Te chocaron!', 'mal'); if (window.Sfx) Sfx.play('error'); }
+    else if (ev.tipo === 'vuelta' && ev.id === myId) { gpAviso(`🏁 ¡Vuelta ${ev.n}! +10`, 'bien'); if (window.Sfx) Sfx.play('turno'); }
+  });
+});
+
+async function gpPedirWakeLock() {
+  try { if (gp && navigator.wakeLock && !gp.wakeLock) gp.wakeLock = await navigator.wakeLock.request('screen'); } catch (e) { /* sin bloqueo de pantalla */ }
+}
+
+function renderChocadores(round, container, roundKey) {
+  $('screen-playing').classList.add('modo-carrera');
+  const iAmHost = myId === room.hostId;
+  const iAmTestHost = room.testMode && iAmHost;
+  const yoPiloto = (round.pilotos || []).find((p) => p.id === myId);
+
+  if (!gp || gp.roundKey !== roundKey || !$('gp-escena')) {
+    cerrarCarrera();
+    gp = { roundKey };
+    gpVistos = new Set();
+    container.innerHTML = `
+      <div class="gp-escena" id="gp-escena">
+        <div class="gp-hud">
+          <span class="gp-reloj" id="gp-reloj">--:--</span>
+          <div class="gp-marcador" id="gp-marcador"></div>
+          <span class="gp-vueltas" id="gp-vueltas"></span>
+        </div>
+        <div class="gp-semaforo hidden" id="gp-semaforo">${'<i></i>'.repeat(5)}</div>
+        <div class="gp-aviso" id="gp-aviso"></div>
+        <div class="gp-tablero" id="gp-tablero"><div class="gp-vel"><i id="gp-vel"></i></div><div class="gp-dir"><i id="gp-dir"></i></div></div>
+        <div class="gp-panel" id="gp-panel"></div>
+      </div>`;
+    if (!gpCargando) gpCargando = import('./fx/chocadores3d.js');
+    gpCargando.then((mod) => {
+      if (!gp || gp.roundKey !== roundKey || gp.carrera) return;
+      const r = room.round;
+      gp.mod = mod;
+      gp.control = mod.crearControl();
+      try {
+        gp.carrera = mod.crearCarrera($('gp-escena'), {
+          miId: myId,
+          pista: r.pista,
+          obst: r.obst,
+          velMax: r.velMax,
+          choques: r.choques,
+          pilotos: r.pilotos,
+          colorDe: (id) => teamColor(id) || '#ffb23f',
+          control: gp.control,
+          enviar: (d) => socket.volatile.emit('auto', d),
+          golpeado: (id) => socket.emit('auto-golpe', id),
+          aviso: (t) => gpAviso(t),
+          hud: (h) => {
+            const vel = $('gp-vel'); const dir = $('gp-dir');
+            if (vel) vel.style.height = `${Math.round(h.acel * 100)}%`;
+            if (dir) dir.style.left = `${50 + h.giro * 45}%`;
+            const v = $('gp-vueltas');
+            if (v && yoPiloto) v.textContent = `🏁 ${h.vueltas} ${h.vueltas === 1 ? 'vuelta' : 'vueltas'}${h.trompo ? ' · 😵' : h.turbo ? ' · 🚀' : h.aceite ? ' · 🛢️' : ''}`;
+            const med = $('gp-medidor-acel'); if (med) med.style.width = `${Math.round(h.acel * 100)}%`;
+            const g = $('gp-medidor-giro'); if (g) g.style.left = `${50 + h.giro * 45}%`;
+          }
+        });
+        gp.carrera.setFase(room.round.fase);
+      } catch (e) {
+        $('gp-panel').innerHTML = '<p>No se pudo abrir la pista 3D en este celu.</p>';
+      }
+      renderChocadores(room.round, container, roundKey);
+    }).catch(() => { $('gp-panel').innerHTML = '<p>No se pudo cargar la pista.</p>'; });
+  }
+
+  if (gp.carrera) gp.carrera.setFase(round.fase);
+  const reloj = $('gp-reloj');
+  const mm = Math.floor(round.segundos / 60); const ss = String(round.segundos % 60).padStart(2, '0');
+  reloj.textContent = round.fase === 'carrera' ? `${mm}:${ss}` : round.fase === 'calibrar' ? '🎮' : round.fase === 'largada' ? '🚦' : '🏁';
+  reloj.classList.toggle('poco', round.fase === 'carrera' && round.segundos <= 10);
+  if (!Object.keys(gpPuntos).length || round.fase !== 'carrera') {
+    $('gp-marcador').innerHTML = Object.entries(round.entrants).sort((a, b) => b[1].points - a[1].points)
+      .map(([id, e]) => `<span style="--team-color:${teamColor(id) || 'var(--accent)'}"><b>${e.points}</b> ${esc(entrantLabel(id))}</span>`).join('');
+  }
+
+  // Semáforo de largada
+  const sem = $('gp-semaforo');
+  if (round.fase === 'largada') {
+    if (sem.classList.contains('hidden')) {
+      sem.classList.remove('hidden', 'verde');
+      const luces = sem.querySelectorAll('i');
+      luces.forEach((l) => l.classList.remove('on'));
+      luces.forEach((l, i) => setTimeout(() => { l.classList.add('on'); if (window.Sfx) Sfx.play('pop'); }, 300 + i * 650));
+    }
+  } else if (round.fase === 'carrera' && !sem.classList.contains('hidden') && !sem.classList.contains('verde')) {
+    sem.classList.add('verde');
+    sem.querySelectorAll('i').forEach((l) => l.classList.remove('on'));
+    if (window.Sfx) Sfx.play('whoosh');
+    gpAviso('¡YA! 🏁', 'bien');
+    setTimeout(() => sem.classList.add('hidden'), 900);
+  }
+  if (round.fase === 'carrera' || round.fase === 'largada') gpPedirWakeLock();
+
+  // Panel: calibración / podio
+  const panel = $('gp-panel');
+  const panelKey = [round.fase, (round.pilotos || []).map((p) => (p.listo ? 1 : 0)).join(''), !!(gp.control && gp.control.hayGiro)].join('|');
+  if (round.fase === 'calibrar') {
+    if (panel.dataset.key !== panelKey) {
+      panel.dataset.key = panelKey;
+      const listos = (round.pilotos || []).map((p) => `<span class="gp-chip${p.listo ? ' listo' : ''}" style="--team-color:${teamColor(p.entrant) || 'var(--accent)'}">${p.listo ? '✔' : '⏳'} ${esc(p.name)}</span>`).join('');
+      const yaListo = yoPiloto && yoPiloto.listo;
+      panel.className = 'gp-panel calibrar';
+      panel.innerHTML = `
+        <h3>🎮 Tu celu es el volante</h3>
+        <ol class="gp-instr">
+          <li>Sostenelo <b>en vertical</b>, con las dos manos.</li>
+          <li><b>Levantalo hasta 45°</b> para acelerar a fondo. <b>Bajalo hasta quedar plano</b> para frenar.</li>
+          <li><b>Ladealo</b> a la izquierda o a la derecha para doblar.</li>
+        </ol>
+        <div class="gp-medidores">
+          <div class="gp-medidor"><small>Acelerador</small><span><i id="gp-medidor-acel"></i></span></div>
+          <div class="gp-medidor giro"><small>Volante</small><span><i id="gp-medidor-giro"></i></span></div>
+        </div>
+        <p class="gp-nota" id="gp-nota">${gp.control && gp.control.hayGiro ? '✅ Volante activo: probalo y mirá cómo se mueven las barras.' : 'Tocá "Activar volante" para usar el giroscopio. En una compu: flechas o WASD.'}</p>
+        <div class="gp-botones">
+          ${gp.control && gp.control.hayGiro ? '' : '<button class="btn btn-ghost" id="gp-activar">🎮 Activar volante</button>'}
+          ${yoPiloto || iAmTestHost ? `<button class="btn btn-solid" id="gp-listo" ${yaListo && !iAmTestHost ? 'disabled' : ''}>${yaListo && !iAmTestHost ? '✔ ¡Listo! Esperando...' : '✅ ¡Estoy listo!'}</button>` : '<p class="muted">Entraste con la carrera armada: mirás esta y corrés la próxima.</p>'}
+          ${iAmHost ? '<button class="btn btn-ghost" id="gp-largar">🚦 Largar ya</button>' : ''}
+        </div>
+        <div class="gp-chips">${listos}</div>`;
+      const act = $('gp-activar');
+      if (act) {
+        act.addEventListener('click', async () => {
+          const ok = gp.mod ? await gp.mod.pedirPermisoGiroscopio() : true;
+          setTimeout(() => {
+            const nota = $('gp-nota');
+            if (!nota) return;
+            if (gp && gp.control && gp.control.hayGiro) { panel.dataset.key = ''; renderChocadores(room.round, container, roundKey); }
+            else nota.textContent = ok ? 'No detectamos giroscopio en este equipo. En una compu: flechas o WASD.' : 'Hay que permitir el acceso al movimiento para manejar.';
+          }, 600);
+        });
+      }
+      const listo = $('gp-listo');
+      if (listo) listo.addEventListener('click', async () => {
+        if (gp && gp.mod && !(gp.control && gp.control.hayGiro)) await gp.mod.pedirPermisoGiroscopio();
+        socket.emit('submit-answer', { listo: true });
+      });
+      const largar = $('gp-largar');
+      if (largar) largar.addEventListener('click', () => socket.emit('judge-word', { largar: true }));
+    }
+    // Si el giroscopio se activa solo (Android, sin pedir permiso), se redibuja.
+    if (!gp.timer) gp.timer = setInterval(() => { if (gp && gp.control && gp.control.hayGiro && $('gp-activar') && room && room.round && room.round.fase === 'calibrar') { panel.dataset.key = ''; renderChocadores(room.round, container, roundKey); } }, 1000);
+  } else if (round.fase === 'fin') {
+    if (panel.dataset.key !== panelKey) {
+      panel.dataset.key = panelKey;
+      panel.className = 'gp-panel fin';
+      const equipos = Object.entries(round.entrants).sort((a, b) => b[1].points - a[1].points);
+      const pilotos = [...(round.pilotos || [])].sort((a, b) => (b.vueltas * round.puntosVuelta + b.golpes * round.puntosGolpe) - (a.vueltas * round.puntosVuelta + a.golpes * round.puntosGolpe));
+      panel.innerHTML = `
+        <h3>🏁 ¡Bandera a cuadros!</h3>
+        <div class="gp-podio">${equipos.map(([id, e], i) => `<div class="gp-escalon p${i + 1}" style="--team-color:${teamColor(id) || 'var(--accent)'}">
+          <span class="gp-medalla">${MEDALS[i] || ''}</span><b>${esc(entrantLabel(id))}</b><span>${e.points} pts</span><small>${e.vueltas} vueltas · ${e.golpes} golpes</small></div>`).join('')}</div>
+        <div class="gp-pilotos">${pilotos.map((p) => `<div style="--team-color:${teamColor(p.entrant) || 'var(--accent)'}"><span>${esc(p.name)}</span><span>🏁 ${p.vueltas} · 💥 ${p.golpes}${p.mejorVuelta ? ` · ⏱ ${p.mejorVuelta.toFixed(1)}s` : ''}</span></div>`).join('')}</div>
+        ${iAmHost ? '<button class="btn btn-solid" id="gp-seguir">Ver resultados ▶</button>' : ''}`;
+      const seguir = $('gp-seguir');
+      if (seguir) seguir.addEventListener('click', () => socket.emit('judge-word', { siguiente: true }));
+      if (window.Sfx) Sfx.play('fanfarria');
+      confetti(2);
+    }
+  } else {
+    panel.className = 'gp-panel';
+    panel.innerHTML = '';
+    panel.dataset.key = '';
+  }
+  $('gp-tablero').classList.toggle('hidden', !(yoPiloto && (round.fase === 'carrera' || round.fase === 'largada')));
+
+  let msg = '';
+  if (round.fase === 'calibrar') msg = 'Calibren el volante y toquen "Listo". Arranca cuando estén todos.';
+  else if (round.fase === 'largada') msg = 'Atentos al semáforo...';
+  else if (round.fase === 'carrera') msg = yoPiloto ? 'Chocá a los rivales, esquivá conos y aceite. ¡Tu equipo suma por vueltas y golpes!' : 'Mirando la carrera...';
+  $('playing-turn-msg').textContent = msg;
+}
+
 // ---------- La Torre (3D) ----------
 // La escena 3D vive en public/fx/torre3d.js y se carga solo cuando se juega.
 // El tablero se arma una vez por juego; en cada actualización solo cambian
@@ -3570,9 +3800,10 @@ function renderPlaying() {
   }
 
   // Verdadero o Falso (todos a la vez) y La Torre (escena 3D): flujos propios.
-  if (['verdadero-falso', 'torre', 'aguante', 'casita-robada'].includes(round.type)) {
+  if (['verdadero-falso', 'torre', 'aguante', 'casita-robada', 'chocadores'].includes(round.type)) {
     $('btn-pasapalabra').classList.add('hidden');
     $('playing-options').innerHTML = '';
+    if (round.type === 'chocadores') { renderChocadores(round, container, roundKey); applyGameIdentity(round); return; }
     if (round.type === 'verdadero-falso') renderVerdaderoFalso(round, container, roundKey);
     else if (round.type === 'casita-robada') renderCasitaRobada(round, container, roundKey);
     else if (round.type === 'aguante') renderAguante(round, container, roundKey);
@@ -3769,6 +4000,7 @@ $('btn-back-home').addEventListener('click', () => {
   vfBuiltFor = null;
   aguanteBuiltFor = null;
   casitaBuiltFor = null;
+  cerrarCarrera();
   limpiarAguante();
   cerrarTorre();
   sopaBuiltFor = null;
@@ -3792,6 +4024,7 @@ function render() {
   if (!room) return;
   // La escena 3D de La Torre se apaga apenas se deja de jugar ese juego.
   if (torreBuiltFor && (room.phase !== 'playing' || !room.round || room.round.type !== 'torre')) cerrarTorre();
+  if (gp && (room.phase !== 'playing' || !room.round || room.round.type !== 'chocadores')) cerrarCarrera();
   if (aguanteBuiltFor && (room.phase !== 'playing' || !room.round || room.round.type !== 'aguante')) { limpiarAguante(); aguanteBuiltFor = null; }
 
   $('room-code-badge').textContent = room.code;

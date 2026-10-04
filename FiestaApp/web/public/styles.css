@@ -1601,3 +1601,67 @@ h1 { letter-spacing: -0.01em; }
 .cr-acciones .btn { padding: 0.7rem 0.6rem; font-size: 0.92rem; }
 .cr-btn-robar { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; border: none; font-weight: 800; animation: ri-pop 0.4s cubic-bezier(.34, 1.56, .64, 1); }
 @media (prefers-reduced-motion: reduce) { .carta.entra, .carta.brilla, .cr-casita.robable { animation: none; } }
+
+/* ---------- Gran Premio: Autos Chocadores ---------- */
+#screen-playing.modo-carrera #time-banks, #screen-playing.modo-carrera #carry-banner { display: none; }
+.gp-escena { position: relative; height: max(430px, calc(100svh - 190px)); margin: 0 -0.6rem; border-radius: 18px; overflow: hidden; background: #0b1030; touch-action: none; user-select: none; -webkit-user-select: none; }
+.gp-canvas { position: absolute; inset: 0; display: block; }
+.gp-hud { position: absolute; top: 0.5rem; left: 0.5rem; right: 0.5rem; z-index: 2; display: flex; align-items: flex-start; gap: 0.5rem; pointer-events: none; }
+.gp-reloj { font-family: var(--font-display); font-weight: 900; font-size: 1.5rem; padding: 0.2rem 0.6rem; border-radius: 12px; background: rgba(7, 8, 26, 0.7); font-variant-numeric: tabular-nums; }
+.gp-reloj.poco { color: var(--error); animation: pulse-danger 1s infinite; }
+.gp-marcador { display: flex; flex-direction: column; gap: 0.2rem; margin-left: auto; }
+.gp-marcador span { padding: 0.15rem 0.55rem; border-radius: 999px; background: rgba(7, 8, 26, 0.7); border-left: 4px solid var(--team-color); font-size: 0.8rem; text-align: right; }
+.gp-marcador b { font-family: var(--font-display); color: var(--team-color); }
+.gp-vueltas { position: absolute; top: 2.6rem; left: 0; padding: 0.15rem 0.55rem; border-radius: 999px; background: rgba(7, 8, 26, 0.7); font-weight: 700; font-size: 0.85rem; }
+.gp-semaforo { position: absolute; top: 22%; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: 0.4rem; padding: 0.5rem; border-radius: 14px; background: #05060f; border: 2px solid #22264d; }
+.gp-semaforo i { width: 2.2rem; aspect-ratio: 1; border-radius: 50%; background: #2a0d12; }
+.gp-semaforo i.on { background: radial-gradient(circle at 40% 35%, #ff8a8a, #ff1e2d 55%, #a30010); box-shadow: 0 0 16px 4px rgba(255, 40, 50, 0.75); }
+.gp-semaforo.verde i { background: radial-gradient(circle at 40% 35%, #b6ffd2, #3ddc84 55%, #128a49); box-shadow: 0 0 16px 4px rgba(61, 220, 132, 0.75); }
+.gp-aviso { position: absolute; top: 40%; left: 0; right: 0; z-index: 3; text-align: center; font-family: var(--font-display); font-weight: 900; font-size: clamp(1.4rem, 7vw, 2.2rem); text-shadow: 0 4px 18px rgba(0, 0, 0, 0.8); opacity: 0; pointer-events: none; transform: scale(0.7); transition: opacity 0.2s, transform 0.25s var(--ease-out); }
+.gp-aviso.mostrar { opacity: 1; transform: scale(1); }
+.gp-aviso.bien { color: #b6ffd2; }
+.gp-aviso.mal { color: #ffb3ba; }
+.gp-tablero { position: absolute; bottom: 0.6rem; left: 0.6rem; right: 0.6rem; z-index: 2; display: flex; align-items: flex-end; gap: 0.6rem; pointer-events: none; }
+.gp-vel { width: 0.9rem; height: 4.5rem; border-radius: 999px; background: rgba(7, 8, 26, 0.7); display: flex; align-items: flex-end; overflow: hidden; }
+.gp-vel i { display: block; width: 100%; height: 0; background: linear-gradient(0deg, #3ddc84, #ffd23f, #ff4d5e); border-radius: 999px; }
+.gp-dir { position: relative; flex: 1; height: 0.9rem; border-radius: 999px; background: rgba(7, 8, 26, 0.7); }
+.gp-dir::after { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255, 255, 255, 0.3); }
+.gp-dir i { position: absolute; top: 50%; left: 50%; width: 1.3rem; height: 1.3rem; margin: -0.65rem 0 0 -0.65rem; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+.gp-panel { position: absolute; inset: auto 0.6rem 0.6rem; z-index: 4; max-height: calc(100% - 4.5rem); overflow: auto; }
+.gp-panel:empty { display: none; }
+.gp-panel.calibrar, .gp-panel.fin { padding: 0.9rem; border-radius: 18px; background: rgba(13, 15, 42, 0.92); border: 1px solid var(--line); backdrop-filter: blur(6px); }
+.gp-panel h3 { margin: 0 0 0.5rem; font-family: var(--font-display); text-align: center; }
+.gp-instr { margin: 0 0 0.7rem; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.45; color: var(--text-dim); }
+.gp-instr b { color: var(--text); }
+.gp-medidores { display: grid; gap: 0.5rem; }
+.gp-medidor small { color: var(--text-dim); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.gp-medidor span { position: relative; display: block; height: 0.9rem; border-radius: 999px; background: var(--panel-2); overflow: hidden; }
+.gp-medidor span i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: linear-gradient(90deg, #3ddc84, #ffd23f, #ff4d5e); border-radius: 999px; }
+.gp-medidor.giro span i { width: 1rem; margin-left: -0.5rem; left: 50%; background: var(--cyan); }
+.gp-nota { font-size: 0.85rem; text-align: center; margin: 0.6rem 0; }
+.gp-botones { display: grid; gap: 0.5rem; }
+.gp-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.3rem; margin-top: 0.6rem; }
+.gp-chip { padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.78rem; background: var(--panel); border-left: 4px solid var(--team-color); opacity: 0.7; }
+.gp-chip.listo { opacity: 1; }
+.gp-podio { display: flex; justify-content: center; align-items: flex-end; gap: 0.5rem; margin: 0.6rem 0; }
+.gp-escalon { flex: 1; max-width: 9rem; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; padding: 0.6rem 0.4rem; border-radius: 14px 14px 6px 6px; background: color-mix(in srgb, var(--team-color) 28%, var(--panel)); border-top: 4px solid var(--team-color); animation: ri-pop 0.5s cubic-bezier(.34, 1.56, .64, 1) both; }
+.gp-escalon.p1 { min-height: 8.5rem; }
+.gp-escalon.p2 { min-height: 7rem; animation-delay: 0.15s; }
+.gp-escalon.p3 { min-height: 6rem; animation-delay: 0.3s; }
+.gp-escalon b { font-family: var(--font-display); color: var(--team-color); text-align: center; }
+.gp-escalon small { color: var(--text-dim); font-size: 0.72rem; text-align: center; }
+.gp-medalla { font-size: 1.6rem; }
+.gp-pilotos { display: grid; gap: 0.25rem; margin-bottom: 0.7rem; }
+.gp-pilotos div { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.35rem 0.6rem; border-radius: 10px; background: var(--panel); border-left: 4px solid var(--team-color); font-size: 0.85rem; }
+.gp-panel.fin .btn { width: 100%; }
+
+/* Reel del Gran Premio: pista ovalada con dos autitos que se chocan */
+.reel-gp { display: grid; place-items: center; }
+.gp-ovalo { position: absolute; width: 82%; height: 36%; border-radius: 999px; border: 0.55rem solid #474c63; box-shadow: 0 0 0 3px #ff3344 inset, 0 0 0 3px #fff; background: radial-gradient(circle, #2f7a45 55%, transparent 56%); }
+.gp-meta { position: absolute; bottom: -0.6rem; left: 50%; width: 0.45rem; height: 0.6rem; background: repeating-linear-gradient(0deg, #fff 0 3px, #111 3px 6px); }
+.gp-auto { position: absolute; top: 50%; left: 50%; font-size: 1.5rem; offset-path: inset(32% 9% round 999px); offset-rotate: auto; animation: gp-vuelta 3.2s linear infinite; animation-play-state: paused; }
+.gp-auto.a { filter: hue-rotate(200deg) saturate(1.4); }
+.gp-auto.b { animation-duration: 3.6s; animation-delay: -0.5s; }
+@keyframes gp-vuelta { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+.gp-boom { position: absolute; font-size: 1.8rem; opacity: 0; animation: gp-boom 3.2s ease-out infinite; animation-play-state: paused; }
+@keyframes gp-boom { 0%, 70% { opacity: 0; transform: scale(0.3); } 76% { opacity: 1; transform: scale(1.3); } 90%, 100% { opacity: 0; transform: scale(1.6); } }

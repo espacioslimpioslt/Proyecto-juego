@@ -232,6 +232,23 @@ io.on('connection', (socket) => {
 
   // El payload depende del juego: un indice de opcion, una casilla, o dos
   // casillas en la sopa de letras. Cada tipo de ronda lo interpreta.
+  // Autos Chocadores: posición del auto propio (~10 por segundo). Va por
+  // fuera del límite general de mensajes, con un tope propio.
+  let autosEnSegundo = 0;
+  let segundoAutos = 0;
+  socket.on('auto', (datos) => {
+    const ahora = Math.floor(Date.now() / 1000);
+    if (ahora !== segundoAutos) { segundoAutos = ahora; autosEnSegundo = 0; }
+    if (++autosEnSegundo > 25) return;
+    rooms.autoEstado(currentRoom(), playerId, datos);
+  });
+  socket.on('auto-golpe', (atacanteId) => {
+    if (!limiter.allow()) return;
+    rooms.autoGolpe(currentRoom(), playerId, String(atacanteId || ''));
+  });
+  // Para medir la demora (ida y vuelta) desde el celu o desde el chequeo del sitio.
+  socket.on('eco', (t, ack) => { if (typeof ack === 'function') ack(t); });
+
   socket.on('submit-answer', handle((payload = {}) => {
     const room = currentRoom();
     if (!room) return { error: 'No estas en ninguna sala.' };
@@ -303,6 +320,14 @@ setInterval(() => {
     if (rooms.tickRoom(room)) broadcast(room);
   }
 }, 1000);
+
+// Autos Chocadores: 10 veces por segundo se reparten las posiciones de todos.
+setInterval(() => {
+  for (const room of rooms.allRooms()) {
+    const pos = rooms.autoPosiciones(room);
+    if (pos) io.to(room.code).volatile.emit('autos', pos);
+  }
+}, 100);
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

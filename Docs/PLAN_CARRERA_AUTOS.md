@@ -6,7 +6,13 @@ celu hasta la meta, con obstáculos y dificultad. Se pueden chocar los autos de
 equipo**. Como en la Fórmula 1, **gana el equipo**, no una persona: los puntos
 de todos los autos del equipo se suman.
 
-Queda para después de los juegos más simples. Este documento guarda el diseño.
+**Estado:** la primera versión ya está hecha (programa "Gran Premio", juego
+"Autos Chocadores"): pista 3D, control solo con giroscopio, choques entre
+equipos con vibración, obstáculos y puntos por equipo. Elegimos que cada celu
+calcule la física de su propio auto (sin demora al manejar) y resuelva sus
+choques; el que recibe el golpe lo avisa al servidor. El chequeo del sitio
+("Chequear sitio" en Actions) mide si MonsterASP deja usar WebSocket y la
+demora de ida y vuelta.
 
 ## Reglas
 

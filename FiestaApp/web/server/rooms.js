@@ -27,7 +27,8 @@ const roundTypes = {
   'verdadero-falso': require('./roundTypes/verdaderoFalso'),
   torre: require('./roundTypes/torre'),
   aguante: require('./roundTypes/aguante'),
-  'casita-robada': require('./roundTypes/casitaRobada')
+  'casita-robada': require('./roundTypes/casitaRobada'),
+  chocadores: require('./roundTypes/chocadores')
 };
 
 // Catalogo de Programas: se arma solo escaneando `programs/*/manifest.json`.
@@ -106,7 +107,8 @@ const ICONS = {
   'verdadero-falso': '⚡',
   torre: '🧱',
   aguante: '🚦',
-  'casita-robada': '🃏'
+  'casita-robada': '🃏',
+  chocadores: '🏎️'
 };
 
 // El catalogo se muestra ANTES de crear una sala (pantalla de portada), asi que
@@ -409,7 +411,9 @@ function setConfig(room, hostPlayerId, config) {
     const promedioPool = poolTypes.length
       ? poolTypes.reduce((a, t) => a + t.estimateSecondsPerRound, 0) / poolTypes.length
       : 90;
-    room.estimatedSeconds = Math.round((count - 1) * promedioPool + (finalType ? finalType.estimateSecondsPerRound : 0));
+    const previos = program.rondasSegunCantidad ? (program.rondasSegunCantidad[count] || 1)
+      : finalType ? count - 1 : count;
+    room.estimatedSeconds = Math.round(previos * promedioPool + (finalType ? finalType.estimateSecondsPerRound : 0));
   }
   if (room.teamsEnabled) {
     if (tieneNombresDePrueba(room)) buildTestRoster(room);
@@ -430,7 +434,11 @@ function roundTypeOf(room) {
 // programa real, donde todo lo ganado antes se gasta en el rosco.
 function buildGameSequence(program, roundCount) {
   const pool = (program.games || []).filter((g) => roundTypes[g]);
-  const cantidadPrevios = Math.max(roundCount - 1, 0);
+  // Con prueba final, esa ocupa la última ronda; sin final, todas son del pool.
+  // Algunos Programas usan menos rondas (ej. Gran Premio: 1, 2 o 3 carreras).
+  const mapa = program.rondasSegunCantidad;
+  const cantidadPrevios = mapa ? (mapa[roundCount] || 1)
+    : program.finalGame ? Math.max(roundCount - 1, 0) : roundCount;
   const secuencia = [];
   let disponibles = [];
   for (let i = 0; i < cantidadPrevios; i++) {
@@ -839,6 +847,8 @@ function publicState(room, viewerId) {
     programName: program ? program.name : null,
     sequenceMode: program ? (program.sequenceMode || 'random') : 'random',
     hasFinalGame: !!(program && program.finalGame),
+    rondasSegunCantidad: program ? program.rondasSegunCantidad || null : null,
+    nombreRonda: program ? program.nombreRonda || null : null,
     selectedGames: room.selectedGames || [],
     roundCount: room.roundCount,
     estimatedSeconds: room.estimatedSeconds,
@@ -873,7 +883,30 @@ function publicState(room, viewerId) {
   };
 }
 
+// ---------- Autos Chocadores: canal rápido de posiciones ----------
+// No pasa por submitAnswer (que redibuja la sala entera): llega ~10 veces por
+// segundo por auto y se reparte aparte (ver server.js).
+function carreraDe(room) {
+  if (!room || room.phase !== 'playing' || !room.roundState || room.roundState.gameType !== 'chocadores') return null;
+  return room.roundState;
+}
+function autoEstado(room, playerId, datos) {
+  const st = carreraDe(room);
+  if (st) roundTypes.chocadores.estado(st, playerId, datos);
+}
+function autoGolpe(room, playerId, atacanteId) {
+  const st = carreraDe(room);
+  return st ? roundTypes.chocadores.golpe(st, playerId, atacanteId) : false;
+}
+function autoPosiciones(room) {
+  const st = carreraDe(room);
+  return st ? roundTypes.chocadores.posiciones(st) : null;
+}
+
 module.exports = {
+  autoEstado,
+  autoGolpe,
+  autoPosiciones,
   REGIONES,
   DIFICULTADES,
   getCatalog,
