@@ -285,7 +285,7 @@ function puede3D() {
 function iniciarEscenario3D() {
   if (heroStage !== null || !puede3D()) return;
   heroStage = false; // "cargando": no se pide dos veces
-  import('./fx/stage3d.js')
+  import(`./fx/stage3d.js?v=${window.__V || ''}`)
     .then((m) => {
       heroStage = m.createStage($('hero-canvas'));
       const actual = heroDestacados[heroIndex];
@@ -3295,7 +3295,7 @@ function renderChocadores(round, container, roundKey) {
         <div class="gp-tablero" id="gp-tablero"><div class="gp-vel"><i id="gp-vel"></i></div><div class="gp-dir"><i id="gp-dir"></i></div></div>
         <div class="gp-panel" id="gp-panel"></div>
       </div>`;
-    if (!gpCargando) gpCargando = import('./fx/chocadores3d.js');
+    if (!gpCargando) gpCargando = import(`./fx/chocadores3d.js?v=${window.__V || ''}`);
     gpCargando.then((mod) => {
       if (!gp || gp.roundKey !== roundKey || gp.carrera) return;
       const r = room.round;
@@ -3663,7 +3663,7 @@ function renderRuleta(round, container, roundKey) {
       num.className = 'rl-numero';
       num.textContent = '';
       if (window.Sfx) Sfx.play('redoble');
-      import('./fx/ruleta3d.js').then((mod) => {
+      import(`./fx/ruleta3d.js?v=${window.__V || ''}`).then((mod) => {
         if (!rl || rl.roundKey !== roundKey) return;
         if (!rl.ruleta) rl.ruleta = mod.crearRuleta(rueda);
         const n = round.numero;
@@ -3818,7 +3818,7 @@ function renderTorre(round, container, roundKey) {
       try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; }
     })();
     if (conWebGL) {
-      import('./fx/torre3d.js').then((mod) => {
+      import(`./fx/torre3d.js?v=${window.__V || ''}`).then((mod) => {
         if (torreBuiltFor !== roundKey || torre3d) return;
         torre3d = mod.crearTorre(stage, { onSoltar: soltar });
         if (room && room.round && room.round.type === 'torre') renderTorre(room.round, container, roundKey);
@@ -3974,6 +3974,13 @@ function myTurnNow(round) {
 function renderPlaying() {
   const round = room.round;
   if (!round) return;
+  // Un juego que esta versión de la página no conoce: hay que actualizar.
+  if (!GAME_THEME[round.type]) {
+    $('game-board').innerHTML = '<div class="board"><p class="board-clue">Este juego es nuevo y tu celu tiene una versión anterior de la página.</p></div>';
+    $('playing-turn-msg').textContent = '';
+    avisoActualizar('Para jugar, actualizá la página.');
+    return;
+  }
 
   const roundKey = `${room.code}-${room.currentRoundNumber}`;
   if (roundKey !== lastRoundKey) {
@@ -4345,6 +4352,22 @@ function render() {
     showScreen('screen-results');
   }
 }
+
+// Si el celu tiene la página de una versión anterior (se publicó una nueva
+// mientras estaba abierta), se ofrece actualizar: si no, un juego nuevo no
+// se puede dibujar.
+function avisoActualizar(texto) {
+  if ($('aviso-version')) return;
+  const el = document.createElement('div');
+  el.id = 'aviso-version';
+  el.className = 'aviso-version';
+  el.innerHTML = `<span>${texto}</span><button class="btn btn-solid">🔄 Actualizar</button>`;
+  el.querySelector('button').addEventListener('click', () => location.reload());
+  document.body.appendChild(el);
+}
+socket.on('version', (v) => {
+  if (window.__V && v && v !== window.__V) avisoActualizar('Hay una versión nueva del juego.');
+});
 
 socket.on('room-update', (state) => { room = state; render(); });
 socket.on('room-error', (msg) => showError(msg));
