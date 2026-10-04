@@ -1772,3 +1772,7 @@ h1 { letter-spacing: -0.01em; }
 @keyframes rc-ficha { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
 .gp-vel i.reversa, .gp-medidor span i.reversa { background: linear-gradient(90deg, #ff4d5e, #ff9f1c); }
+
+/* Aviso de versión nueva */
+.aviso-version { position: fixed; left: 0.75rem; right: 0.75rem; bottom: calc(0.75rem + env(safe-area-inset-bottom)); z-index: 200; display: flex; align-items: center; gap: 0.6rem; padding: 0.7rem 0.8rem; border-radius: 16px; background: var(--panel-2); border: 1px solid var(--accent); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6); font-weight: 600; animation: ri-pop 0.4s cubic-bezier(.34, 1.56, .64, 1); }
+.aviso-version span { flex: 1; }

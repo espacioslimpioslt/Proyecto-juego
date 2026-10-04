@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const http = require('http');
 const crypto = require('crypto');
 const express = require('express');
@@ -16,7 +17,43 @@ const io = new Server(server, { pingInterval: 10000, pingTimeout: 8000 });
 // Comprime lo que se manda (el 3D de la portada pesa ~680 KB sin comprimir,
 // ~170 KB comprimido): importa mucho con datos moviles.
 app.use(compression());
-app.use(express.static(path.join(__dirname, '..', 'public'), { maxAge: '1h' }));
+
+// ---------- Que ningún celu se quede con una versión vieja ----------
+// Antes los archivos se guardaban 1 hora en el celu: después de publicar un
+// juego nuevo, alguien que ya había entrado seguía con la app vieja (no
+// conocía el juego y mostraba "Turno de null"). Ahora:
+//  - la página principal no se guarda nunca;
+//  - app.js, styles.css y los efectos se piden con "?v=VERSION" (cambia en
+//    cada publicación, porque el servidor arranca de nuevo);
+//  - el resto de .js/.css/.html se revalida siempre (respuesta 304 si no
+//    cambió, casi no gasta datos).
+const PUBLIC_DIR = path.join(__dirname, '..', 'public');
+// La versión sale del contenido de los archivos: cambia solo cuando se
+// publica algo nuevo (no cada vez que el hosting reinicia el servidor).
+function calcularVersion() {
+  const h = crypto.createHash('sha1');
+  const fx = fs.readdirSync(path.join(PUBLIC_DIR, 'fx')).filter((f) => f.endsWith('.js')).sort().map((f) => `fx/${f}`);
+  ['index.html', 'app.js', 'styles.css', ...fx].forEach((f) => h.update(fs.readFileSync(path.join(PUBLIC_DIR, f))));
+  return h.digest('hex').slice(0, 10);
+}
+const VERSION = calcularVersion();
+const indexHtml = fs.readFileSync(path.join(PUBLIC_DIR, 'index.html'), 'utf8')
+  .replace(/(href|src)="(styles\.css|app\.js|fx\/[a-z0-9]+\.js)"/g, `$1="$2?v=${VERSION}"`)
+  .replace('<head>', `<head>\n<script>window.__V = '${VERSION}';</script>`);
+function enviarIndex(req, res) {
+  res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.type('html').send(indexHtml);
+}
+app.get(['/', '/index.html'], enviarIndex);
+app.use(express.static(PUBLIC_DIR, {
+  index: false,
+  setHeaders(res, archivo) {
+    if (/vendor\//.test(archivo)) res.set('Cache-Control', 'public, max-age=604800');
+    else if (/\.(js|css|html)$/.test(archivo)) res.set('Cache-Control', 'no-cache');
+    else res.set('Cache-Control', 'public, max-age=3600');
+  }
+}));
+app.get('/api/version', (req, res) => res.json({ version: VERSION }));
 
 app.get('/api/catalog', (req, res) => {
   res.json(rooms.getCatalog());
@@ -144,6 +181,8 @@ io.on('connection', (socket) => {
     return;
   }
   socket.join(`p:${playerId}`);
+  // Para que el celu se dé cuenta si tiene la página de una versión anterior.
+  socket.emit('version', VERSION);
   const limiter = rateLimiter();
 
   function handle(fn) {
