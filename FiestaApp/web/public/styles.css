@@ -1776,3 +1776,38 @@ h1 { letter-spacing: -0.01em; }
 /* Aviso de versión nueva */
 .aviso-version { position: fixed; left: 0.75rem; right: 0.75rem; bottom: calc(0.75rem + env(safe-area-inset-bottom)); z-index: 200; display: flex; align-items: center; gap: 0.6rem; padding: 0.7rem 0.8rem; border-radius: 16px; background: var(--panel-2); border: 1px solid var(--accent); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6); font-weight: 600; animation: ri-pop 0.4s cubic-bezier(.34, 1.56, .64, 1); }
 .aviso-version span { flex: 1; }
+
+/* ---------- Audio en vivo (botón flotante y panel) ---------- */
+.voz { position: fixed; right: 0.5rem; bottom: calc(0.8rem + env(safe-area-inset-bottom)); z-index: 150; display: flex; align-items: center; gap: 0.4rem; pointer-events: none; }
+.voz > * { pointer-events: auto; }
+.voz-barra { display: flex; flex-direction: column; gap: 0.3rem; padding: 0.3rem; border-radius: 999px; background: rgba(13, 15, 42, 0.85); border: 1px solid var(--line); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); backdrop-filter: blur(6px); }
+.voz-mic, .voz-mas { width: 2.7rem; height: 2.7rem; border-radius: 50%; border: none; font-size: 1.2rem; cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; }
+.voz-mas { width: 2.7rem; height: 1.7rem; font-size: 1rem; background: transparent; color: var(--text); }
+.voz-mic.apagado { background: var(--panel-2); filter: grayscale(0.6); }
+.voz-mic.escucha { background: #2b5fb4; }
+.voz-mic.mudo { background: #6b1f2b; }
+.voz-mic.abierto { background: linear-gradient(135deg, #3ddc84, #1fa463); }
+.voz-mic.ptt { background: #7b3fbf; }
+.voz-mic.forzado, .voz-mic.bloqueado { background: #444; }
+.voz-mic.hablando { box-shadow: 0 0 0 3px #3ddc84, 0 0 18px #3ddc84; animation: voz-latido 0.6s ease-in-out infinite alternate; }
+@keyframes voz-latido { to { box-shadow: 0 0 0 5px #3ddc84, 0 0 26px #3ddc84; } }
+.voz-hablan { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; }
+.voz-hablan span { padding: 0.25rem 0.6rem; border-radius: 999px; background: rgba(61, 220, 132, 0.92); color: #06281a; font-weight: 800; font-size: 0.78rem; white-space: nowrap; animation: ri-pop 0.25s ease-out; }
+.voz-panel { position: fixed; left: 0.75rem; right: 0.75rem; bottom: calc(0.75rem + env(safe-area-inset-bottom)); max-width: 26rem; margin: 0 auto; padding: 0.9rem; border-radius: 18px; background: rgba(13, 15, 42, 0.97); border: 1px solid var(--line); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6); max-height: 70vh; overflow: auto; }
+.voz-tit { margin: 0 0 0.5rem; font-family: var(--font-display); font-weight: 700; }
+.voz-fila { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.4rem 0.5rem; border-radius: 10px; }
+.voz-fila.hablando { background: rgba(61, 220, 132, 0.15); }
+.voz-fila small { color: var(--text-dim); }
+.voz-fila button { padding: 0.3rem 0.6rem; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--text); font-size: 0.78rem; }
+.voz-fila button.on { background: #6b1f2b; border-color: #ff4d5e; }
+.voz-nadie { color: var(--text-dim); font-size: 0.85rem; margin: 0.3rem 0; }
+.voz-opciones { display: grid; gap: 0.45rem; margin-top: 0.6rem; font-size: 0.9rem; }
+.voz-opciones label { display: flex; align-items: center; gap: 0.5rem; }
+.voz-entrar, .voz-salir { padding: 0.6rem; border-radius: 12px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text); font-weight: 700; }
+.voz-entrar { background: linear-gradient(135deg, #3ddc84, #1fa463); border: none; }
+.voz-nota { margin: 0.6rem 0 0; font-size: 0.72rem; color: var(--text-dim); }
+
+/* En el casino abajo están las fichas: el audio va arriba a la derecha. */
+body:has(#rl-overlay) .voz { bottom: auto; top: calc(4.4rem + env(safe-area-inset-top)); }
+body:has(#rl-overlay) .voz-barra { flex-direction: row; }
+body:has(#rl-overlay) .voz-mas { width: 1.7rem; height: 2.7rem; }

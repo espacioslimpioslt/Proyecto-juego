@@ -832,6 +832,7 @@ function publicState(room, viewerId) {
     phase: room.phase,
     players: room.players.map((p) => ({ id: p.id, name: p.name, team: p.team, connected: p.connected !== false })),
     locked: !!room.locked,
+    vozApagada: !!room.vozApagada,
     formato: room.formato,
     formatos: Object.entries(FORMATOS).map(([id, f]) => ({ id, nombre: f.nombre, desc: f.desc })),
     tiempoRespuesta: room.tiempoRespuesta,

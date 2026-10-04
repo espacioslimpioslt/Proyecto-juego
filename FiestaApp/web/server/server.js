@@ -165,7 +165,29 @@ function enterRoom(socket, playerId, room) {
   playerRoom.set(playerId, room.code);
 }
 
+// ---------- Audio en vivo (micrófonos) ----------
+// El audio viaja DIRECTO de celu a celu (WebRTC): el servidor solo lleva la
+// lista de quién tiene el audio prendido en cada sala y pasa los mensajes
+// para que dos celus se conecten ("señalización"). Nunca pasa ni se guarda
+// audio por acá.
+const voz = new Map(); // code -> Map(playerId -> { mic })
+
+function vozLista(code) {
+  return [...(voz.get(code) || new Map()).entries()].map(([id, v]) => ({ id, mic: !!v.mic }));
+}
+function vozAvisar(code) {
+  io.to(code).emit('voz-lista', vozLista(code));
+}
+function vozSacar(playerId, code) {
+  const sala = voz.get(code);
+  if (sala && sala.delete(playerId)) {
+    if (!sala.size) voz.delete(code);
+    vozAvisar(code);
+  }
+}
+
 function leaveRoomFor(playerId, code = playerRoom.get(playerId)) {
+  vozSacar(playerId, code);
   if (playerRoom.get(playerId) === code) playerRoom.delete(playerId);
   const room = rooms.getRoom(code);
   if (!room) return;
@@ -285,6 +307,45 @@ io.on('connection', (socket) => {
     if (!limiter.allow()) return;
     rooms.autoGolpe(currentRoom(), playerId, String(atacanteId || ''));
   });
+  // Audio en vivo: entrar/salir del audio de la sala, y señales WebRTC.
+  socket.on('voz-unirse', (datos = {}) => {
+    const room = currentRoom();
+    if (!room || room.vozApagada || !limiter.allow()) return;
+    if (!voz.has(room.code)) voz.set(room.code, new Map());
+    voz.get(room.code).set(playerId, { mic: !!(datos && datos.mic) });
+    vozAvisar(room.code);
+  });
+  socket.on('voz-salir', () => {
+    const room = currentRoom();
+    if (room) vozSacar(playerId, room.code);
+  });
+  let senalesEnSegundo = 0;
+  let segundoSenales = 0;
+  socket.on('voz-senal', (msg = {}) => {
+    const ahora = Math.floor(Date.now() / 1000);
+    if (ahora !== segundoSenales) { segundoSenales = ahora; senalesEnSegundo = 0; }
+    if (++senalesEnSegundo > 80) return;
+    const room = currentRoom();
+    const sala = room && voz.get(room.code);
+    const a = msg && String(msg.a || '');
+    if (!sala || !sala.has(playerId) || !sala.has(a)) return;
+    if (JSON.stringify(msg.datos || {}).length > 20000) return;
+    io.to(`p:${a}`).emit('voz-senal', { de: playerId, datos: msg.datos });
+  });
+  // Anfitrión: apagar (o volver a permitir) el audio de toda la sala.
+  socket.on('voz-sala', handle(({ apagada } = {}) => {
+    const room = currentRoom();
+    if (!room) return { error: 'No estás en ninguna sala.' };
+    if (!rooms.isHost(room, playerId)) return { error: 'Solo el anfitrión puede cambiar el audio de la sala.' };
+    room.vozApagada = !!apagada;
+    if (room.vozApagada) { voz.delete(room.code); vozAvisar(room.code); }
+    broadcast(room);
+  }));
+  socket.on('voz-pedir-lista', () => {
+    const room = currentRoom();
+    if (room) socket.emit('voz-lista', vozLista(room.code));
+  });
+
   // Para medir la demora (ida y vuelta) desde el celu o desde el chequeo del sitio.
   socket.on('eco', (t, ack) => { if (typeof ack === 'function') ack(t); });
 
@@ -342,6 +403,7 @@ io.on('connection', (socket) => {
     if (others.length) return;
     const room = currentRoom();
     if (!room) return;
+    vozSacar(playerId, room.code); // sin conexión no hay audio; al volver se reconecta solo
     rooms.setConnected(room, playerId, false);
     broadcast(room);
     clearTimeout(disconnectTimers.get(playerId));

@@ -21,6 +21,11 @@ const identity = loadIdentity();
 const socket = io({ auth: identity });
 
 const myId = identity.playerId;
+// Audio en vivo entre participantes (fx/voz.js) y música de fondo (fx/musica.js).
+if (window.Voz) {
+  Voz.iniciar(socket, myId);
+  if (window.Musica) Voz.alHablar((alguien) => Musica.bajar(alguien));
+}
 let room = null;
 let lastRoundKey = null;
 let catalog = [];
@@ -500,6 +505,7 @@ function pintarBotonSonido() {
 }
 $('btn-sound').addEventListener('click', () => {
   if (window.Sfx) Sfx.setActivo(!Sfx.activo);
+  if (window.Musica && window.Sfx) Musica.setActiva(Sfx.activo);
   pintarBotonSonido();
 });
 pintarBotonSonido();
@@ -4293,6 +4299,8 @@ $('btn-play-again').addEventListener('click', () => socket.emit('play-again'));
 $('btn-back-home').addEventListener('click', () => {
   // Se avisa que se va de verdad: si solo se cortara la conexion, el
   // servidor le guardaria el lugar y lo volveria a meter en la sala.
+  if (window.Voz) Voz.setSala(null);
+  if (window.Musica) Musica.setAmbiente(null);
   socket.emit('leave-room');
   room = null;
   lastRoundKey = null;
@@ -4327,8 +4335,44 @@ $('results-suggestions').addEventListener('click', (e) => {
 });
 
 // ---------- Render general ----------
+// Música de fondo según el juego (ver fx/musica.js).
+const GAME_MUSICA = {
+  'rosco-por-turnos': 'show', 'eligi-una': 'show', 'la-silla': 'show', 'donde-estaba': 'juegos',
+  'sopa-de-letras': 'juegos', 'palabras-cruzadas': 'juegos', tutifruti: 'juegos', 'la-cadena': 'show',
+  'adivina-la-cancion': null, // ahí suena la música de los que juegan
+  mimica: 'juegos', 'palabra-prohibida': 'juegos', 'duelo-torres': 'show', 'escalera-final': 'suspenso',
+  impostor: 'suspenso', encuesta: 'show', 'caja-fuerte': 'casino', 'verdadero-falso': 'show',
+  torre: 'carrera', aguante: 'carrera', 'casita-robada': 'juegos', chocadores: 'carrera', ruleta: 'casino'
+};
+function ambienteMusical() {
+  if (!room) return null;
+  if (room.phase === 'playing' && room.round) {
+    const r = room.round;
+    // En los momentos de más tensión, suspenso.
+    if (r.type === 'caja-fuerte' && r.fase === 'oferta') return 'suspenso';
+    if (r.type === 'aguante' && r.fase === 'luces') return null; // silencio para oír el semáforo
+    if (r.type === 'ruleta' && r.fase === 'giro') return 'suspenso';
+    return r.type in GAME_MUSICA ? GAME_MUSICA[r.type] : 'juegos';
+  }
+  if (room.phase === 'results' || room.phase === 'roundResult') return 'show';
+  return 'sala';
+}
+
+// Reglas de audio de cada juego: a quiénes no se escucha en este momento.
+function reglasDeVoz() {
+  const r = room && room.phase === 'playing' ? room.round : null;
+  if (!r) return { mudos: [] };
+  // Mímica: el que actúa no puede hablar (ni lo escucha nadie).
+  if (r.type === 'mimica' && r.phase === 'acting' && r.actorId) {
+    return { mudos: [r.actorId], motivo: 'Estás actuando: en Mímica no se habla 🤐' };
+  }
+  return { mudos: [] };
+}
+
 function render() {
   if (!room) return;
+  if (window.Voz) { Voz.setSala(room); Voz.setReglas(reglasDeVoz()); }
+  if (window.Musica) Musica.setAmbiente(ambienteMusical());
   // La escena 3D de La Torre se apaga apenas se deja de jugar ese juego.
   if (torreBuiltFor && (room.phase !== 'playing' || !room.round || room.round.type !== 'torre')) cerrarTorre();
   if (gp && (room.phase !== 'playing' || !room.round || room.round.type !== 'chocadores')) cerrarCarrera();
@@ -4372,6 +4416,8 @@ socket.on('version', (v) => {
 socket.on('room-update', (state) => { room = state; render(); });
 socket.on('room-error', (msg) => showError(msg));
 socket.on('kicked', () => {
+  if (window.Voz) Voz.setSala(null);
+  if (window.Musica) Musica.setAmbiente(null);
   room = null;
   $('room-code-badge').classList.add('hidden');
   showScreen('screen-start');
