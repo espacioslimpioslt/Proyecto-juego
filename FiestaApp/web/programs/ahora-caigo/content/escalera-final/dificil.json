@@ -1,39 +1,310 @@
 {
-  "theme": "Preguntas difíciles",
-  "language": "es",
-  "regions": ["global"],
+  "theme": "Escalera — difícil",
+  "regions": [
+    "global"
+  ],
   "minAge": 0,
   "difficulty": "dificil",
   "questions": [
-    { "clue": "¿Cuál es la capital de Kazajistán?", "options": ["Almaty", "Astaná", "Bishkek", "Tashkent"], "correctIndex": 1 },
-    { "clue": "¿Qué científica ganó dos premios Nobel en distintas categorías?", "options": ["Rosalind Franklin", "Marie Curie", "Ada Lovelace", "Lise Meitner"], "correctIndex": 1 },
-    { "clue": "¿Cuál es el elemento químico más abundante en el universo?", "options": ["Oxígeno", "Carbono", "Hidrógeno", "Helio"], "correctIndex": 2 },
-    { "clue": "¿En qué año terminó la Segunda Guerra Mundial?", "options": ["1943", "1944", "1945", "1946"], "correctIndex": 2 },
-    { "clue": "¿Qué pintor holandés se cortó una oreja?", "options": ["Rembrandt", "Vermeer", "Van Gogh", "Bosch"], "correctIndex": 2 },
-    { "clue": "¿Cuál es el lago más profundo del mundo?", "options": ["Lago Baikal", "Lago Superior", "Lago Titicaca", "Mar Caspio"], "correctIndex": 0 },
-    { "clue": "¿Qué dios griego es el mensajero de los dioses?", "options": ["Ares", "Hermes", "Apolo", "Hefesto"], "correctIndex": 1 },
-    { "clue": "¿Cuál es la unidad básica de medida de la corriente eléctrica?", "options": ["Voltio", "Vatio", "Amperio", "Ohmio"], "correctIndex": 2 },
-    { "clue": "¿Qué imperio construyó el Coliseo?", "options": ["Griego", "Romano", "Persa", "Bizantino"], "correctIndex": 1 },
-    { "clue": "¿Cuál es el número atómico del carbono?", "options": ["4", "6", "8", "12"], "correctIndex": 1 },
-    { "clue": "¿Qué escritor ruso escribió 'Crimen y castigo'?", "options": ["Tolstói", "Chéjov", "Dostoievski", "Gógol"], "correctIndex": 2 },
-    { "clue": "¿Cuál es el país con más husos horarios?", "options": ["Rusia", "Estados Unidos", "Francia", "China"], "correctIndex": 2 },
-    { "clue": "¿Qué tratado puso fin a la Primera Guerra Mundial?", "options": ["Tratado de Versalles", "Tratado de Utrecht", "Congreso de Viena", "Tratado de Tordesillas"], "correctIndex": 0 },
-    { "clue": "¿Cuál es la capital de Mongolia?", "options": ["Ulán Bator", "Astaná", "Vladivostok", "Irkutsk"], "correctIndex": 0 },
-    { "clue": "¿Qué parte de la célula contiene el material genético?", "options": ["Mitocondria", "Núcleo", "Ribosoma", "Citoplasma"], "correctIndex": 1 },
-    { "clue": "¿Quién compuso 'Las cuatro estaciones'?", "options": ["Bach", "Vivaldi", "Handel", "Haydn"], "correctIndex": 1 },
-    { "clue": "¿Cuál es el punto más profundo del océano?", "options": ["Fosa de Puerto Rico", "Fosa de las Marianas", "Fosa de Japón", "Fosa de Kermadec"], "correctIndex": 1 },
-    { "clue": "¿Qué faraón egipcio está asociado a la máscara de oro más famosa?", "options": ["Ramsés II", "Akenatón", "Tutankamón", "Keops"], "correctIndex": 2 },
-    { "clue": "¿Cuál es la capital de Nueva Zelanda?", "options": ["Auckland", "Wellington", "Christchurch", "Hamilton"], "correctIndex": 1 },
-    { "clue": "¿Qué gas noble se usa en los carteles luminosos rojos?", "options": ["Argón", "Helio", "Neón", "Xenón"], "correctIndex": 2 },
-    { "clue": "¿Qué explorador lideró la primera vuelta al mundo (aunque murió en el camino)?", "options": ["Colón", "Vasco da Gama", "Magallanes", "Américo Vespucio"], "correctIndex": 2 },
-    { "clue": "¿Cuál es la capital de Etiopía?", "options": ["Nairobi", "Adís Abeba", "Jartum", "Kampala"], "correctIndex": 1 },
-    { "clue": "¿Qué filósofo escribió 'El príncipe'?", "options": ["Maquiavelo", "Hobbes", "Locke", "Rousseau"], "correctIndex": 0 },
-    { "clue": "¿Cuál es el hueso más fuerte del cuerpo humano?", "options": ["Cráneo", "Fémur", "Mandíbula", "Costilla"], "correctIndex": 1 },
-    { "clue": "¿Qué río atraviesa la ciudad de París?", "options": ["Ródano", "Loira", "Sena", "Garona"], "correctIndex": 2 },
-    { "clue": "¿Cuál es la capital de Portugal?", "options": ["Oporto", "Lisboa", "Faro", "Braga"], "correctIndex": 1 },
-    { "clue": "¿Qué civilización desarrolló el primer sistema de escritura cuneiforme?", "options": ["Egipcia", "Sumeria", "China", "Fenicia"], "correctIndex": 1 },
-    { "clue": "¿Quién escribió la 'Teoría general de la relatividad' en 1915?", "options": ["Newton", "Planck", "Einstein", "Heisenberg"], "correctIndex": 2 },
-    { "clue": "¿Cuál es el segundo elemento más abundante en la atmósfera terrestre?", "options": ["Nitrógeno", "Oxígeno", "Argón", "Dióxido de carbono"], "correctIndex": 1 },
-    { "clue": "¿Qué compositor alemán se quedó completamente sordo?", "options": ["Brahms", "Beethoven", "Wagner", "Schubert"], "correctIndex": 1 }
+    {
+      "clue": "¿Cuál es la capital de Nueva Zelanda?",
+      "options": [
+        "Wellington",
+        "Auckland",
+        "Christchurch",
+        "Sídney"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué escritor creó a Sherlock Holmes?",
+      "options": [
+        "Arthur Conan Doyle",
+        "Agatha Christie",
+        "Edgar Allan Poe",
+        "G. K. Chesterton"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuántos elementos tiene hoy la tabla periódica?",
+      "options": [
+        "118",
+        "108",
+        "112",
+        "126"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué batalla de 1815 marcó la derrota final de Napoleón?",
+      "options": [
+        "Waterloo",
+        "Austerlitz",
+        "Trafalgar",
+        "Leipzig"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién escribió \"El Aleph\"?",
+      "options": [
+        "Jorge Luis Borges",
+        "Julio Cortázar",
+        "Ernesto Sabato",
+        "Roberto Arlt"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué gas noble da la luz roja de los carteles luminosos?",
+      "options": [
+        "Neón",
+        "Argón",
+        "Xenón",
+        "Kriptón"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién presidió la Primera Junta de 1810?",
+      "options": [
+        "Cornelio Saavedra",
+        "Mariano Moreno",
+        "Manuel Belgrano",
+        "Juan José Castelli"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es la montaña más alta de África?",
+      "options": [
+        "Kilimanjaro",
+        "Monte Kenia",
+        "Atlas",
+        "Ruwenzori"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién propuso el modelo heliocéntrico en el Renacimiento?",
+      "options": [
+        "Nicolás Copérnico",
+        "Galileo Galilei",
+        "Johannes Kepler",
+        "Claudio Ptolomeo"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué instrumento mide la presión atmosférica?",
+      "options": [
+        "Barómetro",
+        "Higrómetro",
+        "Anemómetro",
+        "Pluviómetro"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es el país más poblado de África?",
+      "options": [
+        "Nigeria",
+        "Etiopía",
+        "Egipto",
+        "Sudáfrica"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué compositor polaco escribió casi toda su obra para piano?",
+      "options": [
+        "Frédéric Chopin",
+        "Franz Liszt",
+        "Robert Schumann",
+        "Antonín Dvořák"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué escritor argentino escribió \"El túnel\"?",
+      "options": [
+        "Ernesto Sabato",
+        "Jorge Luis Borges",
+        "Julio Cortázar",
+        "Eduardo Mallea"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué ácido produce el estómago para digerir?",
+      "options": [
+        "Clorhídrico",
+        "Sulfúrico",
+        "Nítrico",
+        "Acético"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es el océano más chico?",
+      "options": [
+        "Ártico",
+        "Índico",
+        "Antártico",
+        "Atlántico"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién fue el último emperador azteca?",
+      "options": [
+        "Cuauhtémoc",
+        "Moctezuma II",
+        "Cuitláhuac",
+        "Atahualpa"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué emperador inca fue capturado por Pizarro en Cajamarca?",
+      "options": [
+        "Atahualpa",
+        "Huáscar",
+        "Manco Inca",
+        "Pachacútec"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es la capital de Turquía?",
+      "options": [
+        "Ankara",
+        "Estambul",
+        "Esmirna",
+        "Antalya"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué científica obtuvo la \"Foto 51\", clave para descubrir la forma del ADN?",
+      "options": [
+        "Rosalind Franklin",
+        "Marie Curie",
+        "Barbara McClintock",
+        "Lise Meitner"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuántos minutos tiene un día?",
+      "options": [
+        "1440",
+        "1240",
+        "1640",
+        "1340"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué metal es líquido a temperatura ambiente?",
+      "options": [
+        "Mercurio",
+        "Galio",
+        "Plomo",
+        "Estaño"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién escribió la novela \"1984\"?",
+      "options": [
+        "George Orwell",
+        "Aldous Huxley",
+        "H. G. Wells",
+        "Ray Bradbury"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿En qué país está la ciudad de Petra?",
+      "options": [
+        "Jordania",
+        "Egipto",
+        "Siria",
+        "Israel"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿En qué batalla de 1817 triunfó San Martín tras cruzar los Andes?",
+      "options": [
+        "Chacabuco",
+        "Maipú",
+        "Ayacucho",
+        "Tucumán"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es la lengua con más hablantes nativos del mundo?",
+      "options": [
+        "Chino mandarín",
+        "Inglés",
+        "Español",
+        "Hindi"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién pintó el techo de la Capilla Sixtina?",
+      "options": [
+        "Miguel Ángel",
+        "Rafael",
+        "Leonardo da Vinci",
+        "Sandro Botticelli"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es la estrella más cercana a la Tierra después del Sol?",
+      "options": [
+        "Próxima Centauri",
+        "Sirio",
+        "Betelgeuse",
+        "Vega"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué vitamina es el ácido ascórbico?",
+      "options": [
+        "Vitamina C",
+        "Vitamina A",
+        "Vitamina B12",
+        "Vitamina E"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿En qué cordillera está el monte Everest?",
+      "options": [
+        "Himalaya",
+        "Karakórum",
+        "Hindu Kush",
+        "Pamir"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué escritor colombiano ganó el Nobel de Literatura en 1982?",
+      "options": [
+        "Gabriel García Márquez",
+        "Álvaro Mutis",
+        "Jorge Isaacs",
+        "Fernando Vallejo"
+      ],
+      "correctIndex": 0
+    }
   ]
 }

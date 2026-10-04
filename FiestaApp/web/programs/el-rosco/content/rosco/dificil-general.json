@@ -1,29 +1,251 @@
 {
-  "theme": "Cultura general (difícil)",
+  "theme": "Cultura general (nivel medio)",
   "language": "es",
-  "regions": ["global"],
+  "regions": [
+    "global"
+  ],
   "minAge": 0,
-  "difficulty": "dificil",
+  "difficulty": "normal",
   "letters": [
-    { "letter": "A", "clueType": "empieza", "clue": "Filósofo griego que fue maestro de Alejandro Magno", "options": ["Sócrates", "Platón", "Aristóteles", "Pitágoras"], "correctIndex": 2 },
-    { "letter": "B", "clueType": "empieza", "clue": "Compositor alemán sordo, autor de la Novena Sinfonía", "options": ["Bach", "Beethoven", "Brahms", "Mozart"], "correctIndex": 1 },
-    { "letter": "C", "clueType": "empieza", "clue": "Científica polaca, pionera en radiactividad, ganadora de dos premios Nobel", "options": ["Franklin", "Lovelace", "Curie", "Meitner"], "correctIndex": 2 },
-    { "letter": "D", "clueType": "empieza", "clue": "Naturalista inglés que propuso la teoría de la evolución de las especies", "options": ["Darwin", "Dalton", "Mendel", "Lamarck"], "correctIndex": 0 },
-    { "letter": "E", "clueType": "empieza", "clue": "Científico que formuló la teoría de la relatividad", "options": ["Newton", "Einstein", "Galileo", "Tesla"], "correctIndex": 1 },
-    { "letter": "F", "clueType": "empieza", "clue": "Científico escocés que descubrió la penicilina", "options": ["Fleming", "Faraday", "Franklin", "Feynman"], "correctIndex": 0 },
-    { "letter": "G", "clueType": "empieza", "clue": "Astrónomo italiano defensor del heliocentrismo, según la leyenda dijo 'y sin embargo se mueve'", "options": ["Copérnico", "Galileo", "Kepler", "Bruno"], "correctIndex": 1 },
-    { "letter": "H", "clueType": "empieza", "clue": "Físico británico autor de 'Breve historia del tiempo', experto en agujeros negros", "options": ["Hawking", "Hubble", "Heisenberg", "Higgs"], "correctIndex": 0 },
-    { "letter": "I", "clueType": "empieza", "clue": "País asiático, el más poblado del mundo junto con China", "options": ["Indonesia", "Irán", "India", "Israel"], "correctIndex": 2 },
-    { "letter": "J", "clueType": "empieza", "clue": "Médico inglés que desarrolló la primera vacuna, contra la viruela", "options": ["Jenner", "Koch", "Lister", "Salk"], "correctIndex": 0 },
-    { "letter": "L", "clueType": "empieza", "clue": "Pintor e inventor renacentista que pintó la Mona Lisa", "options": ["Miguel Ángel", "Rafael", "Leonardo da Vinci", "Botticelli"], "correctIndex": 2 },
-    { "letter": "M", "clueType": "contiene", "clue": "Tratado que en 1991 creó una zona de libre comercio entre Argentina, Brasil, Uruguay y Paraguay", "options": ["Unasur", "Mercosur", "Alca", "Celac"], "correctIndex": 1 },
-    { "letter": "N", "clueType": "empieza", "clue": "Filósofo alemán del siglo XIX que escribió 'Así habló Zaratustra'", "options": ["Nietzsche", "Kant", "Hegel", "Schopenhauer"], "correctIndex": 0 },
-    { "letter": "O", "clueType": "termina", "clue": "Instrumento que se usa para medir la presión atmosférica", "options": ["Termómetro", "Higrómetro", "Barómetro", "Anemómetro"], "correctIndex": 2 },
-    { "letter": "P", "clueType": "empieza", "clue": "Científico francés que enunció la teoría microbiana de las enfermedades y creó la vacuna contra la rabia", "options": ["Fleming", "Pasteur", "Koch", "Lister"], "correctIndex": 1 },
-    { "letter": "R", "clueType": "empieza", "clue": "Movimiento artístico europeo de fines del siglo XVIII que exaltaba la emoción sobre la razón", "options": ["Renacimiento", "Romanticismo", "Realismo", "Racionalismo"], "correctIndex": 1 },
-    { "letter": "S", "clueType": "contiene", "clue": "Órgano de gobierno de la Antigua Roma compuesto por patricios", "options": ["Foro", "Senado", "Consulado", "Tribunal"], "correctIndex": 1 },
-    { "letter": "T", "clueType": "empieza", "clue": "Hueso más grande y fuerte de la pierna, va de la rodilla al tobillo", "options": ["Peroné", "Fémur", "Tibia", "Rótula"], "correctIndex": 2 },
-    { "letter": "U", "clueType": "contiene", "clue": "Museo de París donde se exhibe la Mona Lisa", "options": ["Orsay", "Louvre", "Prado", "Hermitage"], "correctIndex": 1 },
-    { "letter": "V", "clueType": "empieza", "clue": "Unidad de medida de la tensión eléctrica, llamada así por el físico italiano Alessandro Volta", "options": ["Vatio", "Voltio", "Amperio", "Ohmio"], "correctIndex": 1 }
+    {
+      "letter": "A",
+      "clueType": "empieza",
+      "clue": "Filósofo griego que fue maestro de Alejandro Magno",
+      "options": [
+        "Sócrates",
+        "Platón",
+        "Aristóteles",
+        "Pitágoras"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "letter": "B",
+      "clueType": "empieza",
+      "clue": "Compositor alemán sordo, autor de la Novena Sinfonía",
+      "options": [
+        "Bach",
+        "Beethoven",
+        "Brahms",
+        "Mozart"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "C",
+      "clueType": "empieza",
+      "clue": "Científica polaca, pionera en radiactividad, ganadora de dos premios Nobel",
+      "options": [
+        "Franklin",
+        "Lovelace",
+        "Curie",
+        "Meitner"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "letter": "D",
+      "clueType": "empieza",
+      "clue": "Naturalista inglés que propuso la teoría de la evolución de las especies",
+      "options": [
+        "Darwin",
+        "Dalton",
+        "Mendel",
+        "Lamarck"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "E",
+      "clueType": "empieza",
+      "clue": "Científico que formuló la teoría de la relatividad",
+      "options": [
+        "Newton",
+        "Einstein",
+        "Galileo",
+        "Tesla"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "F",
+      "clueType": "empieza",
+      "clue": "Científico escocés que descubrió la penicilina",
+      "options": [
+        "Fleming",
+        "Faraday",
+        "Franklin",
+        "Feynman"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "G",
+      "clueType": "empieza",
+      "clue": "Astrónomo italiano defensor del heliocentrismo, según la leyenda dijo 'y sin embargo se mueve'",
+      "options": [
+        "Copérnico",
+        "Galileo",
+        "Kepler",
+        "Bruno"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "H",
+      "clueType": "empieza",
+      "clue": "Físico británico autor de 'Breve historia del tiempo', experto en agujeros negros",
+      "options": [
+        "Hawking",
+        "Hubble",
+        "Heisenberg",
+        "Higgs"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "I",
+      "clueType": "empieza",
+      "clue": "País asiático, el más poblado del mundo junto con China",
+      "options": [
+        "Indonesia",
+        "Irán",
+        "India",
+        "Israel"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "letter": "J",
+      "clueType": "empieza",
+      "clue": "Médico inglés que desarrolló la primera vacuna, contra la viruela",
+      "options": [
+        "Jenner",
+        "Koch",
+        "Lister",
+        "Salk"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "L",
+      "clueType": "empieza",
+      "clue": "Pintor e inventor renacentista que pintó la Mona Lisa",
+      "options": [
+        "Miguel Ángel",
+        "Rafael",
+        "Leonardo da Vinci",
+        "Botticelli"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "letter": "M",
+      "clueType": "contiene",
+      "clue": "Tratado que en 1991 creó una zona de libre comercio entre Argentina, Brasil, Uruguay y Paraguay",
+      "options": [
+        "Unasur",
+        "Mercosur",
+        "Alca",
+        "Celac"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "N",
+      "clueType": "empieza",
+      "clue": "Filósofo alemán del siglo XIX que escribió 'Así habló Zaratustra'",
+      "options": [
+        "Nietzsche",
+        "Kant",
+        "Hegel",
+        "Schopenhauer"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "O",
+      "clueType": "termina",
+      "clue": "Instrumento que se usa para medir la presión atmosférica",
+      "options": [
+        "Termómetro",
+        "Higrómetro",
+        "Barómetro",
+        "Anemómetro"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "letter": "P",
+      "clueType": "empieza",
+      "clue": "Científico francés que enunció la teoría microbiana de las enfermedades y creó la vacuna contra la rabia",
+      "options": [
+        "Fleming",
+        "Pasteur",
+        "Koch",
+        "Lister"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "R",
+      "clueType": "empieza",
+      "clue": "Movimiento artístico europeo de fines del siglo XVIII que exaltaba la emoción sobre la razón",
+      "options": [
+        "Renacimiento",
+        "Romanticismo",
+        "Realismo",
+        "Racionalismo"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "S",
+      "clueType": "contiene",
+      "clue": "Órgano de gobierno de la Antigua Roma compuesto por patricios",
+      "options": [
+        "Foro",
+        "Senado",
+        "Consulado",
+        "Tribunal"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "T",
+      "clueType": "empieza",
+      "clue": "Hueso más grande y fuerte de la pierna, va de la rodilla al tobillo",
+      "options": [
+        "Peroné",
+        "Fémur",
+        "Tibia",
+        "Rótula"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "letter": "U",
+      "clueType": "contiene",
+      "clue": "Museo de París donde se exhibe la Mona Lisa",
+      "options": [
+        "Orsay",
+        "Louvre",
+        "Prado",
+        "Hermitage"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "letter": "V",
+      "clueType": "empieza",
+      "clue": "Unidad de medida de la tensión eléctrica, llamada así por el físico italiano Alessandro Volta",
+      "options": [
+        "Vatio",
+        "Voltio",
+        "Amperio",
+        "Ohmio"
+      ],
+      "correctIndex": 1
+    }
   ]
 }

@@ -1,0 +1,260 @@
+{
+  "theme": "La Cadena — difícil",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "difficulty": "dificil",
+  "questions": [
+    {
+      "clue": "¿Capital de Canadá?",
+      "options": [
+        "Ottawa",
+        "Toronto",
+        "Montreal",
+        "Quebec"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Planeta que tiene la luna Ío?",
+      "options": [
+        "Júpiter",
+        "Saturno",
+        "Marte",
+        "Neptuno"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Autor de \"Rayuela\"?",
+      "options": [
+        "Cortázar",
+        "Borges",
+        "Sabato",
+        "Puig"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Metal cuyo símbolo es Pb?",
+      "options": [
+        "Plomo",
+        "Platino",
+        "Paladio",
+        "Potasio"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Río que pasa por Viena?",
+      "options": [
+        "Danubio",
+        "Rin",
+        "Elba",
+        "Sena"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Pintor del \"Guernica\"?",
+      "options": [
+        "Picasso",
+        "Dalí",
+        "Miró",
+        "Goya"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Capital de Marruecos?",
+      "options": [
+        "Rabat",
+        "Casablanca",
+        "Marrakech",
+        "Tánger"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Gas más abundante en el aire?",
+      "options": [
+        "Nitrógeno",
+        "Oxígeno",
+        "Argón",
+        "Hidrógeno"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Capital de Kenia?",
+      "options": [
+        "Nairobi",
+        "Mombasa",
+        "Kampala",
+        "Kigali"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Autor de \"La Divina Comedia\"?",
+      "options": [
+        "Dante",
+        "Petrarca",
+        "Boccaccio",
+        "Virgilio"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Unidad de potencia eléctrica?",
+      "options": [
+        "Vatio",
+        "Voltio",
+        "Ohmio",
+        "Julio"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Capital de Islandia?",
+      "options": [
+        "Reikiavik",
+        "Oslo",
+        "Helsinki",
+        "Dublín"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Filósofo que fue maestro de Platón?",
+      "options": [
+        "Sócrates",
+        "Aristóteles",
+        "Pitágoras",
+        "Tales"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Órgano que produce la bilis?",
+      "options": [
+        "Hígado",
+        "Páncreas",
+        "Bazo",
+        "Riñón"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Capital de Vietnam?",
+      "options": [
+        "Hanói",
+        "Saigón",
+        "Bangkok",
+        "Manila"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Autor de \"Martín Fierro\"?",
+      "options": [
+        "Hernández",
+        "Sarmiento",
+        "Lugones",
+        "Echeverría"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Instrumento de Astor Piazzolla?",
+      "options": [
+        "Bandoneón",
+        "Piano",
+        "Violín",
+        "Guitarra"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Ciudad de los canales en Italia?",
+      "options": [
+        "Venecia",
+        "Florencia",
+        "Génova",
+        "Verona"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Compositor de \"La flauta mágica\"?",
+      "options": [
+        "Mozart",
+        "Haydn",
+        "Schubert",
+        "Beethoven"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿País con capital en Lusaka?",
+      "options": [
+        "Zambia",
+        "Zimbabue",
+        "Malaui",
+        "Botsuana"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Partícula del núcleo con carga positiva?",
+      "options": [
+        "Protón",
+        "Neutrón",
+        "Electrón",
+        "Fotón"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Ciudad sepultada por el Vesubio?",
+      "options": [
+        "Pompeya",
+        "Ostia",
+        "Nápoles",
+        "Siena"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Autor de \"El Principito\"?",
+      "options": [
+        "Saint-Exupéry",
+        "Verne",
+        "Camus",
+        "Hugo"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Capital de Australia?",
+      "options": [
+        "Canberra",
+        "Sídney",
+        "Melbourne",
+        "Perth"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Pintor de \"La noche estrellada\"?",
+      "options": [
+        "Van Gogh",
+        "Monet",
+        "Cézanne",
+        "Gauguin"
+      ],
+      "correctIndex": 0
+    }
+  ]
+}

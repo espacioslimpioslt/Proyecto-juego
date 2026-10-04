@@ -1,29 +1,270 @@
 {
-  "theme": "Preguntas difíciles",
-  "language": "es",
-  "regions": ["global"],
+  "theme": "Cultura general — difícil",
+  "regions": [
+    "global"
+  ],
   "minAge": 0,
   "difficulty": "dificil",
   "questions": [
-    { "clue": "¿En qué año llegó el ser humano a la Luna por primera vez?", "options": ["1969", "1965", "1972", "1958"], "correctIndex": 0 },
-    { "clue": "¿Cuál es el hueso más pequeño del cuerpo humano?", "options": ["Estribo (oído)", "Falange", "Rótula", "Coxis"], "correctIndex": 0 },
-    { "clue": "¿Qué elemento químico tiene el símbolo 'Fe'?", "options": ["Flúor", "Hierro", "Fósforo", "Francio"], "correctIndex": 1 },
-    { "clue": "¿Quién pintó 'La noche estrellada'?", "options": ["Monet", "Van Gogh", "Picasso", "Dalí"], "correctIndex": 1 },
-    { "clue": "¿Cuál es el río más largo del mundo?", "options": ["Amazonas", "Nilo", "Misisipi", "Yangtsé"], "correctIndex": 1 },
-    { "clue": "¿En qué país se originó el ajedrez?", "options": ["China", "Persia", "India", "Egipto"], "correctIndex": 2 },
-    { "clue": "¿Cuántos corazones tiene un pulpo?", "options": ["Uno", "Dos", "Tres", "Cuatro"], "correctIndex": 2 },
-    { "clue": "¿Qué planeta del sistema solar gira 'acostado' sobre su eje?", "options": ["Saturno", "Neptuno", "Urano", "Júpiter"], "correctIndex": 2 },
-    { "clue": "¿Quién escribió 'Cien años de soledad'?", "options": ["Vargas Llosa", "García Márquez", "Cortázar", "Borges"], "correctIndex": 1 },
-    { "clue": "¿Cuál es la moneda oficial de Japón?", "options": ["Yuan", "Won", "Yen", "Baht"], "correctIndex": 2 },
-    { "clue": "¿Qué imperio construyó Machu Picchu?", "options": ["Azteca", "Maya", "Inca", "Olmeca"], "correctIndex": 2 },
-    { "clue": "¿Cuál es el metal más abundante en la corteza terrestre?", "options": ["Hierro", "Aluminio", "Cobre", "Calcio"], "correctIndex": 1 },
-    { "clue": "¿En qué continente se encuentra el desierto del Sahara?", "options": ["Asia", "África", "Oceanía", "América"], "correctIndex": 1 },
-    { "clue": "¿Qué gas es el más abundante en la atmósfera terrestre?", "options": ["Oxígeno", "Dióxido de carbono", "Nitrógeno", "Hidrógeno"], "correctIndex": 2 },
-    { "clue": "¿Quién compuso las Cuatro Estaciones?", "options": ["Bach", "Vivaldi", "Mozart", "Haydn"], "correctIndex": 1 },
-    { "clue": "¿Cuál es el país más pequeño del mundo?", "options": ["Mónaco", "San Marino", "Ciudad del Vaticano", "Liechtenstein"], "correctIndex": 2 },
-    { "clue": "¿Qué científico propuso las tres leyes del movimiento?", "options": ["Einstein", "Newton", "Galileo", "Kepler"], "correctIndex": 1 },
-    { "clue": "¿Cuántos huesos tiene el cuerpo humano adulto, aproximadamente?", "options": ["206", "150", "300", "250"], "correctIndex": 0 },
-    { "clue": "¿En qué año cayó el Muro de Berlín?", "options": ["1989", "1991", "1985", "1993"], "correctIndex": 0 },
-    { "clue": "¿Cuál es el océano más grande del mundo?", "options": ["Atlántico", "Índico", "Pacífico", "Ártico"], "correctIndex": 2 }
+    {
+      "clue": "¿Qué país tiene más husos horarios contando sus territorios de ultramar?",
+      "options": [
+        "Francia",
+        "Rusia",
+        "Estados Unidos",
+        "China"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién escribió \"Rayuela\"?",
+      "options": [
+        "Julio Cortázar",
+        "Ernesto Sabato",
+        "Adolfo Bioy Casares",
+        "Manuel Puig"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿En qué año se sancionó la Constitución Nacional argentina?",
+      "options": [
+        "1853",
+        "1816",
+        "1826",
+        "1880"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es el río más largo de Europa?",
+      "options": [
+        "Volga",
+        "Danubio",
+        "Rin",
+        "Dniéper"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué astrónomo formuló las tres leyes del movimiento de los planetas?",
+      "options": [
+        "Johannes Kepler",
+        "Galileo Galilei",
+        "Tycho Brahe",
+        "Nicolás Copérnico"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es la capital de Canadá?",
+      "options": [
+        "Ottawa",
+        "Toronto",
+        "Montreal",
+        "Vancouver"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué pintor español pintó \"Las Meninas\"?",
+      "options": [
+        "Diego Velázquez",
+        "Francisco de Goya",
+        "El Greco",
+        "Bartolomé Murillo"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es el metal más abundante en la corteza terrestre?",
+      "options": [
+        "Aluminio",
+        "Hierro",
+        "Cobre",
+        "Calcio"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién fue el primer presidente argentino elegido según la Constitución de 1853?",
+      "options": [
+        "Justo José de Urquiza",
+        "Bartolomé Mitre",
+        "Domingo F. Sarmiento",
+        "Bernardino Rivadavia"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué gas forma la mayor parte de la atmósfera de Marte?",
+      "options": [
+        "Dióxido de carbono",
+        "Nitrógeno",
+        "Metano",
+        "Argón"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué compositor escribió \"Las cuatro estaciones\"?",
+      "options": [
+        "Antonio Vivaldi",
+        "Johann Sebastian Bach",
+        "Georg F. Haendel",
+        "Georg P. Telemann"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es el lago más profundo del mundo?",
+      "options": [
+        "Baikal",
+        "Tanganica",
+        "Titicaca",
+        "Superior"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿En qué año cayó el Muro de Berlín?",
+      "options": [
+        "1989",
+        "1991",
+        "1987",
+        "1985"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién dirigió la película \"2001: Odisea del espacio\"?",
+      "options": [
+        "Stanley Kubrick",
+        "Steven Spielberg",
+        "Ridley Scott",
+        "George Lucas"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué escritor argentino creó el cuento \"Funes el memorioso\"?",
+      "options": [
+        "Jorge Luis Borges",
+        "Julio Cortázar",
+        "Ernesto Sabato",
+        "Leopoldo Lugones"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué planeta tarda más en dar una vuelta sobre sí mismo?",
+      "options": [
+        "Venus",
+        "Mercurio",
+        "Júpiter",
+        "Neptuno"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué país ganó el primer Mundial de fútbol femenino, en 1991?",
+      "options": [
+        "Estados Unidos",
+        "Noruega",
+        "Alemania",
+        "China"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué tratado de 1494 repartió las tierras de América entre España y Portugal?",
+      "options": [
+        "Tordesillas",
+        "Utrecht",
+        "Westfalia",
+        "Versalles"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es la unidad de la resistencia eléctrica?",
+      "options": [
+        "Ohmio",
+        "Voltio",
+        "Amperio",
+        "Faradio"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué cordillera se toma como límite entre Europa y Asia?",
+      "options": [
+        "Montes Urales",
+        "Cáucaso",
+        "Alpes",
+        "Cárpatos"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién pintó \"La persistencia de la memoria\", la de los relojes blandos?",
+      "options": [
+        "Salvador Dalí",
+        "René Magritte",
+        "Joan Miró",
+        "Max Ernst"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es el idioma oficial de Mozambique?",
+      "options": [
+        "Portugués",
+        "Francés",
+        "Inglés",
+        "Suajili"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuántos cromosomas tiene una célula humana común (no reproductiva)?",
+      "options": [
+        "46",
+        "23",
+        "44",
+        "48"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué científico argentino ganó el Nobel de Medicina en 1947?",
+      "options": [
+        "Bernardo Houssay",
+        "Luis F. Leloir",
+        "César Milstein",
+        "René Favaloro"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué número es MCMXC en números romanos?",
+      "options": [
+        "1990",
+        "1940",
+        "2090",
+        "1490"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es el desierto no polar más árido del mundo?",
+      "options": [
+        "Atacama",
+        "Sahara",
+        "Gobi",
+        "Kalahari"
+      ],
+      "correctIndex": 0
+    }
   ]
 }

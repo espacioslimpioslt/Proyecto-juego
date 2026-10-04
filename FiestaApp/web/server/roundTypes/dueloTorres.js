@@ -70,7 +70,8 @@ function createRound({ entrantIds, rosters = {}, usedDeckIds = [], region, adult
   const o = resolver(opciones, elegidas, difficulty);
   const m = { duelos: o.duelos };
   const deck = pickDeck(decks, usedDeckIds, { region, adultsOnly, difficulty });
-  const pool = deck ? shuffle(deck.data.questions) : [];
+  // Opciones mezcladas: si no, la correcta queda siempre en el mismo lugar.
+  const pool = deck ? shuffle(deck.data.questions).map((q) => ({ ...q, ...shuffleOptions(q) })) : [];
 
   const entrants = {};
   entrantIds.forEach((id) => { entrants[id] = { torres: 0, secondsWon: 0 }; });

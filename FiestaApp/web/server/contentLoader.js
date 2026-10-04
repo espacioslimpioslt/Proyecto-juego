@@ -48,11 +48,23 @@ function decksFor(decks, { region = 'global', adultsOnly = false, difficulty = '
 // Si ningun mazo cumple todos los filtros, se aflojan de a uno -- primero la
 // dificultad, despues el pais -- pero la EDAD nunca: antes se caia a "todos
 // los mazos" y podia salir uno +18 con "solo mayores" apagado.
+// Si no hay mazo de la dificultad pedida, se usa el de la dificultad más
+// CERCANA (fácil → normal → difícil), nunca uno cualquiera: antes "fácil"
+// podía terminar sacando un mazo difícil.
+const CERCANIA = {
+  facil: ['facil', 'normal', 'dificil'],
+  normal: ['normal', 'facil', 'dificil'],
+  dificil: ['dificil', 'normal', 'facil']
+};
+
 function pickDeck(decks, usedDeckIds = [], filters = {}) {
   const permitidos = decks.filter((d) => filters.adultsOnly || d.minAge < 18);
+  const region = filters.region || 'global';
+  const enRegion = permitidos.filter((d) => d.regions.includes('global') || d.regions.includes(region));
+  const orden = CERCANIA[filters.difficulty] || CERCANIA.normal;
   const intentos = [
-    decksFor(permitidos, filters),
-    permitidos.filter((d) => d.regions.includes('global') || d.regions.includes(filters.region || 'global')),
+    ...orden.map((dif) => enRegion.filter((d) => d.difficulty === dif)),
+    ...orden.map((dif) => permitidos.filter((d) => d.difficulty === dif)),
     permitidos
   ];
   const safe = intentos.find((lista) => lista.length) || [];

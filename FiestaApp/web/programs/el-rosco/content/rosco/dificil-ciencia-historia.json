@@ -1,0 +1,298 @@
+{
+  "theme": "Ciencia e historia — difícil",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "difficulty": "dificil",
+  "letters": [
+    {
+      "letter": "A",
+      "clueType": "empieza",
+      "clue": "Capital de Etiopía",
+      "options": [
+        "Adís Abeba",
+        "Asmara",
+        "Nairobi",
+        "Jartum"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "B",
+      "clueType": "empieza",
+      "clue": "Inventor que patentó el teléfono en 1876",
+      "options": [
+        "Bell",
+        "Edison",
+        "Meucci",
+        "Morse"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "C",
+      "clueType": "empieza",
+      "clue": "La luna más grande de Plutón",
+      "options": [
+        "Caronte",
+        "Titán",
+        "Tritón",
+        "Europa"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "D",
+      "clueType": "empieza",
+      "clue": "Poeta florentino autor de \"La Divina Comedia\"",
+      "options": [
+        "Dante",
+        "Petrarca",
+        "Boccaccio",
+        "Virgilio"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "E",
+      "clueType": "empieza",
+      "clue": "Matemático griego autor de \"Los Elementos\"",
+      "options": [
+        "Euclides",
+        "Pitágoras",
+        "Arquímedes",
+        "Tales"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "F",
+      "clueType": "empieza",
+      "clue": "Físico italiano que construyó el primer reactor nuclear, en 1942",
+      "options": [
+        "Fermi",
+        "Volta",
+        "Marconi",
+        "Galvani"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "G",
+      "clueType": "empieza",
+      "clue": "Batalla de 1863 de la guerra civil de EE.UU., famosa por un discurso de Lincoln",
+      "options": [
+        "Gettysburg",
+        "Antietam",
+        "Shiloh",
+        "Vicksburg"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "H",
+      "clueType": "empieza",
+      "clue": "Cometa que vuelve a verse desde la Tierra cada 75 o 76 años",
+      "options": [
+        "Halley",
+        "Hale-Bopp",
+        "Encke",
+        "Swift"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "I",
+      "clueType": "empieza",
+      "clue": "Imperio cuya capital era Cuzco",
+      "options": [
+        "Inca",
+        "Azteca",
+        "Maya",
+        "Chimú"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "J",
+      "clueType": "empieza",
+      "clue": "Diosa romana, esposa de Júpiter",
+      "options": [
+        "Juno",
+        "Minerva",
+        "Venus",
+        "Vesta"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "K",
+      "clueType": "empieza",
+      "clue": "Capital de Afganistán",
+      "options": [
+        "Kabul",
+        "Kandahar",
+        "Karachi",
+        "Teherán"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "L",
+      "clueType": "empieza",
+      "clue": "Químico francés que enunció la ley de conservación de la masa",
+      "options": [
+        "Lavoisier",
+        "Lamarck",
+        "Laplace",
+        "Pasteur"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "M",
+      "clueType": "empieza",
+      "clue": "Escritor estadounidense de \"Moby Dick\"",
+      "options": [
+        "Melville",
+        "Hawthorne",
+        "Poe",
+        "Twain"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "N",
+      "clueType": "empieza",
+      "clue": "Emperador francés derrotado en Waterloo",
+      "options": [
+        "Napoleón",
+        "Luis XVI",
+        "Carlomagno",
+        "Carlos X"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "O",
+      "clueType": "empieza",
+      "clue": "Escritor irlandés de \"El retrato de Dorian Gray\"",
+      "options": [
+        "Oscar Wilde",
+        "Bernard Shaw",
+        "James Joyce",
+        "Bram Stoker"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "P",
+      "clueType": "empieza",
+      "clue": "Ciudad romana sepultada por el Vesubio en el año 79",
+      "options": [
+        "Pompeya",
+        "Ostia",
+        "Nápoles",
+        "Rávena"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "Q",
+      "clueType": "empieza",
+      "clue": "Lengua del Imperio inca, todavía hablada en los Andes",
+      "options": [
+        "Quechua",
+        "Aimara",
+        "Guaraní",
+        "Náhuatl"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "R",
+      "clueType": "empieza",
+      "clue": "Físico neozelandés que descubrió el núcleo del átomo",
+      "options": [
+        "Rutherford",
+        "Röntgen",
+        "Bohr",
+        "Thomson"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "S",
+      "clueType": "empieza",
+      "clue": "Escritor argentino de \"Sobre héroes y tumbas\"",
+      "options": [
+        "Sabato",
+        "Cortázar",
+        "Borges",
+        "Arlt"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "T",
+      "clueType": "empieza",
+      "clue": "Faraón niño cuya tumba descubrió Howard Carter en 1922",
+      "options": [
+        "Tutankamón",
+        "Ramsés II",
+        "Keops",
+        "Akenatón"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "U",
+      "clueType": "empieza",
+      "clue": "Planeta que gira \"acostado\", con el eje casi horizontal",
+      "options": [
+        "Urano",
+        "Neptuno",
+        "Saturno",
+        "Venus"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "V",
+      "clueType": "empieza",
+      "clue": "Volcán que sepultó Pompeya",
+      "options": [
+        "Vesubio",
+        "Etna",
+        "Estrómboli",
+        "Teide"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "X",
+      "clueType": "empieza",
+      "clue": "Gas noble que se usa en los faros de algunos autos y en los flashes",
+      "options": [
+        "Xenón",
+        "Neón",
+        "Argón",
+        "Kriptón"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "Z",
+      "clueType": "empieza",
+      "clue": "Dios supremo del Olimpo griego",
+      "options": [
+        "Zeus",
+        "Apolo",
+        "Hades",
+        "Poseidón"
+      ],
+      "correctIndex": 0
+    }
+  ]
+}

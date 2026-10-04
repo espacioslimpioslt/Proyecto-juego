@@ -1,0 +1,211 @@
+{
+  "theme": "Preguntas difíciles (nivel medio)",
+  "language": "es",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "difficulty": "normal",
+  "questions": [
+    {
+      "clue": "¿En qué año llegó el ser humano a la Luna por primera vez?",
+      "options": [
+        "1969",
+        "1965",
+        "1972",
+        "1958"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es el hueso más pequeño del cuerpo humano?",
+      "options": [
+        "Estribo (oído)",
+        "Falange",
+        "Rótula",
+        "Coxis"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué elemento químico tiene el símbolo 'Fe'?",
+      "options": [
+        "Flúor",
+        "Hierro",
+        "Fósforo",
+        "Francio"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Quién pintó 'La noche estrellada'?",
+      "options": [
+        "Monet",
+        "Van Gogh",
+        "Picasso",
+        "Dalí"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Cuál es el río más largo del mundo?",
+      "options": [
+        "Amazonas",
+        "Nilo",
+        "Misisipi",
+        "Yangtsé"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿En qué país se originó el ajedrez?",
+      "options": [
+        "China",
+        "Persia",
+        "India",
+        "Egipto"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Cuántos corazones tiene un pulpo?",
+      "options": [
+        "Uno",
+        "Dos",
+        "Tres",
+        "Cuatro"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Qué planeta del sistema solar gira 'acostado' sobre su eje?",
+      "options": [
+        "Saturno",
+        "Neptuno",
+        "Urano",
+        "Júpiter"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Quién escribió 'Cien años de soledad'?",
+      "options": [
+        "Vargas Llosa",
+        "García Márquez",
+        "Cortázar",
+        "Borges"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Cuál es la moneda oficial de Japón?",
+      "options": [
+        "Yuan",
+        "Won",
+        "Yen",
+        "Baht"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Qué imperio construyó Machu Picchu?",
+      "options": [
+        "Azteca",
+        "Maya",
+        "Inca",
+        "Olmeca"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Cuál es el metal más abundante en la corteza terrestre?",
+      "options": [
+        "Hierro",
+        "Aluminio",
+        "Cobre",
+        "Calcio"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿En qué continente se encuentra el desierto del Sahara?",
+      "options": [
+        "Asia",
+        "África",
+        "Oceanía",
+        "América"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Qué gas es el más abundante en la atmósfera terrestre?",
+      "options": [
+        "Oxígeno",
+        "Dióxido de carbono",
+        "Nitrógeno",
+        "Hidrógeno"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Quién compuso las Cuatro Estaciones?",
+      "options": [
+        "Bach",
+        "Vivaldi",
+        "Mozart",
+        "Haydn"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Cuál es el país más pequeño del mundo?",
+      "options": [
+        "Mónaco",
+        "San Marino",
+        "Ciudad del Vaticano",
+        "Liechtenstein"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Qué científico propuso las tres leyes del movimiento?",
+      "options": [
+        "Einstein",
+        "Newton",
+        "Galileo",
+        "Kepler"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Cuántos huesos tiene el cuerpo humano adulto, aproximadamente?",
+      "options": [
+        "206",
+        "150",
+        "300",
+        "250"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿En qué año cayó el Muro de Berlín?",
+      "options": [
+        "1989",
+        "1991",
+        "1985",
+        "1993"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es el océano más grande del mundo?",
+      "options": [
+        "Atlántico",
+        "Índico",
+        "Pacífico",
+        "Ártico"
+      ],
+      "correctIndex": 2
+    }
+  ]
+}

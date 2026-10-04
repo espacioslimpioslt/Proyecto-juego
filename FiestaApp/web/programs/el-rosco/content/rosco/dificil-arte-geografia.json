@@ -1,0 +1,298 @@
+{
+  "theme": "Arte y geografía — difícil",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "difficulty": "dificil",
+  "letters": [
+    {
+      "letter": "A",
+      "clueType": "empieza",
+      "clue": "Capital de Kazajistán",
+      "options": [
+        "Astaná",
+        "Almaty",
+        "Biskek",
+        "Taskent"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "B",
+      "clueType": "empieza",
+      "clue": "Compositor alemán de los \"Conciertos de Brandeburgo\"",
+      "options": [
+        "Bach",
+        "Haendel",
+        "Telemann",
+        "Brahms"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "C",
+      "clueType": "empieza",
+      "clue": "Pintor postimpresionista de la montaña Sainte-Victoire",
+      "options": [
+        "Cézanne",
+        "Gauguin",
+        "Seurat",
+        "Matisse"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "D",
+      "clueType": "empieza",
+      "clue": "Río que atraviesa Budapest",
+      "options": [
+        "Danubio",
+        "Vístula",
+        "Rin",
+        "Elba"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "E",
+      "clueType": "empieza",
+      "clue": "Volcán activo de Sicilia, el más alto de Europa",
+      "options": [
+        "Etna",
+        "Vesubio",
+        "Estrómboli",
+        "Teide"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "F",
+      "clueType": "empieza",
+      "clue": "Pintora mexicana famosa por sus autorretratos",
+      "options": [
+        "Frida Kahlo",
+        "Tamara de Lempicka",
+        "Leonora Carrington",
+        "Remedios Varo"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "G",
+      "clueType": "empieza",
+      "clue": "Pintor español de \"Los fusilamientos del 3 de mayo\"",
+      "options": [
+        "Goya",
+        "Velázquez",
+        "Zurbarán",
+        "Murillo"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "H",
+      "clueType": "empieza",
+      "clue": "Ciudad japonesa donde cayó la primera bomba atómica",
+      "options": [
+        "Hiroshima",
+        "Nagasaki",
+        "Osaka",
+        "Kioto"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "I",
+      "clueType": "empieza",
+      "clue": "Dramaturgo noruego autor de \"Casa de muñecas\"",
+      "options": [
+        "Ibsen",
+        "Strindberg",
+        "Chéjov",
+        "Brecht"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "J",
+      "clueType": "empieza",
+      "clue": "Escritor irlandés de \"Ulises\"",
+      "options": [
+        "Joyce",
+        "Beckett",
+        "Wilde",
+        "Yeats"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "K",
+      "clueType": "empieza",
+      "clue": "Escritor checo de \"La metamorfosis\"",
+      "options": [
+        "Kafka",
+        "Kundera",
+        "Hašek",
+        "Čapek"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "L",
+      "clueType": "empieza",
+      "clue": "Ciudad boliviana donde funciona el gobierno",
+      "options": [
+        "La Paz",
+        "Sucre",
+        "Cochabamba",
+        "Santa Cruz"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "M",
+      "clueType": "empieza",
+      "clue": "Cumbre más alta de los Alpes",
+      "options": [
+        "Mont Blanc",
+        "Matterhorn",
+        "Monte Rosa",
+        "Eiger"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "N",
+      "clueType": "empieza",
+      "clue": "Río más largo de África",
+      "options": [
+        "Nilo",
+        "Níger",
+        "Congo",
+        "Zambeze"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "O",
+      "clueType": "empieza",
+      "clue": "Capital de Noruega",
+      "options": [
+        "Oslo",
+        "Bergen",
+        "Estocolmo",
+        "Copenhague"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "P",
+      "clueType": "empieza",
+      "clue": "Poeta portugués que escribió con varios heterónimos",
+      "options": [
+        "Pessoa",
+        "Saramago",
+        "Camões",
+        "Eça de Queirós"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "Q",
+      "clueType": "empieza",
+      "clue": "Capital de Ecuador",
+      "options": [
+        "Quito",
+        "Guayaquil",
+        "Cuenca",
+        "Bogotá"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "R",
+      "clueType": "empieza",
+      "clue": "Pintor holandés de \"La ronda de noche\"",
+      "options": [
+        "Rembrandt",
+        "Vermeer",
+        "Rubens",
+        "Van Dyck"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "S",
+      "clueType": "empieza",
+      "clue": "Compositor finlandés del poema sinfónico \"Finlandia\"",
+      "options": [
+        "Sibelius",
+        "Grieg",
+        "Nielsen",
+        "Dvořák"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "T",
+      "clueType": "empieza",
+      "clue": "Lago navegable más alto del mundo",
+      "options": [
+        "Titicaca",
+        "Poopó",
+        "Junín",
+        "Nahuel Huapi"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "U",
+      "clueType": "empieza",
+      "clue": "País cuya capital es Kampala",
+      "options": [
+        "Uganda",
+        "Kenia",
+        "Tanzania",
+        "Ruanda"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "V",
+      "clueType": "empieza",
+      "clue": "Ciudad italiana construida sobre canales",
+      "options": [
+        "Venecia",
+        "Florencia",
+        "Génova",
+        "Verona"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "Y",
+      "clueType": "empieza",
+      "clue": "Capital de Indonesia",
+      "options": [
+        "Yakarta",
+        "Bali",
+        "Manila",
+        "Kuala Lumpur"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "letter": "Z",
+      "clueType": "empieza",
+      "clue": "País africano cuya capital es Lusaka",
+      "options": [
+        "Zambia",
+        "Zimbabue",
+        "Malaui",
+        "Botsuana"
+      ],
+      "correctIndex": 0
+    }
+  ]
+}

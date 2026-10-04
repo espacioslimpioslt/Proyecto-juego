@@ -1,28 +1,285 @@
 {
   "theme": "La Silla — difícil",
   "language": "es",
-  "regions": ["global"],
+  "regions": [
+    "global"
+  ],
   "minAge": 0,
   "difficulty": "dificil",
   "chains": [
     {
       "letter": "M",
       "questions": [
-        { "clue": "Instrumento óptico que amplía objetos diminutos para poder verlos", "options": ["Microscopio", "Telescopio", "Binoculares", "Lupa gigante"], "correctIndex": 0 },
-        { "clue": "Proceso biológico por el que una oruga se transforma en mariposa", "options": ["Mutación", "Metamorfosis", "Evolución", "Muda"], "correctIndex": 1 },
-        { "clue": "Capa de roca fundida que está debajo de la corteza terrestre", "options": ["Manto", "Magma", "Mineral", "Meteorito"], "correctIndex": 1 },
-        { "clue": "Fuerza invisible que atrae objetos de hierro", "options": ["Movimiento", "Masa", "Magnetismo", "Motor"], "correctIndex": 2 },
-        { "clue": "Instrumento de percusión con teclas de madera que se golpean con mazos", "options": ["Maracas", "Marimba", "Metrónomo", "Mandolina"], "correctIndex": 1 }
+        {
+          "clue": "Capa de la Tierra entre la corteza y el núcleo",
+          "options": [
+            "Manto",
+            "Magma",
+            "Litosfera",
+            "Astenosfera"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Pensador florentino autor de \"El príncipe\"",
+          "options": [
+            "Maquiavelo",
+            "Montesquieu",
+            "Hobbes",
+            "Rousseau"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Pueblo cuyo emperador era Moctezuma",
+          "options": [
+            "Mexica",
+            "Maya",
+            "Inca",
+            "Olmeca"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Compositor austríaco de \"La flauta mágica\"",
+          "options": [
+            "Mozart",
+            "Haydn",
+            "Schubert",
+            "Beethoven"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Pintor francés de la serie \"Los nenúfares\"",
+          "options": [
+            "Monet",
+            "Manet",
+            "Renoir",
+            "Degas"
+          ],
+          "correctIndex": 0
+        }
       ]
     },
     {
       "letter": "T",
       "questions": [
-        { "clue": "Instrumento que sirve para medir la temperatura", "options": ["Tensiómetro", "Termómetro", "Timón", "Transformador"], "correctIndex": 1 },
-        { "clue": "Movimiento repentino y violento de la corteza terrestre", "options": ["Tsunami", "Terremoto", "Tornado", "Tormenta"], "correctIndex": 1 },
-        { "clue": "Aparato de grandes aspas que convierte la energía del viento o del agua en electricidad", "options": ["Transmisor", "Tractor", "Turbina", "Tanque"], "correctIndex": 2 },
-        { "clue": "Instrumento óptico usado para observar estrellas y planetas lejanos", "options": ["Telescopio", "Termómetro", "Transbordador", "Tarjeta"], "correctIndex": 0 },
-        { "clue": "Recipiente delgado de vidrio que se usa en los laboratorios para mezclar líquidos", "options": ["Tarro", "Tubo de ensayo", "Termo", "Tanque"], "correctIndex": 1 }
+        {
+          "clue": "Lago navegable más alto del mundo, entre Perú y Bolivia",
+          "options": [
+            "Titicaca",
+            "Poopó",
+            "Junín",
+            "Nahuel Huapi"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Faraón niño cuya tumba descubrió Howard Carter en 1922",
+          "options": [
+            "Tutankamón",
+            "Ramsés II",
+            "Keops",
+            "Akenatón"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Tratado de 1494 que repartió América entre España y Portugal",
+          "options": [
+            "Tordesillas",
+            "Utrecht",
+            "Westfalia",
+            "Versalles"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Escritor ruso autor de \"Guerra y paz\"",
+          "options": [
+            "Tolstói",
+            "Dostoievski",
+            "Chéjov",
+            "Pushkin"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Capital de Taiwán",
+          "options": [
+            "Taipéi",
+            "Kaohsiung",
+            "Hong Kong",
+            "Seúl"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "letter": "C",
+      "questions": [
+        {
+          "clue": "Ciudad que fue la capital del Imperio inca",
+          "options": [
+            "Cuzco",
+            "Cajamarca",
+            "Copacabana",
+            "Chan Chan"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Astrónomo que propuso que la Tierra gira alrededor del Sol",
+          "options": [
+            "Copérnico",
+            "Galileo",
+            "Kepler",
+            "Brahe"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Parte del encéfalo que coordina el equilibrio",
+          "options": [
+            "Cerebelo",
+            "Bulbo raquídeo",
+            "Hipotálamo",
+            "Tálamo"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Escritor argentino autor de \"Bestiario\" y \"Final del juego\"",
+          "options": [
+            "Cortázar",
+            "Borges",
+            "Bioy Casares",
+            "Sabato"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Navegante genovés que llegó a América en 1492",
+          "options": [
+            "Colón",
+            "Magallanes",
+            "Vespucio",
+            "Caboto"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "letter": "P",
+      "questions": [
+        {
+          "clue": "Filósofo griego del famoso teorema del triángulo rectángulo",
+          "options": [
+            "Pitágoras",
+            "Tales",
+            "Euclides",
+            "Arquímedes"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Ciudad de Jordania tallada en la roca",
+          "options": [
+            "Petra",
+            "Palmira",
+            "Persépolis",
+            "Babilonia"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Pintor malagueño que fundó el cubismo junto a Braque",
+          "options": [
+            "Picasso",
+            "Gris",
+            "Miró",
+            "Dalí"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Partícula del núcleo atómico con carga positiva",
+          "options": [
+            "Protón",
+            "Neutrón",
+            "Electrón",
+            "Fotón"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Cordillera en la frontera entre Francia y España",
+          "options": [
+            "Pirineos",
+            "Alpes",
+            "Apeninos",
+            "Cantábrica"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "letter": "S",
+      "questions": [
+        {
+          "clue": "Autor de \"Facundo. Civilización y barbarie\"",
+          "options": [
+            "Sarmiento",
+            "Alberdi",
+            "Echeverría",
+            "Mitre"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Filósofo griego condenado a beber cicuta",
+          "options": [
+            "Sócrates",
+            "Platón",
+            "Diógenes",
+            "Zenón"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Desierto más grande de África",
+          "options": [
+            "Sahara",
+            "Kalahari",
+            "Namib",
+            "Gobi"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Compositor finlandés del poema sinfónico \"Finlandia\"",
+          "options": [
+            "Sibelius",
+            "Grieg",
+            "Nielsen",
+            "Dvořák"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "clue": "Escritor argentino de \"Sobre héroes y tumbas\"",
+          "options": [
+            "Sabato",
+            "Cortázar",
+            "Borges",
+            "Arlt"
+          ],
+          "correctIndex": 0
+        }
       ]
     }
   ]

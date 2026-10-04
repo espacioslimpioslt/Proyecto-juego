@@ -1,0 +1,311 @@
+{
+  "theme": "Preguntas difíciles (nivel medio)",
+  "language": "es",
+  "regions": [
+    "global"
+  ],
+  "minAge": 0,
+  "difficulty": "normal",
+  "questions": [
+    {
+      "clue": "¿Cuál es la capital de Kazajistán?",
+      "options": [
+        "Almaty",
+        "Astaná",
+        "Bishkek",
+        "Tashkent"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Qué científica ganó dos premios Nobel en distintas categorías?",
+      "options": [
+        "Rosalind Franklin",
+        "Marie Curie",
+        "Ada Lovelace",
+        "Lise Meitner"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Cuál es el elemento químico más abundante en el universo?",
+      "options": [
+        "Oxígeno",
+        "Carbono",
+        "Hidrógeno",
+        "Helio"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿En qué año terminó la Segunda Guerra Mundial?",
+      "options": [
+        "1943",
+        "1944",
+        "1945",
+        "1946"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Qué pintor holandés se cortó una oreja?",
+      "options": [
+        "Rembrandt",
+        "Vermeer",
+        "Van Gogh",
+        "Bosch"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Cuál es el lago más profundo del mundo?",
+      "options": [
+        "Lago Baikal",
+        "Lago Superior",
+        "Lago Titicaca",
+        "Mar Caspio"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué dios griego es el mensajero de los dioses?",
+      "options": [
+        "Ares",
+        "Hermes",
+        "Apolo",
+        "Hefesto"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Cuál es la unidad básica de medida de la corriente eléctrica?",
+      "options": [
+        "Voltio",
+        "Vatio",
+        "Amperio",
+        "Ohmio"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Qué imperio construyó el Coliseo?",
+      "options": [
+        "Griego",
+        "Romano",
+        "Persa",
+        "Bizantino"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Cuál es el número atómico del carbono?",
+      "options": [
+        "4",
+        "6",
+        "8",
+        "12"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Qué escritor ruso escribió 'Crimen y castigo'?",
+      "options": [
+        "Tolstói",
+        "Chéjov",
+        "Dostoievski",
+        "Gógol"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Cuál es el país con más husos horarios?",
+      "options": [
+        "Rusia",
+        "Estados Unidos",
+        "Francia",
+        "China"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Qué tratado puso fin a la Primera Guerra Mundial?",
+      "options": [
+        "Tratado de Versalles",
+        "Tratado de Utrecht",
+        "Congreso de Viena",
+        "Tratado de Tordesillas"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es la capital de Mongolia?",
+      "options": [
+        "Ulán Bator",
+        "Astaná",
+        "Vladivostok",
+        "Irkutsk"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué parte de la célula contiene el material genético?",
+      "options": [
+        "Mitocondria",
+        "Núcleo",
+        "Ribosoma",
+        "Citoplasma"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Quién compuso 'Las cuatro estaciones'?",
+      "options": [
+        "Bach",
+        "Vivaldi",
+        "Handel",
+        "Haydn"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Cuál es el punto más profundo del océano?",
+      "options": [
+        "Fosa de Puerto Rico",
+        "Fosa de las Marianas",
+        "Fosa de Japón",
+        "Fosa de Kermadec"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Qué faraón egipcio está asociado a la máscara de oro más famosa?",
+      "options": [
+        "Ramsés II",
+        "Akenatón",
+        "Tutankamón",
+        "Keops"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Cuál es la capital de Nueva Zelanda?",
+      "options": [
+        "Auckland",
+        "Wellington",
+        "Christchurch",
+        "Hamilton"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Qué gas noble se usa en los carteles luminosos rojos?",
+      "options": [
+        "Argón",
+        "Helio",
+        "Neón",
+        "Xenón"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Qué explorador lideró la primera vuelta al mundo (aunque murió en el camino)?",
+      "options": [
+        "Colón",
+        "Vasco da Gama",
+        "Magallanes",
+        "Américo Vespucio"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Cuál es la capital de Etiopía?",
+      "options": [
+        "Nairobi",
+        "Adís Abeba",
+        "Jartum",
+        "Kampala"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Qué filósofo escribió 'El príncipe'?",
+      "options": [
+        "Maquiavelo",
+        "Hobbes",
+        "Locke",
+        "Rousseau"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es el hueso más fuerte del cuerpo humano?",
+      "options": [
+        "Cráneo",
+        "Fémur",
+        "Mandíbula",
+        "Costilla"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Qué río atraviesa la ciudad de París?",
+      "options": [
+        "Ródano",
+        "Loira",
+        "Sena",
+        "Garona"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Cuál es la capital de Portugal?",
+      "options": [
+        "Oporto",
+        "Lisboa",
+        "Faro",
+        "Braga"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Qué civilización desarrolló el primer sistema de escritura cuneiforme?",
+      "options": [
+        "Egipcia",
+        "Sumeria",
+        "China",
+        "Fenicia"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Quién escribió la 'Teoría general de la relatividad' en 1915?",
+      "options": [
+        "Newton",
+        "Planck",
+        "Einstein",
+        "Heisenberg"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "clue": "¿Cuál es el segundo elemento más abundante en la atmósfera terrestre?",
+      "options": [
+        "Nitrógeno",
+        "Oxígeno",
+        "Argón",
+        "Dióxido de carbono"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "clue": "¿Qué compositor alemán se quedó completamente sordo?",
+      "options": [
+        "Brahms",
+        "Beethoven",
+        "Wagner",
+        "Schubert"
+      ],
+      "correctIndex": 1
+    }
+  ]
+}
