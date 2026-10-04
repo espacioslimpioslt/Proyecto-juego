@@ -227,6 +227,53 @@ function armarImpostor() {
   return grupo;
 }
 
+// Gran Premio: dos autitos chocadores dando vueltas que se golpean de a ratos.
+function armarGranPremio() {
+  const grupo = new THREE.Group();
+  const pista = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.35, 10, 64), new THREE.MeshStandardMaterial({ color: 0x474c63, roughness: 0.8 }));
+  pista.rotation.x = Math.PI / 2;
+  pista.scale.set(1.35, 1, 1);
+  pista.position.y = -1.2;
+  grupo.add(pista);
+  const auto = (color) => {
+    const a = new THREE.Group();
+    const cuerpo = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.28, 0.6), new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.25, metalness: 0.4, roughness: 0.3 }));
+    const goma = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.1, 8, 20), new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.9 }));
+    goma.rotation.x = Math.PI / 2; goma.scale.set(1, 0.72, 1); goma.position.y = -0.08;
+    const antena = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.7), new THREE.MeshBasicMaterial({ color: 0xdddddd }));
+    antena.position.set(-0.3, 0.45, 0);
+    a.add(cuerpo, goma, antena);
+    grupo.add(a);
+    return a;
+  };
+  const a = auto(COLORES.equipoA);
+  const b = auto(COLORES.equipoB);
+  const brillo = halo(COLORES.ambar, 2.2);
+  brillo.position.y = -0.9;
+  grupo.add(brillo, halo(COLORES.rojo, 4.5));
+  // Inclinada hacia la cámara, para ver la pista desde arriba.
+  grupo.rotation.x = 0.6;
+  grupo.scale.setScalar(0.78);
+  [a, b].forEach((x) => x.scale.setScalar(1.5));
+  const lugar = (obj, ang, extra) => {
+    obj.position.set(Math.cos(ang) * 2.97, -0.95 + extra, Math.sin(ang) * 2.2);
+    obj.rotation.y = -ang - Math.PI / 2;
+  };
+  grupo.userData.update = (t) => {
+    const angA = t * 1.1;
+    // B va un poco más rápido: lo alcanza, lo choca y rebota.
+    const ciclo = (t % 5.7) / 5.7;
+    const angB = angA - 0.9 + ciclo * 0.9 + Math.sin(ciclo * Math.PI) * 0.1;
+    const choque = ciclo > 0.92 ? Math.sin((ciclo - 0.92) / 0.08 * Math.PI) : 0;
+    lugar(a, angA, choque * 0.25);
+    lugar(b, angB, 0);
+    a.rotation.z = choque * 0.4;
+    brillo.position.set(Math.cos(angA) * 2.97, -0.6, Math.sin(angA) * 2.2);
+    brillo.material.opacity = choque;
+  };
+  return grupo;
+}
+
 function armarGenerico() {
   const grupo = new THREE.Group();
   const signo = new THREE.Mesh(
@@ -241,7 +288,8 @@ function armarGenerico() {
 const PIEZAS = {
   'el-rosco': armarRosco,
   'ahora-caigo': armarAhoraCaigo,
-  varios: armarImpostor
+  varios: armarImpostor,
+  'gran-premio': armarGranPremio
 };
 
 // ---------- El estudio ----------

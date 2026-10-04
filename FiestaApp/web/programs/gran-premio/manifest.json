@@ -1,0 +1,21 @@
+{
+  "id": "gran-premio",
+  "name": "Gran Premio",
+  "tagline": "Autos chocadores por equipos: se maneja inclinando el celu.",
+  "description": "Cada uno maneja su auto inclinando el celu: levantalo para acelerar, ladealo para doblar, bajalo para frenar. Carrera contra reloj en una pista con conos, aceite y turbos. Los autos de tu equipo se atraviesan; los rivales se chocan. Como en la Fórmula 1, gana el equipo: suman las vueltas y los golpes de todos.",
+  "minPlayers": 2,
+  "maxPlayers": 10,
+  "supportsTeams": true,
+  "games": [
+    "chocadores"
+  ],
+  "rondasSegunCantidad": {
+    "3": 1,
+    "6": 2,
+    "9": 3
+  },
+  "nombreRonda": [
+    "carrera",
+    "carreras"
+  ]
+}

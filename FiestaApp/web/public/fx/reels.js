@@ -48,6 +48,16 @@
     </div>`;
   }
 
+  // Gran Premio: dos autitos dando vueltas a una pista ovalada y chocándose.
+  function reelGranPremio() {
+    return `<div class="reel reel-gp">
+      <div class="gp-ovalo"><span class="gp-meta"></span></div>
+      <span class="gp-auto a">🏎️</span>
+      <span class="gp-auto b">🏎️</span>
+      <span class="gp-boom">💥</span>
+    </div>`;
+  }
+
   // Programas que todavía no existen: el ícono flotando con un brillo que
   // pasa, para que la galería no se vea muerta.
   function reelProximo(icon) {
@@ -61,7 +71,8 @@
   const POR_PROGRAMA = {
     'el-rosco': reelRosco,
     'ahora-caigo': reelAhoraCaigo,
-    varios: reelImpostor
+    varios: reelImpostor,
+    'gran-premio': reelGranPremio
   };
 
   function reelHtml(program) {

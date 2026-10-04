@@ -20,3 +20,29 @@ jobs:
           done
           echo "===== certificado https"
           echo | openssl s_client -connect soyparticipante.runasp.net:443 -servername soyparticipante.runasp.net 2>/dev/null | openssl x509 -noout -subject -issuer -dates 2>&1 || echo "(sin certificado)"
+      - name: Medir la conexión en tiempo real (WebSocket y demora)
+        run: |
+          mkdir -p /tmp/eco && cd /tmp/eco && npm init -y >/dev/null && npm i socket.io-client@4 >/dev/null 2>&1
+          cat > eco.js <<'JS'
+          const { io } = require('socket.io-client');
+          const id = () => Math.random().toString(36).slice(2, 12) + Math.random().toString(36).slice(2, 12);
+          const s = io('https://soyparticipante.runasp.net', { auth: { playerId: id(), secret: id() }, timeout: 15000 });
+          const fin = (msg) => { console.log(msg); s.close(); process.exit(0); };
+          setTimeout(() => fin('(no se pudo medir: tiempo agotado)'), 40000);
+          s.on('connect', () => {
+            console.log('conectado por:', s.io.engine.transport.name);
+            setTimeout(async () => {
+              console.log('después de 3 s, transporte:', s.io.engine.transport.name, '(websocket = tiempo real; polling = más lento)');
+              const tiempos = [];
+              for (let i = 0; i < 20; i++) {
+                const t0 = Date.now();
+                await new Promise((ok) => s.timeout(5000).emit('eco', t0, () => ok()));
+                tiempos.push(Date.now() - t0);
+              }
+              tiempos.sort((a, b) => a - b);
+              fin(`ida y vuelta (ms) desde GitHub: mínimo ${tiempos[0]}, mediana ${tiempos[10]}, máximo ${tiempos[19]}`);
+            }, 3000);
+          });
+          s.on('connect_error', (e) => fin('error al conectar: ' + e.message));
+          JS
+          node eco.js
