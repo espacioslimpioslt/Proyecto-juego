@@ -1,29 +1,260 @@
 {
-  "theme": "Preguntas difíciles",
-  "language": "es",
-  "regions": ["global"],
+  "theme": "Duelo — difícil",
+  "regions": [
+    "global"
+  ],
   "minAge": 0,
   "difficulty": "dificil",
   "questions": [
-    { "clue": "¿Cuál es el hueso más pequeño del cuerpo humano?", "options": ["Estribo (oído)", "Falange", "Rótula", "Coxis"], "correctIndex": 0 },
-    { "clue": "¿Qué elemento químico tiene el símbolo 'Au'?", "options": ["Plata", "Aluminio", "Oro", "Argón"], "correctIndex": 2 },
-    { "clue": "¿En qué año llegó el ser humano a la Luna por primera vez?", "options": ["1965", "1969", "1972", "1958"], "correctIndex": 1 },
-    { "clue": "¿Quién pintó 'Las Meninas'?", "options": ["Goya", "El Greco", "Velázquez", "Murillo"], "correctIndex": 2 },
-    { "clue": "¿Cuál es la capital de Australia?", "options": ["Sídney", "Melbourne", "Canberra", "Perth"], "correctIndex": 2 },
-    { "clue": "¿Qué científico formuló la teoría de la relatividad?", "options": ["Newton", "Einstein", "Bohr", "Tesla"], "correctIndex": 1 },
-    { "clue": "¿Cuántos corazones tiene un pulpo?", "options": ["Uno", "Dos", "Tres", "Cuatro"], "correctIndex": 2 },
-    { "clue": "¿Cuál es el país más pequeño del mundo?", "options": ["Mónaco", "San Marino", "Ciudad del Vaticano", "Liechtenstein"], "correctIndex": 2 },
-    { "clue": "¿Qué dinastía gobernó China durante la construcción de la Ciudad Prohibida?", "options": ["Tang", "Ming", "Qing", "Han"], "correctIndex": 1 },
-    { "clue": "¿Cuál es el idioma oficial de Brasil?", "options": ["Español", "Portugués", "Francés", "Italiano"], "correctIndex": 1 },
-    { "clue": "¿Qué compositor quedó sordo y siguió componiendo?", "options": ["Mozart", "Bach", "Beethoven", "Chopin"], "correctIndex": 2 },
-    { "clue": "¿Cuál es la montaña más alta de África?", "options": ["Monte Kenia", "Kilimanjaro", "Atlas", "Ruwenzori"], "correctIndex": 1 },
-    { "clue": "¿En qué órgano se produce la insulina?", "options": ["Hígado", "Páncreas", "Bazo", "Riñón"], "correctIndex": 1 },
-    { "clue": "¿Cuál es el desierto más grande del mundo?", "options": ["Sahara", "Gobi", "Antártida", "Kalahari"], "correctIndex": 2 },
-    { "clue": "¿Qué filósofo griego fue maestro de Alejandro Magno?", "options": ["Sócrates", "Platón", "Aristóteles", "Pitágoras"], "correctIndex": 2 },
-    { "clue": "¿Cuál es el símbolo químico del sodio?", "options": ["So", "Sd", "Na", "S"], "correctIndex": 2 },
-    { "clue": "¿En qué guerra se usó por primera vez la palabra 'tanque' para el vehículo blindado?", "options": ["Guerra de los Bóers", "Primera Guerra Mundial", "Guerra Civil española", "Segunda Guerra Mundial"], "correctIndex": 1 },
-    { "clue": "¿Cuál es el metal más abundante en la corteza terrestre?", "options": ["Hierro", "Aluminio", "Cobre", "Calcio"], "correctIndex": 1 },
-    { "clue": "¿Qué escritor argentino escribió 'Rayuela'?", "options": ["Borges", "Cortázar", "Sabato", "Arlt"], "correctIndex": 1 },
-    { "clue": "¿Cuál es la velocidad aproximada de la luz en el vacío?", "options": ["300.000 km/s", "150.000 km/s", "1.000.000 km/s", "30.000 km/s"], "correctIndex": 0 }
+    {
+      "clue": "¿Qué filósofo escribió \"Así habló Zaratustra\"?",
+      "options": [
+        "Friedrich Nietzsche",
+        "Immanuel Kant",
+        "Arthur Schopenhauer",
+        "G. W. F. Hegel"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es la capital de Mongolia?",
+      "options": [
+        "Ulán Bator",
+        "Astaná",
+        "Biskek",
+        "Taskent"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué elemento químico tiene el símbolo \"W\"?",
+      "options": [
+        "Tungsteno (wolframio)",
+        "Vanadio",
+        "Itrio",
+        "Xenón"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿En qué año comenzó la Revolución Francesa?",
+      "options": [
+        "1789",
+        "1776",
+        "1799",
+        "1815"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿En qué pueblo imaginario transcurre \"Cien años de soledad\"?",
+      "options": [
+        "Macondo",
+        "Comala",
+        "Santa María",
+        "Yoknapatawpha"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué océano baña las costas de Mozambique?",
+      "options": [
+        "Índico",
+        "Atlántico",
+        "Pacífico",
+        "Ártico"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuántos jugadores tiene en cancha cada equipo en el rugby union?",
+      "options": [
+        "15",
+        "13",
+        "11",
+        "7"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué arquitecto diseñó la Sagrada Familia de Barcelona?",
+      "options": [
+        "Antoni Gaudí",
+        "Le Corbusier",
+        "Gustave Eiffel",
+        "Oscar Niemeyer"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué río atraviesa la ciudad de Bagdad?",
+      "options": [
+        "Tigris",
+        "Éufrates",
+        "Nilo",
+        "Jordán"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Durante qué presidencia se sancionó la Ley 1420 de educación común?",
+      "options": [
+        "Julio A. Roca",
+        "Domingo F. Sarmiento",
+        "Bartolomé Mitre",
+        "Nicolás Avellaneda"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es el país independiente más chico de Sudamérica?",
+      "options": [
+        "Surinam",
+        "Uruguay",
+        "Guyana",
+        "Ecuador"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién compuso la ópera \"La traviata\"?",
+      "options": [
+        "Giuseppe Verdi",
+        "Giacomo Puccini",
+        "Gioachino Rossini",
+        "Richard Wagner"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Alrededor de qué planeta gira la luna Titán?",
+      "options": [
+        "Saturno",
+        "Júpiter",
+        "Urano",
+        "Neptuno"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién propuso el principio de incertidumbre en física cuántica?",
+      "options": [
+        "Werner Heisenberg",
+        "Niels Bohr",
+        "Max Planck",
+        "Erwin Schrödinger"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿En qué país está la ciudad de Tombuctú?",
+      "options": [
+        "Malí",
+        "Níger",
+        "Marruecos",
+        "Senegal"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién escribió \"Crimen y castigo\"?",
+      "options": [
+        "Fiódor Dostoievski",
+        "León Tolstói",
+        "Antón Chéjov",
+        "Nikolái Gógol"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuántos grados suman los ángulos interiores de un hexágono?",
+      "options": [
+        "720",
+        "540",
+        "360",
+        "900"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es el volcán más alto del mundo?",
+      "options": [
+        "Ojos del Salado",
+        "Aconcagua",
+        "Kilimanjaro",
+        "Chimborazo"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Cuál es la glándula más grande del cuerpo humano?",
+      "options": [
+        "Hígado",
+        "Páncreas",
+        "Tiroides",
+        "Bazo"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Quién pintó \"La joven de la perla\"?",
+      "options": [
+        "Johannes Vermeer",
+        "Rembrandt",
+        "Pedro Pablo Rubens",
+        "Frans Hals"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué tratado de 1919 impuso la paz a Alemania tras la Primera Guerra Mundial?",
+      "options": [
+        "Versalles",
+        "Tordesillas",
+        "Utrecht",
+        "Westfalia"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué imperio construyó Machu Picchu?",
+      "options": [
+        "Inca",
+        "Azteca",
+        "Maya",
+        "Olmeca"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿A qué velocidad aproximada viaja la luz en el vacío?",
+      "options": [
+        "300.000 km/s",
+        "150.000 km/s",
+        "30.000 km/s",
+        "3.000.000 km/s"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿En qué año ganó Argentina su primer Mundial de fútbol masculino?",
+      "options": [
+        "1978",
+        "1986",
+        "1930",
+        "1974"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "clue": "¿Qué escritor portugués ganó el Nobel de Literatura en 1998?",
+      "options": [
+        "José Saramago",
+        "Fernando Pessoa",
+        "António Lobo Antunes",
+        "Eça de Queirós"
+      ],
+      "correctIndex": 0
+    }
   ]
 }
